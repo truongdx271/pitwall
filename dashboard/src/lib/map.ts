@@ -46,6 +46,12 @@ export const createSectors = (map: Map): MapSector[] => {
 	const sectors: MapSector[] = [];
 	const points: TrackPosition[] = map.x.map((x, index) => ({ x, y: map.y[index] }));
 
+	// A measured outline has no marshal boundaries: render the whole track,
+	// with track-wide flags only (sector 0 is never an official marshal sector).
+	if (map.marshalSectors.length === 0) {
+		return [{ number: 0, start: points[0], end: points[points.length - 1], points }];
+	}
+
 	for (let i = 0; i < map.marshalSectors.length; i++) {
 		sectors.push({
 			number: i + 1,

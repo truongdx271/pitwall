@@ -67,6 +67,7 @@ export type TimingAppDataDriver = {
 };
 
 export type Stint = {
+	StartLaps?: number;
 	TotalLaps?: number;
 	Compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
 	New?: string; // TRUE | FALSE

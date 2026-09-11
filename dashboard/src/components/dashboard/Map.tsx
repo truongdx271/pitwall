@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
 import type { PositionCar, TimingDataDriver } from "@/types/state.type";
-import type { Map, TrackPosition } from "@/types/map.type";
+import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 
@@ -109,6 +109,13 @@ type Props = {
 };
 
 export default function Map({ filter }: Props) {
+	const session = useDataStore((state) => state.state?.SessionInfo);
+	const circuitKey = session?.Meeting.Circuit.Key;
+	const year = session?.StartDate ? new Date(session.StartDate).getFullYear() : new Date().getFullYear();
+	return <CircuitMap key={`${circuitKey}-${year}`} filter={filter} circuitKey={circuitKey} year={year} />;
+}
+
+function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number; year: number }) {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
 	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
@@ -117,7 +124,8 @@ export default function Map({ filter }: Props) {
 	const trackStatus = useDataStore((state) => state?.state?.TrackStatus);
 	const timingDrivers = useDataStore((state) => state?.state?.TimingData);
 	const raceControlMessages = useDataStore((state) => state?.state?.RaceControlMessages?.Messages ?? undefined);
-	const circuitKey = useDataStore((state) => state?.state?.SessionInfo?.Meeting.Circuit.Key);
+	const [unavailable, setUnavailable] = useState(false);
+	const [attempt, setAttempt] = useState(0);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
@@ -125,16 +133,21 @@ export default function Map({ filter }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<MapSector[]>([]);
 	const [corners, setCorners] = useState<Corner[]>([]);
+	const [outlineOnly, setOutlineOnly] = useState(false);
 	const [rotation, setRotation] = useState<number>(0);
 	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
 	const [originalTrackPoints, setOriginalTrackPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	useEffect(() => {
+		let cancelled = false;
 		(async () => {
 			if (!circuitKey) return;
-			const mapJson = await fetchMap(circuitKey);
-
-			if (!mapJson) return;
+			const mapJson = await fetchMap(circuitKey, year);
+			if (cancelled) return;
+			if (!mapJson) {
+				setUnavailable(true);
+				return;
+			}
 
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
@@ -179,6 +192,7 @@ export default function Map({ filter }: Props) {
 			// Store original track points for position calculation
 			const originalPoints = mapJson.x.map((x, index) => ({ x, y: mapJson.y[index] }));
 
+			setOutlineOnly(mapJson.outlineOnly ?? false);
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
@@ -188,7 +202,10 @@ export default function Map({ filter }: Props) {
 			setFinishLine({ x: rotatedFinishLine.x, y: rotatedFinishLine.y, startAngle });
 			setOriginalTrackPoints(originalPoints);
 		})();
-	}, [circuitKey]);
+		return () => {
+			cancelled = true;
+		};
+	}, [circuitKey, year, attempt]);
 
 	const yellowSectors = useMemo(() => findYellowSectors(raceControlMessages), [raceControlMessages]);
 
@@ -209,7 +226,33 @@ export default function Map({ filter }: Props) {
 			.sort(prioritizeColoredSectors);
 	}, [trackStatus, sectors, yellowSectors]);
 
-	if (!points || !minX || !minY || !widthX || !widthY) {
+	if (unavailable || !circuitKey) {
+		return (
+			<div
+				role="status"
+				className="flex h-full min-h-64 flex-col items-center justify-center gap-3 p-4 font-mono text-sm text-zinc-400"
+			>
+				<p>{!circuitKey ? "Waiting for circuit information…" : "Track map unavailable for this session."}</p>
+				{circuitKey && (
+					<>
+						<p className="text-xs text-zinc-500">The map provider has not supplied a usable circuit layout.</p>
+						<button
+							type="button"
+							className="border border-zinc-700 px-3 py-1 hover:text-white"
+							onClick={() => {
+								setUnavailable(false);
+								setAttempt((value) => value + 1);
+							}}
+						>
+							Retry map
+						</button>
+					</>
+				)}
+			</div>
+		);
+	}
+
+	if (!points || minX === null || minY === null || !widthX || !widthY) {
 		return (
 			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
 				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
@@ -218,97 +261,105 @@ export default function Map({ filter }: Props) {
 	}
 
 	return (
-		<svg
-			viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
-			className="h-full w-full xl:max-h-screen"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				className="stroke-gray-800"
-				strokeWidth={300}
-				strokeLinejoin="round"
-				fill="transparent"
-				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
-			/>
-
-			{renderedSectors.map((sector) => {
-				const style = sector.pulse
-					? {
-							animation: `${sector.pulse * 100}ms linear infinite pulse`,
-						}
-					: {};
-				return (
-					<path
-						key={`map.sector.${sector.number}`}
-						className={sector.color}
-						strokeWidth={sector.strokeWidth}
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						fill="transparent"
-						d={sector.d}
-						style={style}
-					/>
-				);
-			})}
-
-			{finishLine && (
-				<rect
-					x={finishLine.x - 75}
-					y={finishLine.y}
-					width={240}
-					height={20}
-					fill="red"
-					stroke="red"
-					strokeWidth={70}
-					transform={`rotate(${finishLine.startAngle + 90}, ${finishLine.x + 25}, ${finishLine.y})`}
+		<div className="relative h-full w-full">
+			{outlineOnly && (
+				<p className="absolute top-1 left-2 text-[10px] text-zinc-500">
+					FP1 track outline · sector flags unavailable{!positions && " · positions estimated"}
+				</p>
+			)}
+			<svg
+				aria-label="Live circuit map"
+				viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
+				className="h-full w-full xl:max-h-screen"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					className="stroke-gray-800"
+					strokeWidth={300}
+					strokeLinejoin="round"
+					fill="transparent"
+					d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 				/>
-			)}
 
-			{showCornerNumbers &&
-				corners.map((corner) => (
-					<CornerNumber
-						key={`corner.${corner.number}`}
-						number={corner.number}
-						x={corner.labelPos.x}
-						y={corner.labelPos.y}
+				{renderedSectors.map((sector) => {
+					const style = sector.pulse
+						? {
+								animation: `${sector.pulse * 100}ms linear infinite pulse`,
+							}
+						: {};
+					return (
+						<path
+							key={`map.sector.${sector.number}`}
+							className={sector.color}
+							strokeWidth={sector.strokeWidth}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							fill="transparent"
+							d={sector.d}
+							style={style}
+						/>
+					);
+				})}
+
+				{finishLine && !outlineOnly && (
+					<rect
+						x={finishLine.x - 75}
+						y={finishLine.y}
+						width={240}
+						height={20}
+						fill="red"
+						stroke="red"
+						strokeWidth={70}
+						transform={`rotate(${finishLine.startAngle + 90}, ${finishLine.x + 25}, ${finishLine.y})`}
 					/>
-				))}
+				)}
 
-			{centerX && centerY && drivers && timingDrivers && (
-				<>
-					{Object.values(drivers)
-						.reverse()
-						.filter((driver) => (filter ? filter.includes(driver.RacingNumber) : true))
-						.map((driver) => {
-							const timingDriver = timingDrivers?.Lines[driver.RacingNumber];
-							const hidden = timingDriver
-								? timingDriver.KnockedOut || timingDriver.Stopped || timingDriver.Retired
-								: false;
-							const pit = timingDriver ? timingDriver.InPit : false;
+				{showCornerNumbers &&
+					corners.map((corner) => (
+						<CornerNumber
+							key={`corner.${corner.number}`}
+							number={corner.number}
+							x={corner.labelPos.x}
+							y={corner.labelPos.y}
+						/>
+					))}
 
-							const realPos = positions?.[driver.RacingNumber];
-							const driverPosition = realPos ?? getDriverPosition(timingDriver, originalTrackPoints);
+				{centerX && centerY && drivers && timingDrivers && (
+					<>
+						{Object.values(drivers)
+							.reverse()
+							.filter((driver) => (filter ? filter.includes(driver.RacingNumber) : true))
+							.map((driver) => {
+								const timingDriver = timingDrivers?.Lines[driver.RacingNumber];
+								const hidden = timingDriver
+									? timingDriver.KnockedOut || timingDriver.Stopped || timingDriver.Retired
+									: false;
+								const pit = timingDriver ? timingDriver.InPit : false;
 
-							if (!driverPosition) return null;
+								const realPos = positions?.[driver.RacingNumber];
+								const driverPosition = realPos ?? getDriverPosition(timingDriver, originalTrackPoints);
 
-							return (
-								<CarDot
-									key={`map.driver.${driver.RacingNumber}`}
-									favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.RacingNumber) : false}
-									name={driver.Tla}
-									color={driver.TeamColour}
-									pit={pit}
-									hidden={hidden}
-									pos={driverPosition}
-									rotation={rotation}
-									centerX={centerX}
-									centerY={centerY}
-								/>
-							);
-						})}
-				</>
-			)}
-		</svg>
+								if (!driverPosition) return null;
+
+								return (
+									<CarDot
+										key={`map.driver.${driver.RacingNumber}`}
+										favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.RacingNumber) : false}
+										name={driver.Tla}
+										color={driver.TeamColour}
+										pit={pit}
+										hidden={hidden}
+										pos={driverPosition}
+										rotation={rotation}
+										centerX={centerX}
+										centerY={centerY}
+									/>
+								);
+							})}
+					</>
+				)}
+			</svg>
+		</div>
 	);
 }
 

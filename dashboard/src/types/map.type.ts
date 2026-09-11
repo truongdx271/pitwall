@@ -1,4 +1,5 @@
 export type Map = {
+	outlineOnly?: boolean;
 	corners: Corner[];
 	marshalLights: Corner[];
 	marshalSectors: Corner[];

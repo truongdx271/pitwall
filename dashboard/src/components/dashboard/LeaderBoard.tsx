@@ -110,6 +110,7 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 			{showInterval ? "INT ↕" : "GAP ↕"}
 		</button>
 		<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">LAP</span>
+		<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">BEST</span>
 		<span className="text-[11px] tracking-widest text-zinc-500 uppercase">SECTORS</span>
 		{showPace && <span className="text-[11px] tracking-widest text-zinc-500 uppercase">PACE</span>}
 	</div>
@@ -117,6 +118,6 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 
 const SkeletonDriver = () => (
 	<div className="border-b border-zinc-900 py-0.5 pr-1 pl-2 font-mono text-base leading-none text-zinc-800">
-		▌ -- ??? -- -------- ---------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
+		▌ -- ??? -- -------- ---------- --------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
 	</div>
 );

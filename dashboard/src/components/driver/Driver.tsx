@@ -15,6 +15,7 @@ import DriverGap from "./DriverGap";
 import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
+import DriverBestLap from "./DriverBestLap";
 import DriverInfo from "./DriverInfo";
 import DriverCarMetrics from "./DriverCarMetrics";
 import DriverPace from "./DriverPace";
@@ -30,7 +31,7 @@ type Props = {
 
 export const DRIVER_GRID_GAP = "2ch";
 export const driverGridCols = (showPace: boolean) =>
-	showPace ? "7ch 3ch 7ch 4ch 5ch 9ch 9ch 1fr auto" : "7ch 3ch 7ch 4ch 5ch 9ch 9ch 1fr";
+	showPace ? "7ch 3ch 7ch 4ch 5ch 9ch 9ch 9ch 1fr auto" : "7ch 3ch 7ch 4ch 5ch 9ch 9ch 9ch 1fr";
 // keep alias so any other import doesn't break
 export const DRIVER_GRID_COLS = driverGridCols(true);
 
@@ -97,6 +98,8 @@ export default function Driver({ driver, timingDriver, position, showInterval, s
 				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} showInterval={showInterval} />
 
 				<DriverLapTime last={timingDriver.LastLapTime} best={timingDriver.BestLapTime} hasFastest={hasFastest} />
+
+				<DriverBestLap best={timingDriver.BestLapTime} hasFastest={hasFastest} />
 
 				<DriverMiniSectors sectors={timingDriver.Sectors} />
 

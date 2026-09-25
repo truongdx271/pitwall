@@ -2,7 +2,7 @@
 
 Reproduce a recorded F1 session against the dashboard when there's no live one —
 between race weekends, offline, on a plane. Dev-only; the endpoint 404s in a
-production build.
+production build unless `DEV_REPLAY=1` (used on the homelab staging deploy).
 
 ## Use it
 

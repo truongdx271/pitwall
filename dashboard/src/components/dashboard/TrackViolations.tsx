@@ -38,10 +38,14 @@ export default function TrackViolations() {
 		? Object.values(drivers).filter((driver) => trackLimits[driver.RacingNumber] > 0)
 		: undefined;
 
+	const total = Object.values(trackLimits).reduce((a, b) => a + b, 0);
+	const max = Math.max(1, ...Object.values(trackLimits));
+
 	return (
-		<div className="font-mono">
-			<div className="border-b-2 border-zinc-700 px-2 py-0.5 text-[11px] tracking-widest text-zinc-500 uppercase">
-				track violations
+		<div className="max-w-lg font-mono">
+			<div className="flex items-center justify-between border-b-2 border-zinc-700 px-2 py-0.5">
+				<span className="text-[11px] tracking-widest text-zinc-500 uppercase">track violations</span>
+				{total > 0 && <span className="text-[11px] text-zinc-600 tabular-nums">{total} total</span>}
 			</div>
 
 			{violationDrivers && violationDrivers.length < 1 && (
@@ -58,6 +62,7 @@ export default function TrackViolations() {
 							driver={driver}
 							driversTiming={driversTiming ?? undefined}
 							driverViolations={trackLimits[driver.RacingNumber]}
+							max={max}
 						/>
 					))}
 		</div>

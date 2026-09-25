@@ -22,7 +22,7 @@ import {
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
 
-const SPACE = 1000;
+const SPACE = 600;
 const ROTATION_FIX = 90;
 
 // Function to calculate driver position based on their segment progress
@@ -409,7 +409,11 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 			<text
 				id={`map.driver.text`}
 				fontWeight="bold"
-				fontSize={120 * 3}
+				fontSize={120 * 2.6}
+				stroke="#000"
+				strokeWidth={90}
+				strokeLinejoin="round"
+				paintOrder="stroke"
 				style={{
 					transform: "translateX(150px) translateY(-120px)",
 				}}

@@ -15,7 +15,7 @@ export default function TeamRadios() {
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
 
 	return (
-		<ul className="flex flex-col font-mono">
+		<ul className="flex max-w-2xl flex-col font-mono">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
 			{teamRadios && gmtOffset && drivers && teamRadios.Captures && (

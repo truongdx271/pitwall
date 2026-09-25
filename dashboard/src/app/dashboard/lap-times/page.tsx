@@ -165,7 +165,7 @@ export default function LapTimes() {
 						<div className="px-2 py-3 text-[11px] text-zinc-700">select two drivers to compare</div>
 					) : (
 						<div className="overflow-auto">
-							<table className="w-full text-sm">
+							<table className="w-full min-w-max text-sm">
 								<thead className="sticky top-0 bg-black">
 									<tr className="border-b-2 border-zinc-600">
 										<th className="px-2 py-0.5 text-left text-[11px] tracking-widest text-zinc-500 uppercase">LAP</th>
@@ -230,7 +230,7 @@ export default function LapTimes() {
 				<div className="px-2 py-3 text-sm text-zinc-700">no laps completed yet</div>
 			) : (
 				<div className="overflow-auto">
-					<table className="w-full text-sm">
+					<table className="w-full min-w-max text-sm">
 						<thead className="sticky top-0 bg-black">
 							<tr className="border-b-2 border-zinc-600">
 								<th className="px-2 py-0.5 text-left text-[11px] tracking-widest text-zinc-500 uppercase">LAP</th>

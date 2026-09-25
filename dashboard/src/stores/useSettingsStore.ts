@@ -61,7 +61,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				carMetrics: false,
 				setCarMetrics: (carMetrics: boolean) => set({ carMetrics }),
 
-				tableHeaders: false,
+				tableHeaders: true,
 				setTableHeaders: (tableHeaders: boolean) => set({ tableHeaders }),
 
 				showBestSectors: true,
@@ -93,8 +93,23 @@ export const useSettingsStore = create<SettingsStore>()(
 			{
 				name: "settings-storage",
 				storage: createJSONStorage(() => localStorage),
-				onRehydrateStorage: (state) => {
-					return () => state.setDelayIsPaused(false);
+				onRehydrateStorage: () => {
+					return (state) => {
+						if (!state) return;
+						state.setDelayIsPaused(false);
+
+						// Driver table headers now default on. Existing installs have
+						// `tableHeaders: false` persisted from when it was the default, so
+						// flip it once (guarded by a sentinel); after that it's theirs.
+						try {
+							if (localStorage.getItem("settings-table-headers-default-v1") === null) {
+								localStorage.setItem("settings-table-headers-default-v1", "1");
+								if (!state.tableHeaders) state.setTableHeaders(true);
+							}
+						} catch {
+							// localStorage unavailable — nothing to migrate
+						}
+					};
 				},
 			},
 		),

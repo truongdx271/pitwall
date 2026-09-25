@@ -84,7 +84,9 @@ export default function DashboardLayout({ children }: Props) {
 			<ReplayOverlay />
 			<Sidebar key="sidebar" connected={connected} />
 
-			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col gap-0">
+			{/* App content frame: a fixed max width, left-aligned, so dense views fill it
+			   and sparse ones don't sprawl across an ultrawide monitor. */}
+			<motion.div layout="size" className="flex h-full w-full max-w-[1600px] flex-1 flex-col gap-0">
 				<DesktopStaticBar show={!syncing || ended} />
 				<MobileStaticBar show={!syncing || ended} connected={connected} />
 

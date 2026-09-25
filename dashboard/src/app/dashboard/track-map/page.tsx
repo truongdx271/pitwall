@@ -16,8 +16,8 @@ import { useDataStore } from "@/stores/useDataStore";
 import type { Driver, TimingDataDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-const GRID_COLS = "7ch 3ch 4ch 8ch 8ch";
-const GRID_GAP = "1ch";
+const GRID_COLS = "7ch 3ch 5ch 8ch 9ch";
+const GRID_GAP = "1.5ch";
 
 export default function TrackMap() {
 	const drivers = useDataStore((state) => state.state?.DriverList);

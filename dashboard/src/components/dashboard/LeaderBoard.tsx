@@ -97,11 +97,11 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 		className="grid items-center border-b-2 border-zinc-600 py-0.5 pr-1 pl-2 font-mono text-base leading-none"
 		style={{ columnGap: DRIVER_GRID_GAP, gridTemplateColumns: driverGridCols(showPace) }}
 	>
-		<span className="text-[11px] tracking-widest text-zinc-500 uppercase">POS</span>
-		<span className="text-[11px] tracking-widest text-zinc-500 uppercase">OVT</span>
-		<span className="text-[11px] tracking-widest text-zinc-500 uppercase">TYRE</span>
-		<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">INFO</span>
-		<span className="text-[11px] tracking-widest text-zinc-700 uppercase">&lt;1s</span>
+		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">POS</span>
+		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">OVT</span>
+		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
+		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">INFO</span>
+		<span className="text-[11px] tracking-widest text-zinc-600 uppercase">&lt;1s</span>
 		<button
 			onClick={onToggleInterval}
 			className="cursor-pointer text-right text-[11px] tracking-widest text-zinc-400 uppercase transition-colors hover:text-zinc-200"
@@ -109,10 +109,10 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 		>
 			{showInterval ? "INT ↕" : "GAP ↕"}
 		</button>
-		<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">LAP</span>
-		<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">BEST</span>
-		<span className="text-[11px] tracking-widest text-zinc-500 uppercase">SECTORS</span>
-		{showPace && <span className="text-[11px] tracking-widest text-zinc-500 uppercase">PACE</span>}
+		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">LAP</span>
+		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
+		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">SECTORS</span>
+		{showPace && <span className="text-[11px] tracking-widest text-zinc-400 uppercase">PACE</span>}
 	</div>
 );
 

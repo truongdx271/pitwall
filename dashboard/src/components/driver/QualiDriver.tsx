@@ -12,7 +12,10 @@ import { formatDelta, parseTimeMs } from "@/lib/timeUtils";
 import DriverTag from "./DriverTag";
 import DriverTire from "./DriverTire";
 
-export const QUALI_GRID_COLS = "7ch 8ch 10ch 1fr 1fr 1fr 5ch";
+// Every column is a fixed width so the tower stays aligned regardless of what
+// each cell holds (live bars of varying length, deltas, blanks). Sector cells
+// right-align their content and clip overflow, so the times/Δ always line up.
+export const QUALI_GRID_COLS = "7ch 9ch 10ch 10ch 18ch 18ch 18ch 7ch";
 export const QUALI_GRID_GAP = "2ch";
 
 type Props = {
@@ -21,14 +24,22 @@ type Props = {
 	timingDriver: TimingDataDriver;
 	timingStats: TimingStatsDriver | undefined;
 	fastestSectors: (number | null)[];
+	/** fastest complete lap in the field, ms — for the gap-to-pole column */
+	poleMs: number;
 };
 
-export default function QualiDriver({ position, driver, timingDriver, timingStats }: Props) {
+export default function QualiDriver({ position, driver, timingDriver, timingStats, poleMs }: Props) {
 	const appTimingDriver = useDataStore((state) => state.state?.TimingAppData?.Lines[driver.RacingNumber]);
 	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
 
 	const isOut = timingDriver.KnockedOut || timingDriver.Retired || timingDriver.Stopped;
 	const hasFastestLap = timingStats?.PersonalBestLapTime.Position === 1;
+
+	// Gap to pole, computed from best laps — the quali feed has no reliable GapToLeader.
+	const bestMs = parseTimeMs(timingDriver.BestLapTime.Value ?? "");
+	const hasBest = isFinite(bestMs) && isFinite(poleMs);
+	const isPole = hasBest && bestMs <= poleMs;
+	const gapToPole = hasBest && !isPole ? (bestMs - poleMs) / 1000 : null;
 
 	return (
 		<motion.div
@@ -47,19 +58,15 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 			>
 				<DriverTag short={driver.Tla} teamColor={driver.TeamColour} position={position} />
 
-				{/* GAP to P1 best lap */}
+				{/* GAP to pole (P1 best lap) */}
 				<span
 					className={clsx("block w-full text-right tabular-nums", {
-						"text-emerald-400": !timingDriver.GapToLeader || timingDriver.GapToLeader === "0.000",
-						"text-zinc-300": timingDriver.GapToLeader && timingDriver.GapToLeader !== "0.000",
-						"text-zinc-700": !timingDriver.GapToLeader,
+						"text-emerald-400": isPole,
+						"text-zinc-300": gapToPole !== null,
+						"text-zinc-700": !hasBest,
 					})}
 				>
-					{timingDriver.GapToLeader
-						? timingDriver.GapToLeader === "0.000"
-							? "LEADER"
-							: `+${timingDriver.GapToLeader}`
-						: "---"}
+					{isPole ? "LEADER" : gapToPole !== null ? `+${gapToPole.toFixed(3)}` : "---"}
 				</span>
 
 				{/* Best lap time */}
@@ -71,6 +78,21 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 					})}
 				>
 					{timingDriver.BestLapTime.Value || "---"}
+				</span>
+
+				{/* Last lap time */}
+				<span
+					className={clsx("block w-full text-right tabular-nums", {
+						"text-violet-400": timingDriver.LastLapTime.OverallFastest,
+						"text-emerald-400": !timingDriver.LastLapTime.OverallFastest && timingDriver.LastLapTime.PersonalFastest,
+						"text-zinc-300":
+							!timingDriver.LastLapTime.OverallFastest &&
+							!timingDriver.LastLapTime.PersonalFastest &&
+							!!timingDriver.LastLapTime.Value,
+						"text-zinc-700": !timingDriver.LastLapTime.Value,
+					})}
+				>
+					{timingDriver.LastLapTime.Value || "---"}
 				</span>
 
 				{/* S1, S2, S3 — merged: best on top, current + Δ below */}
@@ -126,7 +148,7 @@ type SectorCellProps = {
  * `sector.PreviousValue`= sector from the previous lap  (don't show Δ — could be any lap)
  */
 function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProps) {
-	if (!sector) return <span className="text-zinc-800">---</span>;
+	if (!sector) return <span className="block text-right text-zinc-800">---</span>;
 
 	const bestTime = bestSector?.Value ?? "";
 	const curTime = sector.Value ?? "";
@@ -139,9 +161,10 @@ function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProp
 	const deltaMs = curTime && bestTime ? parseTimeMs(curTime) - parseTimeMs(bestTime) : null;
 
 	const displayTime = curTime || prevTime;
+	const hasLine2 = hasSegs || !!displayTime || deltaMs !== null;
 
 	return (
-		<span className="flex flex-col gap-[3px]">
+		<span className="flex min-w-0 flex-col items-end gap-px overflow-hidden">
 			{/* ── Line 1: personal best — always the standing reference ── */}
 			<span
 				className={clsx("whitespace-nowrap tabular-nums", {
@@ -153,38 +176,40 @@ function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProp
 				{bestTime || "---"}
 			</span>
 
-			{/* ── Line 2: mini-bars (always) + current/prev time + Δ ── */}
-			<span className="flex items-center gap-[0.5ch] text-[11px] leading-none whitespace-nowrap">
-				{hasSegs && (
-					<span className="flex items-center gap-px">
-						{sector.Segments.map((seg, j) => (
-							<MiniBlock key={j} status={seg.Status} />
-						))}
-					</span>
-				)}
-				{displayTime && (
-					<span
-						className={clsx("tabular-nums", {
-							"text-violet-400": sector.OverallFastest,
-							"text-emerald-400": !sector.OverallFastest && sector.PersonalFastest,
-							"text-zinc-400": !sector.OverallFastest && !sector.PersonalFastest && !!curTime,
-							"text-zinc-700": !curTime,
-						})}
-					>
-						{displayTime}
-					</span>
-				)}
-				{deltaMs !== null && (
-					<span
-						className={clsx("font-bold tabular-nums", {
-							"text-emerald-400": deltaMs < 0,
-							"text-red-500": deltaMs > 0,
-						})}
-					>
-						{formatDelta(deltaMs)}
-					</span>
-				)}
-			</span>
+			{/* ── Line 2: current/prev time + Δ (pinned right) with live bars trailing left ── */}
+			{hasLine2 && (
+				<span className="flex w-full items-center justify-end gap-[0.5ch] overflow-hidden text-[11px] leading-none whitespace-nowrap">
+					{hasSegs && (
+						<span className="flex min-w-0 shrink items-center gap-px overflow-hidden">
+							{sector.Segments.map((seg, j) => (
+								<MiniBlock key={j} status={seg.Status} />
+							))}
+						</span>
+					)}
+					{displayTime && (
+						<span
+							className={clsx("shrink-0 tabular-nums", {
+								"text-violet-400": sector.OverallFastest,
+								"text-emerald-400": !sector.OverallFastest && sector.PersonalFastest,
+								"text-zinc-400": !sector.OverallFastest && !sector.PersonalFastest && !!curTime,
+								"text-zinc-700": !curTime,
+							})}
+						>
+							{displayTime}
+						</span>
+					)}
+					{deltaMs !== null && (
+						<span
+							className={clsx("shrink-0 font-bold tabular-nums", {
+								"text-emerald-400": deltaMs < 0,
+								"text-red-500": deltaMs > 0,
+							})}
+						>
+							{formatDelta(deltaMs)}
+						</span>
+					)}
+				</span>
+			)}
 		</span>
 	);
 }

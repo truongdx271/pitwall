@@ -47,6 +47,12 @@ export default function QualiHelpModal({ onClose }: Props) {
 								accent="violet"
 								accentText="violeta = vuelta más rápida de todos"
 							/>
+							<Row
+								label="LAST"
+								desc="Última vuelta completada."
+								accent="emerald"
+								accentText="verde = PB de vuelta · violeta = la más rápida de todos"
+							/>
 							<Row label="S1 / S2 / S3" desc="Columnas de sector (ver detalle abajo)." />
 							<Row label="TYRE" desc="Compuesto actual. Número = vueltas en ese set." />
 						</div>

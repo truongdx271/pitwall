@@ -34,7 +34,7 @@ export default function SpeedTraps() {
 	const timingData = useDataStore((s) => s.state?.TimingData?.Lines);
 	const speedUnit = useSettingsStore((s) => s.speedUnit);
 
-	const unit = speedUnit === "metric" ? "km/h" : "mp/h";
+	const unit = speedUnit === "metric" ? "km/h" : "mph";
 
 	if (!timingStats || !driverList || !timingData) {
 		return <div className="px-2 py-1 font-mono text-sm text-zinc-700">waiting for session data...</div>;
@@ -45,7 +45,7 @@ export default function SpeedTraps() {
 		.sort(sortPos);
 
 	return (
-		<div className="w-full font-mono">
+		<div className="w-full max-w-3xl font-mono">
 			<div className="overflow-auto">
 				<table className="w-full text-sm">
 					<thead className="sticky top-0 bg-black">

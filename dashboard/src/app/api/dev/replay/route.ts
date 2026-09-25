@@ -7,8 +7,8 @@ import { merge } from "@/lib/merge";
 import { STATE_TOPICS, parseSignalrLine, projectMessage } from "@/lib/replayParse";
 
 // Dev-only endpoint: streams a recorded F1 session over SSE in the exact shape
-// `useSocket` / `useDataEngine` expect (`initial` + `update` events). Never enabled
-// in a production build.
+// `useSocket` / `useDataEngine` expect (`initial` + `update` events). 404s in a
+// production build unless DEV_REPLAY=1 (set on staging, never on prod).
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -93,7 +93,8 @@ function sseEvent(event: string, data: unknown): string {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function GET(request: Request): Promise<Response> {
-	if (process.env.NODE_ENV === "production") {
+	// Prod-locked, but a trusted non-prod deploy (staging) can opt in with DEV_REPLAY=1.
+	if (process.env.NODE_ENV === "production" && process.env.DEV_REPLAY !== "1") {
 		return new Response("Not found", { status: 404 });
 	}
 

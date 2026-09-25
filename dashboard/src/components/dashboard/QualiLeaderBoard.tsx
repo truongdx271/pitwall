@@ -37,6 +37,16 @@ export default function QualiLeaderBoard() {
 		});
 	}
 
+	// Pole time = fastest complete lap in the field. Drives the gap-to-pole column
+	// (the quali feed has no reliable GapToLeader).
+	let poleMs = Infinity;
+	if (driversTiming) {
+		Object.values(driversTiming.Lines).forEach((d) => {
+			const ms = parseTimeMs(d.BestLapTime?.Value ?? "");
+			if (ms < poleMs) poleMs = ms;
+		});
+	}
+
 	const sessionPart = driversTiming?.SessionPart;
 
 	return (
@@ -76,6 +86,7 @@ export default function QualiLeaderBoard() {
 										timingDriver={timingDriver}
 										timingStats={timingStats?.Lines[timingDriver.RacingNumber]}
 										fastestSectors={fastestSectors}
+										poleMs={poleMs}
 									/>
 								))}
 						</AnimatePresence>
@@ -92,25 +103,23 @@ function QualiHeaders({ fastestSectors }: { fastestSectors: (number | null)[] })
 			className="grid items-end border-b-2 border-zinc-600 py-0.5 pr-1 pl-2 font-mono text-base leading-none"
 			style={{ columnGap: QUALI_GRID_GAP, gridTemplateColumns: QUALI_GRID_COLS }}
 		>
-			<span className="text-[11px] tracking-widest text-zinc-500 uppercase">POS</span>
-			<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">GAP</span>
-			<span className="text-right text-[11px] tracking-widest text-zinc-500 uppercase">BEST</span>
+			<span className="text-[11px] tracking-widest text-zinc-400 uppercase">POS</span>
+			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">GAP</span>
+			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
+			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">LAST</span>
 
 			{[0, 1, 2].map((i) => (
-				<span key={`hdr-s${i}`} className="flex flex-col gap-[2px]">
-					{/* Fastest sector time across all drivers (tiny reference) */}
-					<span className="text-[10px] text-zinc-700 tabular-nums">
-						{fastestSectors[i] !== null ? (fastestSectors[i]! / 1000).toFixed(3) : ""}
-					</span>
-					{/* Column label + sub-label explaining the two rows */}
-					<span className="flex items-baseline gap-[0.5ch]">
-						<span className="text-[11px] tracking-widest text-zinc-500 uppercase">S{i + 1}</span>
-						<span className="text-[9px] text-zinc-700">cur/bl Δ</span>
-					</span>
+				<span key={`hdr-s${i}`} className="flex items-baseline justify-end gap-[0.5ch] overflow-hidden">
+					<span className="text-[11px] tracking-widest text-zinc-400 uppercase">S{i + 1}</span>
+					<span className="text-[9px] text-zinc-600">cur/bl Δ</span>
+					{/* fastest sector across the field (tiny reference) */}
+					{fastestSectors[i] !== null && (
+						<span className="text-[9px] text-zinc-600 tabular-nums">·{(fastestSectors[i]! / 1000).toFixed(3)}</span>
+					)}
 				</span>
 			))}
 
-			<span className="text-[11px] tracking-widest text-zinc-500 uppercase">TYRE</span>
+			<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
 		</div>
 	);
 }

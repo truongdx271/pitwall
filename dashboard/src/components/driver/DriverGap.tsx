@@ -23,6 +23,9 @@ export default function DriverGap({ timingDriver, sessionPart, showInterval = fa
 
 	const catching = timingDriver.IntervalToPositionAhead?.Catching;
 
+	// For the race leader the feed puts the current lap ("LAP 12") in the gap field.
+	const leaderLapMarker = /^LAP \d/i.test(gapToLeader);
+
 	if (showInterval) {
 		const isLeader = !gapToFront || gapToFront === "0.000";
 		return (
@@ -39,7 +42,7 @@ export default function DriverGap({ timingDriver, sessionPart, showInterval = fa
 		);
 	}
 
-	const isLeader = !gapToLeader || gapToLeader === "0.000";
+	const isLeader = !gapToLeader || gapToLeader === "0.000" || leaderLapMarker;
 	return (
 		<span
 			className={clsx("block w-full text-right tabular-nums", {

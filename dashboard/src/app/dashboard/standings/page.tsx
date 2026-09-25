@@ -26,7 +26,7 @@ export default function Standings() {
 	}
 
 	return (
-		<div className="grid grid-cols-1 font-mono lg:grid-cols-2 lg:divide-x lg:divide-zinc-800">
+		<div className="grid max-w-5xl grid-cols-1 font-mono lg:grid-cols-2 lg:divide-x lg:divide-zinc-800">
 			{/* Drivers */}
 			<div>
 				<div className="border-b-2 border-zinc-700 px-2 py-0.5 text-[11px] tracking-widest text-zinc-500 uppercase">

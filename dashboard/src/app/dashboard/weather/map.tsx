@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { fetchCoords } from "@/lib/geocode";
+import { fetchCityCoords, fetchCoords } from "@/lib/geocode";
 import { getRainviewer } from "@/lib/rainviewer";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -29,10 +29,10 @@ export function WeatherMap() {
 		);
 	}
 
-	return <RadarMap key={circuitKey} query={`${countryName}, ${location}`} />;
+	return <RadarMap key={circuitKey} query={`${countryName}, ${location}`} city={location} />;
 }
 
-function RadarMap({ query }: { query: string }) {
+function RadarMap({ query, city }: { query: string; city: string }) {
 	const [ready, setReady] = useState(false);
 	const [playing, setPlaying] = useState(false);
 	const [frames, setFrames] = useState<{ id: number; time: number }[]>([]);
@@ -82,7 +82,8 @@ function RadarMap({ query }: { query: string }) {
 			const coords =
 				(await fetchCoords(`${query} circuit`)) ??
 				(await fetchCoords(`${query} autodrome`)) ??
-				(await fetchCoords(query));
+				(await fetchCoords(query)) ??
+				(await fetchCityCoords(city));
 
 			if (cancelled || !container) return;
 
@@ -109,7 +110,7 @@ function RadarMap({ query }: { query: string }) {
 			mapRef.current?.remove();
 			mapRef.current = null;
 		};
-	}, [query]);
+	}, [query, city]);
 
 	const setFrame = (idx: number) => {
 		const map = mapRef.current;

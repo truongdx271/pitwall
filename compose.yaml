@@ -36,7 +36,7 @@ services:
       - RUST_LOG=realtime=info
       - ADDRESS=0.0.0.0:80
       - ORIGIN=${FRONTEND_URL}
-      - F1_DEV_URL=ws://simulator:3001/ws
+      # - F1_DEV_URL=ws://simulator:3001/ws  # replay mode; commented out for live F1
 
   web:
     build:

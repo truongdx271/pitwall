@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
-import type { PositionCar, TimingDataDriver } from "@/types/state.type";
+import type { PositionCar } from "@/types/state.type";
 import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
+import { useTrackAnimation } from "@/hooks/useTrackAnimation";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
 	createSectors,
@@ -24,79 +25,6 @@ import {
 
 const SPACE = 600;
 const ROTATION_FIX = 90;
-
-// Function to calculate driver position based on their segment progress
-function getDriverPosition(
-	timingDriver: TimingDataDriver | undefined,
-	originalTrackPoints: { x: number; y: number }[] | null,
-): PositionCar | null {
-	if (!timingDriver || !originalTrackPoints || originalTrackPoints.length === 0) {
-		return null;
-	}
-
-	// Get all segments from all sectors
-	const allSegments = timingDriver.Sectors.flatMap((sector) => sector.Segments);
-
-	if (allSegments.length === 0) {
-		// No segments available, position at start/finish line
-		return {
-			Status: "OnTrack",
-			X: originalTrackPoints[0].x,
-			Y: originalTrackPoints[0].y,
-			Z: 0,
-		};
-	}
-
-	// Find the furthest segment with a meaningful status
-	// Status values: 0 = not started, 1 = in progress, 2+ = completed
-	let furthestSegmentIndex = -1;
-	for (let i = allSegments.length - 1; i >= 0; i--) {
-		const status = allSegments[i].Status;
-		if (status !== undefined && status > 0) {
-			furthestSegmentIndex = i;
-			break;
-		}
-	}
-
-	// If no completed segments found, check for any segment with status 0 (current segment)
-	if (furthestSegmentIndex === -1) {
-		for (let i = 0; i < allSegments.length; i++) {
-			if (allSegments[i].Status !== undefined) {
-				furthestSegmentIndex = i;
-				break;
-			}
-		}
-	}
-
-	// Still no segments found, default to start
-	if (furthestSegmentIndex === -1) {
-		furthestSegmentIndex = 0;
-	}
-
-	// Calculate position index based on segment progress
-	// Add small offset for in-progress segments to show forward movement
-	const baseRatio = furthestSegmentIndex / Math.max(allSegments.length - 1, 1);
-	const currentSegmentStatus = allSegments[furthestSegmentIndex]?.Status || 0;
-
-	// Add fractional progress within current segment if it's in progress (status 1)
-	const segmentProgress = currentSegmentStatus === 1 ? 0.5 : 0;
-	const segmentSize = 1 / Math.max(allSegments.length, 1);
-	const adjustedRatio = baseRatio + segmentProgress * segmentSize;
-
-	const positionIndex = Math.floor(adjustedRatio * (originalTrackPoints.length - 1));
-
-	// Ensure we don't go out of bounds
-	const safeIndex = Math.min(Math.max(positionIndex, 0), originalTrackPoints.length - 1);
-
-	const trackPoint = originalTrackPoints[safeIndex];
-
-	return {
-		Status: "OnTrack",
-		X: trackPoint.x,
-		Y: trackPoint.y,
-		Z: 0,
-	};
-}
 
 type Corner = {
 	number: number;
@@ -226,6 +154,17 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 			.sort(prioritizeColoredSectors);
 	}, [trackStatus, sectors, yellowSectors]);
 
+	// No Position.z (F1 now withholds it from unauthenticated clients): animate estimated positions.
+	const estimated = !positions;
+	const carRef = useTrackAnimation({
+		enabled: estimated,
+		trackPoints: originalTrackPoints,
+		timingLines: timingDrivers?.Lines,
+		rotation,
+		centerX,
+		centerY,
+	});
+
 	if (unavailable || !circuitKey) {
 		return (
 			<div
@@ -337,9 +276,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 								const pit = timingDriver ? timingDriver.InPit : false;
 
 								const realPos = positions?.[driver.RacingNumber];
-								const driverPosition = realPos ?? getDriverPosition(timingDriver, originalTrackPoints);
-
-								if (!driverPosition) return null;
+								if (!estimated && !realPos) return null;
 
 								return (
 									<CarDot
@@ -349,7 +286,8 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 										color={driver.TeamColour}
 										pit={pit}
 										hidden={hidden}
-										pos={driverPosition}
+										pos={realPos}
+										animRef={estimated ? carRef(driver.RacingNumber) : undefined}
 										rotation={rotation}
 										centerX={centerX}
 										centerY={centerY}
@@ -385,23 +323,37 @@ type CarDotProps = {
 	pit: boolean;
 	hidden: boolean;
 
-	pos: PositionCar;
+	// Either a real position, or a ref the track animation writes transforms into.
+	pos?: PositionCar;
+	animRef?: (node: SVGGElement | null) => void;
 	rotation: number;
 
 	centerX: number;
 	centerY: number;
 };
 
-const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
-	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
-	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
+const CarDot = ({
+	pos,
+	animRef,
+	name,
+	color,
+	favoriteDriver,
+	pit,
+	hidden,
+	rotation,
+	centerX,
+	centerY,
+}: CarDotProps) => {
+	const rotatedPos = pos ? rotate(pos.X, pos.Y, rotation, centerX, centerY) : null;
+	const transform = rotatedPos ? `translateX(${rotatedPos.x}px) translateY(${rotatedPos.y}px)` : undefined;
 
 	return (
 		<g
+			ref={animRef}
 			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0!": hidden })}
 			style={{
-				transition: "all 1s linear",
-				transform,
+				// Animated dots get their transform every frame; only real positions tween via CSS.
+				...(transform && { transition: "all 1s linear", transform }),
 				...(color && { fill: `#${color}` }),
 			}}
 		>

@@ -5,6 +5,7 @@ import type { PositionCar } from "@/types/state.type";
 import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
+import { textOn } from "@/lib/color";
 
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
@@ -23,8 +24,15 @@ import {
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
 
-const SPACE = 600;
+// Padding around the track so corner badges on the outside are not clipped.
+const SPACE = 800;
 const ROTATION_FIX = 90;
+
+// In map units, sized against the 300-wide track outline.
+const FINISH_LINE_WIDTH = 300;
+const CORNER_LABEL_OFFSET = 480;
+const CORNER_RADIUS = 210;
+const CAR_RADIUS = 340;
 
 type Corner = {
 	number: number;
@@ -93,8 +101,8 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 				number: corner.number,
 				pos: rotate(corner.trackPosition.x, corner.trackPosition.y, fixedRotation, centerX, centerY),
 				labelPos: rotate(
-					corner.trackPosition.x + 540 * Math.cos(rad(corner.angle)),
-					corner.trackPosition.y + 540 * Math.sin(rad(corner.angle)),
+					corner.trackPosition.x + CORNER_LABEL_OFFSET * Math.cos(rad(corner.angle)),
+					corner.trackPosition.y + CORNER_LABEL_OFFSET * Math.sin(rad(corner.angle)),
 					fixedRotation,
 					centerX,
 					centerY,
@@ -240,18 +248,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 					);
 				})}
 
-				{finishLine && !outlineOnly && (
-					<rect
-						x={finishLine.x - 75}
-						y={finishLine.y}
-						width={240}
-						height={20}
-						fill="red"
-						stroke="red"
-						strokeWidth={70}
-						transform={`rotate(${finishLine.startAngle + 90}, ${finishLine.x + 25}, ${finishLine.y})`}
-					/>
-				)}
+				{finishLine && !outlineOnly && <FinishLine x={finishLine.x} y={finishLine.y} angle={finishLine.startAngle} />}
 
 				{showCornerNumbers &&
 					corners.map((corner) => (
@@ -266,7 +263,12 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 				{centerX && centerY && drivers && timingDrivers && (
 					<>
 						{Object.values(drivers)
-							.reverse()
+							// Draw the leader last so it sits on top when cars overlap.
+							.sort(
+								(a, b) =>
+									racePosition(timingDrivers.Lines[b.RacingNumber]?.Position) -
+									racePosition(timingDrivers.Lines[a.RacingNumber]?.Position),
+							)
 							.filter((driver) => (filter ? filter.includes(driver.RacingNumber) : true))
 							.map((driver) => {
 								const timingDriver = timingDrivers?.Lines[driver.RacingNumber];
@@ -301,17 +303,59 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 	);
 }
 
+// Unknown positions sort as last, so they are drawn first (underneath).
+const racePosition = (position: string | undefined) => {
+	const n = parseInt(position ?? "");
+	return Number.isFinite(n) ? n : 99;
+};
+
+const CHECKER_ROWS = 2;
+const CHECKER_COLS = 6;
+
+type FinishLineProps = {
+	x: number;
+	y: number;
+	angle: number;
+};
+
+// Chequered strip across the track at the start/finish point; x runs along the direction of travel.
+const FinishLine = ({ x, y, angle }: FinishLineProps) => {
+	const cell = FINISH_LINE_WIDTH / CHECKER_COLS;
+
+	return (
+		<g transform={`translate(${x}, ${y}) rotate(${angle})`}>
+			{Array.from({ length: CHECKER_ROWS * CHECKER_COLS }, (_, i) => {
+				const row = Math.floor(i / CHECKER_COLS);
+				const col = i % CHECKER_COLS;
+				return (
+					<rect
+						key={`finish.${i}`}
+						x={(row - CHECKER_ROWS / 2) * cell}
+						y={col * cell - FINISH_LINE_WIDTH / 2}
+						width={cell}
+						height={cell}
+						fill={(row + col) % 2 === 0 ? "#fff" : "#000"}
+					/>
+				);
+			})}
+		</g>
+	);
+};
+
 type CornerNumberProps = {
 	number: number;
 	x: number;
 	y: number;
 };
 
-const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
+const CornerNumber = ({ number, x, y }: CornerNumberProps) => {
 	return (
-		<text x={x} y={y} className="fill-zinc-700" fontSize={300} fontWeight="semibold">
-			{number}
-		</text>
+		<g transform={`translate(${x}, ${y})`}>
+			<circle r={CORNER_RADIUS} className="fill-zinc-900 stroke-zinc-600" strokeWidth={25} />
+			<text className="fill-zinc-300" fontSize={230} fontWeight="bold" textAnchor="middle" dominantBaseline="central">
+				{number}
+			</text>
+		</g>
 	);
 };
 
@@ -350,39 +394,19 @@ const CarDot = ({
 	return (
 		<g
 			ref={animRef}
-			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0!": hidden })}
+			className={clsx({ "opacity-40": pit }, { "opacity-0!": hidden })}
 			style={{
 				// Animated dots get their transform every frame; only real positions tween via CSS.
 				...(transform && { transition: "all 1s linear", transform }),
-				...(color && { fill: `#${color}` }),
 			}}
 		>
-			<circle id={`map.driver.circle`} r={120} />
-			<text
-				id={`map.driver.text`}
-				fontWeight="bold"
-				fontSize={120 * 2.6}
-				stroke="#000"
-				strokeWidth={90}
-				strokeLinejoin="round"
-				paintOrder="stroke"
-				style={{
-					transform: "translateX(150px) translateY(-120px)",
-				}}
-			>
+			{favoriteDriver && <circle className="stroke-sky-400" r={CAR_RADIUS + 90} fill="transparent" strokeWidth={65} />}
+
+			<circle r={CAR_RADIUS} fill={color ? `#${color}` : "#3f3f46"} stroke="#000" strokeWidth={50} />
+
+			<text fill={textOn(color)} fontSize={235} fontWeight="bold" textAnchor="middle" dominantBaseline="central">
 				{name}
 			</text>
-
-			{favoriteDriver && (
-				<circle
-					id={`map.driver.favorite`}
-					className="stroke-sky-400"
-					r={180}
-					fill="transparent"
-					strokeWidth={40}
-					style={{ transition: "all 1s linear" }}
-				/>
-			)}
 		</g>
 	);
 };

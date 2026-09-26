@@ -3,6 +3,7 @@
 import { useDataStore } from "@/stores/useDataStore";
 import { stintLaps, tyreLapScale } from "@/lib/tyreStrategy";
 import type { Stint } from "@/types/state.type";
+import { isLight } from "@/lib/color";
 
 const COMPOUND_COLORS: Record<string, string> = {
 	SOFT: "#E8002D",
@@ -32,14 +33,6 @@ const COMPOUND_LETTER: Record<string, string> = {
 };
 
 const X_TICKS = 10;
-
-function isLight(hex: string): boolean {
-	if (!hex || hex.length < 6) return false;
-	const r = parseInt(hex.slice(0, 2), 16);
-	const g = parseInt(hex.slice(2, 4), 16);
-	const b = parseInt(hex.slice(4, 6), 16);
-	return (r * 299 + g * 587 + b * 114) / 1000 > 128;
-}
 
 export default function TyreStrategy() {
 	const timingApp = useDataStore((s) => s.state?.TimingAppData?.Lines);

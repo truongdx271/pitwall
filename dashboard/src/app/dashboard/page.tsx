@@ -9,6 +9,7 @@ import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
 import RaceControl from "@/components/dashboard/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
+import RadioTranscripts from "@/components/dashboard/RadioTranscripts";
 import TrackViolations from "@/components/dashboard/TrackViolations";
 import Map from "@/components/dashboard/Map";
 import Footer from "@/components/Footer";
@@ -73,8 +74,13 @@ export default function Page() {
 				{activeTab === "timing" && (
 					<div className="flex w-full flex-col">
 						{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
-						<div className="h-[40vh] min-h-64 overflow-hidden border-t border-zinc-800 py-2">
-							<Map />
+						<div className="grid border-t border-zinc-800 md:h-[40vh] md:min-h-64 md:grid-cols-2">
+							<div className="h-[40vh] min-h-64 overflow-hidden py-2 md:h-auto md:min-h-0">
+								<Map />
+							</div>
+							<div className="h-[40vh] min-h-64 overflow-hidden border-t border-zinc-800 py-2 md:h-auto md:min-h-0 md:border-t-0 md:border-l">
+								<RadioTranscripts />
+							</div>
 						</div>
 					</div>
 				)}

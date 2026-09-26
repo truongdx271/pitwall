@@ -5,10 +5,7 @@ import { MAX_ATTEMPTS, retryDelayMs, transcriptUrl } from "@/lib/radioTranscript
 describe("transcriptUrl", () => {
 	it("joins session and clip path and encodes it", () => {
 		expect(
-			transcriptUrl(
-				"2026/2026-05-24_Canadian_Grand_Prix/2026-05-24_Race/",
-				"TeamRadio/LEC_16_20260524_130022.mp3",
-			),
+			transcriptUrl("2026/2026-05-24_Canadian_Grand_Prix/2026-05-24_Race/", "TeamRadio/LEC_16_20260524_130022.mp3"),
 		).toBe(
 			"/api/radio/transcript?path=2026%2F2026-05-24_Canadian_Grand_Prix%2F2026-05-24_Race%2FTeamRadio%2FLEC_16_20260524_130022.mp3",
 		);

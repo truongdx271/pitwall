@@ -24,7 +24,7 @@ export default function RaceHelpModal({ onClose }: Props) {
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-zinc-700 px-4 py-2">
-					<span className="text-[11px] tracking-widest text-zinc-500 uppercase">carrera — ayuda</span>
+					<span className="text-[11px] tracking-widest text-zinc-500 uppercase">race — help</span>
 					<button
 						onClick={onClose}
 						className="text-lg leading-none text-zinc-600 hover:text-zinc-300"
@@ -37,52 +37,49 @@ export default function RaceHelpModal({ onClose }: Props) {
 				<div className="space-y-5 p-4">
 					{/* Column overview */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columnas</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columns</div>
 						<div className="space-y-1 text-zinc-400">
-							<Row label="POS" desc="Posición actual en carrera + sigla del piloto con barra de color del equipo." />
-							<Row label="TYRE" desc="Últimos 3 stints (del más viejo al actual): compuesto y vueltas en cada stint." />
-							<Row label="INFO" desc="Estado del piloto (ver detalle abajo)." />
-							<Row label="GAP" desc="Diferencia con el líder." />
-							<Row label="INT" desc="Intervalo: diferencia con el auto de adelante. Verde = lo está alcanzando." />
-							<Row label="LAP" desc="Última vuelta completada. Si no hay, muestra la mejor vuelta de la sesión." />
-							<Row label="SECTORS" desc="Barras de minisector en tiempo real (ver detalle abajo)." />
+							<Row label="POS" desc="Current race position + driver code with team colour." />
+							<Row label="INFO" desc="Driver status (see below)." />
+							<Row
+								label="<1s"
+								desc="Within one second of the car ahead: the fuller and redder the bar, the closer the car."
+							/>
+							<Row label="GAP" desc="Gap to the leader." />
+							<Row label="INT" desc="Interval to the car ahead. Green = closing in." />
+							<Row label="LAP" desc="Last completed lap. If there is none yet, shows the best lap of the session." />
+							<Row label="BEST" desc="Driver's best lap of the race." />
+							<Row label="SECTORS" desc="Live mini-sector bars (see below)." />
+							<Row label="TYRE" desc="Last 3 stints (oldest to current): compound and laps on each set." />
 							<Row
 								label="PACE"
-								desc="Ritmo promedio por stint, excluyendo vueltas de entrada/salida de pits (ver detalle abajo)."
+								desc="Average pace per stint, excluding pit in/out laps. Toggle with the PACE button (see below)."
 							/>
 						</div>
 					</section>
 
 					{/* INFO column */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-							columna INFO — estado del piloto
-						</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">INFO column — driver status</div>
 						<div className="space-y-1 text-[12px]">
 							<ColorRow
 								color="text-violet-400"
 								char="FL"
-								desc="Fastest Lap — este piloto tiene la vuelta más rápida de la carrera."
+								desc="Fastest lap — this driver holds the fastest lap of the race."
 							/>
-							<ColorRow
-								color="text-emerald-400"
-								char="+N"
-								desc="Ganó N posiciones respecto a su posición de largada."
-							/>
-							<ColorRow color="text-red-400" char="−N" desc="Perdió N posiciones respecto a su posición de largada." />
-							<ColorRow color="text-zinc-600" char="NL" desc="Sin cambios de posición — muestra vueltas completadas." />
-							<ColorRow color="text-cyan-400" char="PIT" desc="En boxes en este momento." />
-							<ColorRow color="text-cyan-400" char="OUT" desc="Saliendo de boxes." />
-							<ColorRow color="text-red-400" char="RET" desc="Retirado de la carrera." />
-							<ColorRow color="text-red-400" char="STP" desc="Detenido en pista." />
+							<ColorRow color="text-emerald-400" char="+N" desc="Gained N positions since the start." />
+							<ColorRow color="text-red-400" char="−N" desc="Lost N positions since the start." />
+							<ColorRow color="text-zinc-600" char="NL" desc="No position change — shows laps completed." />
+							<ColorRow color="text-cyan-400" char="PIT" desc="In the pit lane right now." />
+							<ColorRow color="text-cyan-400" char="OUT" desc="Leaving the pits." />
+							<ColorRow color="text-red-400" char="RET" desc="Retired from the race." />
+							<ColorRow color="text-red-400" char="STP" desc="Stopped on track." />
 						</div>
 					</section>
 
 					{/* PACE column */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-							columna PACE — análisis de ritmo por stint
-						</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">PACE column — pace per stint</div>
 
 						<div className="mb-3 border border-zinc-800 p-3 text-zinc-400">
 							<div className="mb-2 flex items-baseline gap-4 text-[12px]">
@@ -97,101 +94,101 @@ export default function RaceHelpModal({ onClose }: Props) {
 								</span>
 							</div>
 							<p className="text-[11px] text-zinc-600">
-								Stint 1 en blando: promedio 1:15.4 · Stint actual en medio: promedio 1:16.2, degradando +0.04s por
-								vuelta
+								Stint 1 on softs: average 1:15.4 · Current stint on mediums: average 1:16.2, degrading +0.04s per lap
 							</p>
 						</div>
 
 						<div className="space-y-1 text-[12px]">
 							<p className="text-zinc-400">
-								<span className="text-zinc-300">Letra del compuesto</span>
-								{" — "}en color del compuesto (ver neumáticos abajo).
+								<span className="text-zinc-300">Compound letter</span>
+								{" — "}in the compound&apos;s colour (see tyres below).
 							</p>
 							<p className="text-zinc-400">
-								<span className="text-zinc-300">Tiempo promedio</span>
-								{" — "}media de las vueltas de ritmo del stint (excluye vuelta de salida de pits y vuelta de entrada).
-								El stint actual aparece en <span className="text-zinc-200">blanco</span>, los pasados en{" "}
-								<span className="text-zinc-500">gris</span>.
+								<span className="text-zinc-300">Average time</span>
+								{" — "}mean of the stint&apos;s racing laps (excludes the pit out-lap and in-lap). The current stint is
+								shown in <span className="text-zinc-200">white</span>, earlier ones in{" "}
+								<span className="text-zinc-500">grey</span>.
 							</p>
 							<p className="text-zinc-400">
-								<span className="text-zinc-300">Degradación (+/−)</span>
-								{" — "}cuántos segundos por vuelta está empeorando (o mejorando) el ritmo dentro del stint. Solo aparece
-								si hay suficientes vueltas. <span className="text-red-500">Rojo</span> = degradación alta,{" "}
-								<span className="text-emerald-500">verde</span> = mejorando.
+								<span className="text-zinc-300">Degradation (+/−)</span>
+								{" — "}how many seconds per lap the pace is getting worse (or better) within the stint. Only shown once
+								there are enough laps. <span className="text-red-500">Red</span> = high degradation,{" "}
+								<span className="text-emerald-500">green</span> = improving.
 							</p>
 							<p className="mt-1 text-[11px] text-zinc-600">
-								Si el piloto tiene pocas vueltas en el stint actual el promedio puede no ser representativo todavía.
+								With only a few laps in the current stint, the average may not be representative yet.
 							</p>
 						</div>
 					</section>
 
 					{/* Sectors */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-							barras de minisector (SECTORS)
-						</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">mini-sector bars (SECTORS)</div>
 						<div className="space-y-1 text-[12px]">
 							<ColorRow
 								color="text-violet-400"
 								char="█"
-								desc="Más rápido de todos en ese minisector (overall fastest)."
+								desc="Fastest of all drivers in that mini-sector (overall fastest)."
 							/>
-							<ColorRow color="text-emerald-400" char="█" desc="Mejor personal del piloto en ese minisector." />
-							<ColorRow color="text-amber-400" char="█" desc="En tiempo, sin comparación disponible." />
-							<ColorRow color="text-blue-400" char="█" desc="Vuelta de entrada o salida de pits." />
-							<ColorRow color="text-zinc-700" char="▒" desc="Minisector aún no recorrido en esta vuelta." />
+							<ColorRow color="text-emerald-400" char="█" desc="Driver's personal best in that mini-sector." />
+							<ColorRow color="text-amber-400" char="█" desc="Completed, no improvement." />
+							<ColorRow color="text-blue-400" char="█" desc="Pit in-lap or out-lap." />
+							<ColorRow color="text-zinc-700" char="▒" desc="Mini-sector not yet reached on this lap." />
 						</div>
 					</section>
 
 					{/* Lap time colors */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">colores de tiempos de vuelta</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">lap time colours</div>
 						<div className="space-y-1 text-[12px]">
-							<ColorRow color="text-violet-400" char="1:15.387" desc="Vuelta más rápida de la carrera (fastest lap)." />
-							<ColorRow color="text-emerald-400" char="1:16.012" desc="Mejor vuelta personal del piloto." />
-							<ColorRow color="text-zinc-300" char="1:17.540" desc="Vuelta normal de esta ronda." />
+							<ColorRow color="text-violet-400" char="1:15.387" desc="Fastest lap of the race." />
+							<ColorRow color="text-emerald-400" char="1:16.012" desc="Driver's personal best lap." />
+							<ColorRow color="text-zinc-300" char="1:17.540" desc="Regular lap." />
 							<ColorRow
 								color="text-zinc-600"
 								char="1:18.201"
-								desc="Mejor vuelta de la sesión (si no hay última vuelta)."
+								desc="Best lap of the session (when there is no last lap)."
 							/>
 						</div>
 					</section>
 
 					{/* Tyre legend */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">neumáticos</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">tyres</div>
 						<div className="space-y-1 text-[12px]">
-							<TyreRow bg="bg-red-500" char="S" label="SOFT" desc="Blando — rojo" />
-							<TyreRow bg="bg-yellow-300" char="M" label="MEDIUM" desc="Medio — amarillo" />
-							<TyreRow bg="bg-zinc-100" char="H" label="HARD" desc="Duro — blanco" />
-							<TyreRow bg="bg-green-500" char="I" label="INTERMEDIATE" desc="Intermedio — verde" />
-							<TyreRow bg="bg-blue-500" char="W" label="WET" desc="Full wet — azul" />
+							<TyreRow bg="bg-red-500" char="S" label="SOFT" desc="red" />
+							<TyreRow bg="bg-yellow-300" char="M" label="MEDIUM" desc="yellow" />
+							<TyreRow bg="bg-zinc-100" char="H" label="HARD" desc="white" />
+							<TyreRow bg="bg-green-500" char="I" label="INTERMEDIATE" desc="green" />
+							<TyreRow bg="bg-blue-500" char="W" label="WET" desc="blue" />
 						</div>
-						<p className="mt-1 text-[11px] text-zinc-700">
-							El número tras la letra indica vueltas en ese set. pN = número de paradas.
-						</p>
+						<p className="mt-1 text-[11px] text-zinc-700">The number after the letter is the laps on that set.</p>
 					</section>
 
 					{/* Row highlight colors */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">color de fila</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">row colour</div>
 						<div className="space-y-1 text-[12px] text-zinc-400">
 							<p>
-								<span className="text-violet-400">Violeta</span> — piloto con la vuelta más rápida de la carrera.
+								<span className="text-violet-400">Violet</span> — driver with the fastest lap of the race.
 							</p>
 							<p>
-								<span className="text-sky-400">Azul</span> — piloto marcado como favorito en ajustes.
+								<span className="text-sky-400">Blue</span> — driver marked as a favourite in settings.
 							</p>
 							<p>
-								<span className="text-zinc-600">Opacidad reducida</span> — piloto retirado, detenido o fuera de carrera.
+								<span className="text-zinc-600">Dimmed</span> — driver retired, stopped or out of the race.
 							</p>
 						</div>
 					</section>
 
-					<div className="border-t border-zinc-800 pt-3 text-[11px] text-zinc-600">
-						TIP: hacé click en GAP para alternar entre diferencia al líder e intervalo con el auto de adelante.
-					</div>
+					{/* Team radio panel */}
+					<section>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">team radio (next to the map)</div>
+						<p className="text-[12px] text-zinc-400">
+							The latest 20 team radio clips as text, newest first. Transcripts are generated automatically (Whisper)
+							and can mishear noisy radio — listen to the clip in the RADIOS tab when in doubt.
+						</p>
+					</section>
 				</div>
 			</div>
 		</div>

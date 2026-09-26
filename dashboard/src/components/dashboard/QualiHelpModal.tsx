@@ -37,31 +37,31 @@ export default function QualiHelpModal({ onClose }: Props) {
 				<div className="space-y-5 p-4">
 					{/* Layout overview */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columnas</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columns</div>
 						<div className="space-y-1 text-zinc-400">
-							<Row label="POS" desc="Posición en la clasificación según mejor vuelta." />
-							<Row label="GAP" desc="Diferencia con el líder (pole). LEADER = P1." />
+							<Row label="POS" desc="Qualifying position by best lap." />
+							<Row label="GAP" desc="Gap to the leader (pole). LEADER = P1." />
 							<Row
 								label="BEST"
-								desc="Mejor vuelta completa del piloto en la sesión."
+								desc="Driver's best complete lap of the session."
 								accent="violet"
-								accentText="violeta = vuelta más rápida de todos"
+								accentText="violet = fastest of all"
 							/>
 							<Row
 								label="LAST"
-								desc="Última vuelta completada."
+								desc="Last completed lap."
 								accent="emerald"
-								accentText="verde = PB de vuelta · violeta = la más rápida de todos"
+								accentText="green = lap PB · violet = fastest of all"
 							/>
-							<Row label="S1 / S2 / S3" desc="Columnas de sector (ver detalle abajo)." />
-							<Row label="TYRE" desc="Compuesto actual. Número = vueltas en ese set." />
+							<Row label="S1 / S2 / S3" desc="Sector columns (see below)." />
+							<Row label="TYRE" desc="Current compound. Number = laps on that set, pN = pit stops." />
 						</div>
 					</section>
 
 					{/* Sector column detail */}
 					<section>
 						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-							cada columna de sector (S1, S2, S3)
+							each sector column (S1, S2, S3)
 						</div>
 
 						<div className="border border-zinc-800 p-3 text-zinc-400">
@@ -75,23 +75,23 @@ export default function QualiHelpModal({ onClose }: Props) {
 
 							<div className="space-y-1 text-[12px]">
 								<p>
-									<span className="text-zinc-300">Línea 1 (grande)</span>
-									{" — "}mejor sector personal del piloto en la sesión. Referencia fija.
+									<span className="text-zinc-300">Line 1 (large)</span>
+									{" — "}driver&apos;s best sector of the session. Fixed reference.
 								</p>
 								<p>
-									<span className="text-zinc-300">Línea 2 (chica)</span>
-									{" — "}lo que está pasando en la vuelta actual:
+									<span className="text-zinc-300">Line 2 (small)</span>
+									{" — "}what is happening on the current lap:
 								</p>
 								<ul className="ml-3 space-y-0.5 text-zinc-500">
 									<li>
-										<span className="text-amber-400">████</span> barras = piloto transitando ese sector ahora
+										<span className="text-amber-400">████</span> bars = driver is in this sector now
 									</li>
-									<li>número = tiempo del sector completado en esta vuelta</li>
+									<li>number = sector time completed on this lap</li>
 									<li>
-										<span className="text-red-500">+X.XXX</span> = cuánto más lento que su mejor en ese sector
+										<span className="text-red-500">+X.XXX</span> = how much slower than their best in this sector
 									</li>
 									<li>
-										<span className="text-emerald-400">−X.XXX</span> = está mejorando su mejor sector (PB en ruta)
+										<span className="text-emerald-400">−X.XXX</span> = improving on their best sector (PB on the way)
 									</li>
 								</ul>
 							</div>
@@ -100,85 +100,77 @@ export default function QualiHelpModal({ onClose }: Props) {
 
 					{/* Sector bar colors */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-							colores de las barras de minisector (█)
-						</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">mini-sector bar colours (█)</div>
 						<div className="space-y-1 text-[12px]">
 							<ColorRow
 								color="text-violet-400"
 								char="█"
-								label="VIOLETA"
-								desc="Más rápido de todos los pilotos en ese minisector"
+								label="VIOLET"
+								desc="Fastest of all drivers in that mini-sector"
 							/>
 							<ColorRow
 								color="text-emerald-400"
 								char="█"
-								label="VERDE"
-								desc="Mejor personal del piloto en ese minisector"
+								label="GREEN"
+								desc="Driver's personal best in that mini-sector"
 							/>
-							<ColorRow
-								color="text-amber-400"
-								char="█"
-								label="AMARILLO"
-								desc="En tiempo, sin comparación (mismo paso que su mejor)"
-							/>
-							<ColorRow color="text-blue-400" char="█" label="AZUL" desc="Vuelta de entrada o salida de pits" />
-							<ColorRow color="text-zinc-700" char="▒" label="GRIS" desc="Minisector aún no recorrido" />
+							<ColorRow color="text-amber-400" char="█" label="YELLOW" desc="Completed, no improvement on their best" />
+							<ColorRow color="text-blue-400" char="█" label="BLUE" desc="Pit in-lap or out-lap" />
+							<ColorRow color="text-zinc-700" char="▒" label="GREY" desc="Mini-sector not yet reached" />
 						</div>
 					</section>
 
 					{/* Lap time colors */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">colores de tiempos</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">time colours</div>
 						<div className="space-y-1 text-[12px]">
 							<ColorRow
 								color="text-violet-400"
 								char="1:12.578"
 								label=""
-								desc="Vuelta / sector más rápido de la sesión (overall fastest)"
+								desc="Fastest lap / sector of the session (overall fastest)"
 							/>
-							<ColorRow color="text-emerald-400" char="20.547" label="" desc="Mejor personal (personal fastest)" />
-							<ColorRow color="text-zinc-300" char="26.755" label="" desc="Tiempo normal de esta vuelta" />
-							<ColorRow color="text-zinc-700" char="29.081" label="" desc="Tiempo de una vuelta anterior (sin delta)" />
+							<ColorRow color="text-emerald-400" char="20.547" label="" desc="Personal best" />
+							<ColorRow color="text-zinc-300" char="26.755" label="" desc="Regular time on this lap" />
+							<ColorRow color="text-zinc-700" char="29.081" label="" desc="Time from a previous lap (no delta)" />
 						</div>
 					</section>
 
 					{/* Session parts */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">partes de la sesión</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">session parts</div>
 						<div className="space-y-1 text-[12px] text-zinc-400">
 							<p>
-								<span className="text-zinc-200">Q1</span> — 22 pilotos, eliminan los 6 más lentos (16 pasan)
+								<span className="text-zinc-200">Q1</span> — 22 drivers, the 6 slowest are knocked out (16 go through)
 							</p>
 							<p>
-								<span className="text-zinc-200">Q2</span> — 16 pilotos, eliminan los 6 más lentos (10 pasan)
+								<span className="text-zinc-200">Q2</span> — 16 drivers, the 6 slowest are knocked out (10 go through)
 							</p>
 							<p>
-								<span className="text-zinc-200">Q3</span> — 10 pilotos pelean por la pole position
+								<span className="text-zinc-200">Q3</span> — 10 drivers fight for pole position
 							</p>
-							<p className="text-zinc-600">Los pilotos eliminados aparecen con opacidad reducida.</p>
+							<p className="text-zinc-600">Knocked-out drivers are dimmed.</p>
 						</div>
 					</section>
 
 					{/* Tyre legend */}
 					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">neumáticos</div>
+						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">tyres</div>
 						<div className="space-y-1 text-[12px]">
-							<TyreRow bg="bg-red-500" char="S" label="SOFT" desc="Blando — rojo" />
-							<TyreRow bg="bg-yellow-300" char="M" label="MEDIUM" desc="Medio — amarillo" />
-							<TyreRow bg="bg-zinc-100" char="H" label="HARD" desc="Duro — blanco" />
-							<TyreRow bg="bg-green-500" char="I" label="INTERMEDIATE" desc="Intermedio — verde" />
-							<TyreRow bg="bg-blue-500" char="W" label="WET" desc="Full wet — azul" />
+							<TyreRow bg="bg-red-500" char="S" label="SOFT" desc="red" />
+							<TyreRow bg="bg-yellow-300" char="M" label="MEDIUM" desc="yellow" />
+							<TyreRow bg="bg-zinc-100" char="H" label="HARD" desc="white" />
+							<TyreRow bg="bg-green-500" char="I" label="INTERMEDIATE" desc="green" />
+							<TyreRow bg="bg-blue-500" char="W" label="WET" desc="blue" />
 						</div>
 						<p className="mt-1 text-[11px] text-zinc-700">
-							El número tras la letra indica vueltas en ese set. * = neumático usado.
+							The number after the letter is the laps on that set. pN = pit stops.
 						</p>
 					</section>
 
 					{/* Tip */}
 					<div className="border-t border-zinc-800 pt-3 text-[11px] text-zinc-600">
-						TIP: las barras de minisector se actualizan en tiempo real — si están en verde el piloto viene más rápido
-						que su mejor en ese minisector.
+						TIP: mini-sector bars update live — green means the driver is faster than their best in that mini-sector.
 					</div>
 				</div>
 			</div>

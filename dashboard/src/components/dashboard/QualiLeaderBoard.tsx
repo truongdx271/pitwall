@@ -63,7 +63,7 @@ export default function QualiLeaderBoard() {
 						className="text-[11px] tracking-widest text-zinc-700 uppercase transition-colors hover:text-zinc-400"
 						aria-label="Qualifying mode help"
 					>
-						? ayuda
+						? help
 					</button>
 				</div>
 

@@ -112,7 +112,7 @@ export default function RadioMessage({ driver, capture, basePath }: Props) {
 			</button>
 
 			{failed ? (
-				<span className="text-[11px] text-zinc-700 select-none">radio no disponible</span>
+				<span className="text-[11px] text-zinc-700 select-none">radio unavailable</span>
 			) : (
 				<>
 					<span className="text-[11px] text-zinc-600 tabular-nums select-none">

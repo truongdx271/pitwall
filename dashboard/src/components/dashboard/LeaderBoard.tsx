@@ -92,8 +92,6 @@ const TableHeaders = ({ showPace }: HeaderProps) => (
 		style={{ columnGap: DRIVER_GRID_GAP, gridTemplateColumns: driverGridCols(showPace) }}
 	>
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">POS</span>
-		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">OVT</span>
-		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">INFO</span>
 		<span className="text-[11px] tracking-widest text-zinc-600 uppercase">&lt;1s</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">GAP</span>
@@ -101,12 +99,13 @@ const TableHeaders = ({ showPace }: HeaderProps) => (
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">LAP</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">SECTORS</span>
+		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
 		{showPace && <span className="text-[11px] tracking-widest text-zinc-400 uppercase">PACE</span>}
 	</div>
 );
 
 const SkeletonDriver = () => (
 	<div className="border-b border-zinc-900 py-0.5 pr-1 pl-2 font-mono text-base leading-none text-zinc-800">
-		▌ -- ??? -- -------- ---------- -------- --------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
+		▌ -- ??? --------- ---------- -------- --------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
 	</div>
 );

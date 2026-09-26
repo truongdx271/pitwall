@@ -40,8 +40,7 @@ export default function RaceHelpModal({ onClose }: Props) {
 						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columnas</div>
 						<div className="space-y-1 text-zinc-400">
 							<Row label="POS" desc="Posición actual en carrera + sigla del piloto con barra de color del equipo." />
-							<Row label="OVT" desc="Estado DRS / pits (ver detalle abajo)." />
-							<Row label="TYRE" desc="Compuesto actual y vueltas en ese set. Número tras la p = cantidad de paradas." />
+							<Row label="TYRE" desc="Últimos 3 stints (del más viejo al actual): compuesto y vueltas en cada stint." />
 							<Row label="INFO" desc="Estado del piloto (ver detalle abajo)." />
 							<Row label="GAP" desc="Diferencia con el líder." />
 							<Row label="INT" desc="Intervalo: diferencia con el auto de adelante. Verde = lo está alcanzando." />
@@ -51,25 +50,6 @@ export default function RaceHelpModal({ onClose }: Props) {
 								label="PACE"
 								desc="Ritmo promedio por stint, excluyendo vueltas de entrada/salida de pits (ver detalle abajo)."
 							/>
-						</div>
-					</section>
-
-					{/* OVT column */}
-					<section>
-						<div className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">columna OVT — estado DRS</div>
-						<div className="space-y-1 text-[12px]">
-							<ColorRow
-								color="text-emerald-400"
-								char="DRS"
-								desc="DRS activado — el piloto tiene el alerón trasero abierto."
-							/>
-							<ColorRow
-								color="text-zinc-500"
-								char="OVT"
-								desc="DRS disponible — está dentro de 1 segundo del auto de adelante en zona DRS."
-							/>
-							<ColorRow color="text-cyan-400" char="PIT" desc="En boxes o saliendo de boxes." />
-							<ColorRow color="text-zinc-700" char="---" desc="Sin información DRS relevante." />
 						</div>
 					</section>
 

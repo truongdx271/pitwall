@@ -10,9 +10,8 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 
 import DriverTag from "./DriverTag";
-import DriverDRS from "./DriverDRS";
 import DriverGap from "./DriverGap";
-import DriverTire from "./DriverTire";
+import DriverTireStack from "./DriverTireStack";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
 import DriverBestLap from "./DriverBestLap";
@@ -30,12 +29,9 @@ type Props = {
 
 export const DRIVER_GRID_GAP = "2ch";
 export const driverGridCols = (showPace: boolean) =>
-	showPace ? "7ch 3ch 7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr auto" : "7ch 3ch 7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr";
+	showPace ? "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr 16ch auto" : "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr 16ch";
 // keep alias so any other import doesn't break
 export const DRIVER_GRID_COLS = driverGridCols(true);
-
-const hasDRS = (drs: number) => drs > 9;
-const possibleDRS = (drs: number) => drs === 8;
 
 const inDangerZone = (position: number, sessionPart: number) => {
 	switch (sessionPart) {
@@ -77,15 +73,6 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 			>
 				<DriverTag short={driver.Tla} teamColor={driver.TeamColour} position={position} />
 
-				<DriverDRS
-					on={carData ? hasDRS(carData[45] ?? 0) : false}
-					possible={carData ? possibleDRS(carData[45] ?? 0) : false}
-					inPit={timingDriver.InPit}
-					pitOut={timingDriver.PitOut}
-				/>
-
-				<DriverTire stints={appTimingDriver?.Stints} />
-
 				<DriverInfo
 					timingDriver={timingDriver}
 					gridPos={appTimingDriver ? parseInt(appTimingDriver.GridPos) : 0}
@@ -103,6 +90,8 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 				<DriverBestLap best={timingDriver.BestLapTime} hasFastest={hasFastest} />
 
 				<DriverMiniSectors sectors={timingDriver.Sectors} />
+
+				<DriverTireStack stints={appTimingDriver?.Stints} />
 
 				{showPace && <DriverPace stints={appTimingDriver?.Stints} racingNumber={driver.RacingNumber} />}
 

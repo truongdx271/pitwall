@@ -10,6 +10,7 @@ import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
 import RaceControl from "@/components/dashboard/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
 import TrackViolations from "@/components/dashboard/TrackViolations";
+import Map from "@/components/dashboard/Map";
 import Footer from "@/components/Footer";
 
 import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
@@ -69,7 +70,14 @@ export default function Page() {
 
 			{/* Tab content */}
 			<div className="flex-1">
-				{activeTab === "timing" && <div className="w-full">{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}</div>}
+				{activeTab === "timing" && (
+					<div className="flex w-full flex-col">
+						{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
+						<div className="h-[40vh] min-h-64 overflow-hidden border-t border-zinc-800 py-2">
+							<Map />
+						</div>
+					</div>
+				)}
 
 				{activeTab === "map" && (
 					<div className="h-[calc(100vh-12rem)]">

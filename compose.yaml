@@ -9,6 +9,10 @@ services:
       - RUST_LOG=api=info
       - ADDRESS=0.0.0.0:80
       - ORIGIN=${FRONTEND_URL}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - TRANSCRIPT_CACHE_DIR=/data/transcripts
+    volumes:
+      - transcripts:/data/transcripts
 
   simulator:
     build:
@@ -51,3 +55,6 @@ services:
     environment:
       - NEXT_PUBLIC_LIVE_URL=${REALTIME_URL}
       - API_URL=http://api:80
+
+volumes:
+  transcripts:

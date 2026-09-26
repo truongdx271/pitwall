@@ -1,4 +1,5 @@
 use std::env;
+use std::sync::Arc;
 
 use anyhow::Error;
 use axum::{
@@ -15,6 +16,7 @@ use shared::tracing_subscriber;
 
 mod endpoints {
     pub(crate) mod health;
+    pub(crate) mod radio;
     pub(crate) mod schedule;
 }
 
@@ -26,10 +28,17 @@ async fn main() -> Result<(), Error> {
 
     let addr = env::var("ADDRESS").unwrap_or_else(|_| "0.0.0.0:80".to_string());
 
+    let transcriber = radio::Transcriber::from_env().map(Arc::new);
+    if transcriber.is_none() {
+        info!("GROQ_API_KEY not set, radio transcripts disabled");
+    }
+
     let app = Router::new()
         .route("/api/schedule", get(endpoints::schedule::get))
         .route("/api/schedule/next", get(endpoints::schedule::get_next))
-        .route("/api/health", get(endpoints::health::check));
+        .route("/api/radio/transcript", get(endpoints::radio::get_transcript))
+        .route("/api/health", get(endpoints::health::check))
+        .with_state(transcriber);
 
     info!(addr, "starting api http server");
 

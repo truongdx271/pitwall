@@ -20,7 +20,6 @@ export default function LeaderBoard() {
 	const noData = !drivers || !driversTiming;
 	const graceOver = useLoadingGrace();
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
-	const [showInterval, setShowInterval] = useState(false);
 	const [showPace, setShowPace] = useState(false);
 	const [helpOpen, setHelpOpen] = useState(false);
 
@@ -53,8 +52,6 @@ export default function LeaderBoard() {
 
 				{showTableHeader && (
 					<TableHeaders
-						showInterval={showInterval}
-						onToggleInterval={() => setShowInterval((v) => !v)}
 						showPace={showPace}
 					/>
 				)}
@@ -74,7 +71,6 @@ export default function LeaderBoard() {
 										position={index + 1}
 										driver={drivers[timingDriver.RacingNumber]}
 										timingDriver={timingDriver}
-										showInterval={showInterval}
 										showPace={showPace}
 									/>
 								))}
@@ -87,12 +83,10 @@ export default function LeaderBoard() {
 }
 
 type HeaderProps = {
-	showInterval: boolean;
-	onToggleInterval: () => void;
 	showPace: boolean;
 };
 
-const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps) => (
+const TableHeaders = ({ showPace }: HeaderProps) => (
 	<div
 		className="grid items-center border-b-2 border-zinc-600 py-0.5 pr-1 pl-2 font-mono text-base leading-none"
 		style={{ columnGap: DRIVER_GRID_GAP, gridTemplateColumns: driverGridCols(showPace) }}
@@ -102,13 +96,8 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">INFO</span>
 		<span className="text-[11px] tracking-widest text-zinc-600 uppercase">&lt;1s</span>
-		<button
-			onClick={onToggleInterval}
-			className="cursor-pointer text-right text-[11px] tracking-widest text-zinc-400 uppercase transition-colors hover:text-zinc-200"
-			title={showInterval ? "Switch to Gap to Leader" : "Switch to Interval"}
-		>
-			{showInterval ? "INT ↕" : "GAP ↕"}
-		</button>
+		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">GAP</span>
+		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">INT</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">LAP</span>
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">SECTORS</span>
@@ -118,6 +107,6 @@ const TableHeaders = ({ showInterval, onToggleInterval, showPace }: HeaderProps)
 
 const SkeletonDriver = () => (
 	<div className="border-b border-zinc-900 py-0.5 pr-1 pl-2 font-mono text-base leading-none text-zinc-800">
-		▌ -- ??? -- -------- ---------- --------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
+		▌ -- ??? -- -------- ---------- -------- --------- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
 	</div>
 );

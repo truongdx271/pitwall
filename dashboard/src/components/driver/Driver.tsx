@@ -25,13 +25,12 @@ type Props = {
 	position: number;
 	driver: Driver;
 	timingDriver: TimingDataDriver;
-	showInterval: boolean;
 	showPace: boolean;
 };
 
 export const DRIVER_GRID_GAP = "2ch";
 export const driverGridCols = (showPace: boolean) =>
-	showPace ? "7ch 3ch 7ch 4ch 5ch 9ch 9ch 9ch 1fr auto" : "7ch 3ch 7ch 4ch 5ch 9ch 9ch 9ch 1fr";
+	showPace ? "7ch 3ch 7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr auto" : "7ch 3ch 7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr";
 // keep alias so any other import doesn't break
 export const DRIVER_GRID_COLS = driverGridCols(true);
 
@@ -49,7 +48,7 @@ const inDangerZone = (position: number, sessionPart: number) => {
 	}
 };
 
-export default function Driver({ driver, timingDriver, position, showInterval, showPace }: Props) {
+export default function Driver({ driver, timingDriver, position, showPace }: Props) {
 	const sessionPart = useDataStore((state) => state.state?.TimingData?.SessionPart);
 	const timingStatsDriver = useDataStore((state) => state.state?.TimingStats?.Lines[driver.RacingNumber]);
 	const appTimingDriver = useDataStore((state) => state.state?.TimingAppData?.Lines[driver.RacingNumber]);
@@ -95,7 +94,9 @@ export default function Driver({ driver, timingDriver, position, showInterval, s
 
 				<DriverProximity timingDriver={timingDriver} />
 
-				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} showInterval={showInterval} />
+				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} />
+
+				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} showInterval />
 
 				<DriverLapTime last={timingDriver.LastLapTime} best={timingDriver.BestLapTime} hasFastest={hasFastest} />
 

@@ -43,10 +43,8 @@ export default function RaceHelpModal({ onClose }: Props) {
 							<Row label="OVT" desc="Estado DRS / pits (ver detalle abajo)." />
 							<Row label="TYRE" desc="Compuesto actual y vueltas en ese set. Número tras la p = cantidad de paradas." />
 							<Row label="INFO" desc="Estado del piloto (ver detalle abajo)." />
-							<Row
-								label="GAP"
-								desc="Diferencia con el líder. Click en el header para cambiar a INTERVALO (diferencia con el auto de adelante)."
-							/>
+							<Row label="GAP" desc="Diferencia con el líder." />
+							<Row label="INT" desc="Intervalo: diferencia con el auto de adelante. Verde = lo está alcanzando." />
 							<Row label="LAP" desc="Última vuelta completada. Si no hay, muestra la mejor vuelta de la sesión." />
 							<Row label="SECTORS" desc="Barras de minisector en tiempo real (ver detalle abajo)." />
 							<Row

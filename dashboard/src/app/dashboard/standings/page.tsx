@@ -68,11 +68,6 @@ export default function Standings() {
 
 	return (
 		<div className="max-w-5xl font-mono">
-			{!hasFeed && (
-				<p className="px-2 py-1 text-[11px] text-zinc-600">
-					projected from pre-race standings (jolpica) + current running order · retired cars score 0
-				</p>
-			)}
 			<div className="grid grid-cols-1 lg:grid-cols-2 lg:divide-x lg:divide-zinc-800">
 				{/* Drivers */}
 				<div>

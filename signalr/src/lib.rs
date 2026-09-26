@@ -261,14 +261,13 @@ pub struct UpdateArgs {
     pub timestamp: String,
 }
 
+/// Yields one batch per text frame. Frames without feed data (e.g. the server's
+/// keep-alive pings) yield an empty batch, so callers can detect a dead
+/// connection by the absence of any item.
 pub fn listen(client: SignalrClient) -> impl Stream<Item = Vec<UpdateArgs>> {
     client.stream.filter_map(|message| match message {
         Ok(Message::Text(txt)) => {
             let messages = split_messages(&txt);
-
-            if messages.is_empty() {
-                return None;
-            }
 
             let mut results = Vec::new();
 
@@ -292,10 +291,6 @@ pub fn listen(client: SignalrClient) -> impl Stream<Item = Vec<UpdateArgs>> {
                     data,
                     timestamp,
                 });
-            }
-
-            if results.is_empty() {
-                return None;
             }
 
             Some(results)

@@ -1,4 +1,6 @@
-use anyhow::Error;
+use std::time::Duration;
+
+use anyhow::{anyhow, Error};
 use serde_json::json;
 use tokio::sync::broadcast::Sender;
 use tokio_stream::StreamExt;
@@ -8,6 +10,9 @@ use crate::services::state_service::StateService;
 
 const URL: &str = "livetiming.formula1.com/signalrcore";
 const HUB: &str = "Streaming";
+
+// The server pings every ~15s; this long without any frame means the socket is dead.
+const IDLE_TIMEOUT: Duration = Duration::from_secs(60);
 
 const TOPICS: [&str; 18] = [
     "Heartbeat",
@@ -41,7 +46,13 @@ pub async fn ingest_f1(
 
     let mut stream = signalr::listen(client);
 
-    while let Some(items) = stream.next().await {
+    loop {
+        let items = match tokio::time::timeout(IDLE_TIMEOUT, stream.next()).await {
+            Ok(Some(items)) => items,
+            Ok(None) => break,
+            Err(_) => return Err(anyhow!("no frames from F1 for {IDLE_TIMEOUT:?}, reconnecting")),
+        };
+
         for update in items {
             trace!(?update.topic, "received update");
 

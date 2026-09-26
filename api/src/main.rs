@@ -18,6 +18,8 @@ mod endpoints {
     pub(crate) mod schedule;
 }
 
+mod radio;
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     tracing_subscriber();

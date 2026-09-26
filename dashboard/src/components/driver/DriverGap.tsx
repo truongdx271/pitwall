@@ -25,9 +25,11 @@ export default function DriverGap({ timingDriver, sessionPart, showInterval = fa
 
 	// For the race leader the feed puts the current lap ("LAP 12") in the gap field.
 	const leaderLapMarker = /^LAP \d/i.test(gapToLeader);
+	// Retired / stopped cars also have empty gaps, so only P1 may treat "empty" as leading.
+	const inFirst = timingDriver.Position === "1";
 
 	if (showInterval) {
-		const isLeader = !gapToFront || gapToFront === "0.000";
+		const isLeader = gapToFront === "0.000" || (!gapToFront && inFirst);
 		return (
 			<span
 				className={clsx("block w-full text-right tabular-nums", {
@@ -42,7 +44,7 @@ export default function DriverGap({ timingDriver, sessionPart, showInterval = fa
 		);
 	}
 
-	const isLeader = !gapToLeader || gapToLeader === "0.000" || leaderLapMarker;
+	const isLeader = gapToLeader === "0.000" || leaderLapMarker || (!gapToLeader && inFirst);
 	return (
 		<span
 			className={clsx("block w-full text-right tabular-nums", {

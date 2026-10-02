@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
-import type { PositionCar } from "@/types/state.type";
+import type { PositionCar, TimingStats } from "@/types/state.type";
 import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
+import { garageOrder } from "@/lib/garageOrder";
+import { parseLapTime } from "@/lib/trackProgress";
 import { textOn } from "@/lib/color";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -33,6 +35,8 @@ const FINISH_LINE_WIDTH = 300;
 const CORNER_LABEL_OFFSET = 480;
 const CORNER_RADIUS = 210;
 const CAR_RADIUS = 340;
+// Pit cars shrink so they can sit right beside the main straight.
+const PIT_SCALE = 0.3;
 
 type Corner = {
 	number: number;
@@ -59,6 +63,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 	const drivers = useDataStore((state) => state?.state?.DriverList);
 	const trackStatus = useDataStore((state) => state?.state?.TrackStatus);
 	const timingDrivers = useDataStore((state) => state?.state?.TimingData);
+	const timingStats = useDataStore((state) => state?.state?.TimingStats);
 	const raceControlMessages = useDataStore((state) => state?.state?.RaceControlMessages?.Messages ?? undefined);
 	const [unavailable, setUnavailable] = useState(false);
 	const [attempt, setAttempt] = useState(0);
@@ -164,6 +169,8 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 
 	// No Position.z (F1 now withholds it from unauthenticated clients): animate estimated positions.
 	const estimated = !positions;
+	const sectorSeconds = useMemo(() => sessionBestSectors(timingStats), [timingStats]);
+	const garages = useMemo(() => garageOrder(drivers ? Object.values(drivers) : []), [drivers]);
 	const carRef = useTrackAnimation({
 		enabled: estimated,
 		trackPoints: originalTrackPoints,
@@ -171,6 +178,10 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 		rotation,
 		centerX,
 		centerY,
+		carRadius: CAR_RADIUS,
+		pitScale: PIT_SCALE,
+		garages,
+		sectorSeconds,
 	});
 
 	if (unavailable || !circuitKey) {
@@ -211,7 +222,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 		<div className="relative h-full w-full">
 			{outlineOnly && (
 				<p className="absolute top-1 left-2 text-[10px] text-zinc-500">
-					FP1 track outline · sector flags unavailable{!positions && " · positions estimated"}
+					Approximate track outline · sector flags unavailable{!positions && " · positions estimated"}
 				</p>
 			)}
 			<svg
@@ -248,7 +259,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 					);
 				})}
 
-				{finishLine && !outlineOnly && <FinishLine x={finishLine.x} y={finishLine.y} angle={finishLine.startAngle} />}
+				{finishLine && <FinishLine x={finishLine.x} y={finishLine.y} angle={finishLine.startAngle} />}
 
 				{showCornerNumbers &&
 					corners.map((corner) => (
@@ -263,11 +274,13 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 				{centerX && centerY && drivers && timingDrivers && (
 					<>
 						{Object.values(drivers)
-							// Draw the leader last so it sits on top when cars overlap.
+							// Pit cars first so running cars draw over them; then the leader last so it sits on top.
 							.sort(
 								(a, b) =>
+									Number(!timingDrivers.Lines[a.RacingNumber]?.InPit) -
+										Number(!timingDrivers.Lines[b.RacingNumber]?.InPit) ||
 									racePosition(timingDrivers.Lines[b.RacingNumber]?.Position) -
-									racePosition(timingDrivers.Lines[a.RacingNumber]?.Position),
+										racePosition(timingDrivers.Lines[a.RacingNumber]?.Position),
 							)
 							.filter((driver) => (filter ? filter.includes(driver.RacingNumber) : true))
 							.map((driver) => {
@@ -389,7 +402,9 @@ const CarDot = ({
 	centerY,
 }: CarDotProps) => {
 	const rotatedPos = pos ? rotate(pos.X, pos.Y, rotation, centerX, centerY) : null;
-	const transform = rotatedPos ? `translateX(${rotatedPos.x}px) translateY(${rotatedPos.y}px)` : undefined;
+	const transform = rotatedPos
+		? `translateX(${rotatedPos.x}px) translateY(${rotatedPos.y}px)${pit ? ` scale(${PIT_SCALE})` : ""}`
+		: undefined;
 
 	return (
 		<g
@@ -410,3 +425,15 @@ const CarDot = ({
 		</g>
 	);
 };
+
+// Fastest time anyone has set in each sector this session.
+function sessionBestSectors(stats: TimingStats | undefined): (number | null)[] {
+	const best: (number | null)[] = [];
+	for (const line of Object.values(stats?.Lines ?? {})) {
+		Object.values(line.BestSectors ?? {}).forEach((sector, k) => {
+			const t = parseLapTime(sector?.Value);
+			if (t !== null && (best[k] == null || t < (best[k] as number))) best[k] = t;
+		});
+	}
+	return best;
+}

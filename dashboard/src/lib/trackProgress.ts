@@ -16,6 +16,8 @@ export type CarProgress = {
 	shown: number; // unwrapped: laps + fraction, only ever increases
 	target: number; // fraction of the lap at the last confirmed segment
 	targetAt: number; // ms timestamp when `target` last changed
+	timed?: boolean; // `targetAt` is a real segment crossing, not first sight or a snap
+	pace?: number; // laps per second measured from recent segment crossings
 };
 
 const DEFAULT_LAP_SECONDS = 100;
@@ -23,6 +25,15 @@ const DEFAULT_LAP_SECONDS = 100;
 const CATCH_UP_GAIN = 0.8;
 // Beyond this gap we snap instead of animating (first frame, pit exit, glitches).
 const SNAP_GAP = 0.25;
+// Weight of the newest segment timing in the running pace estimate.
+const PACE_SMOOTHING = 0.5;
+// Segment timings implying laps outside this range are batching or glitches, not driving.
+const FASTEST_LAP_SECONDS = 50;
+const SLOWEST_LAP_SECONDS = 600;
+// Laps within this factor of the car's best count as push laps for learning segment lengths.
+const PUSH_LAP_MARGIN = 1.07;
+// Segment shares average over this many laps, then keep adapting.
+const LEARNED_LAPS = 20;
 
 export function buildTrack(points: Point[]): Track {
 	const cumulative = [0];
@@ -57,11 +68,12 @@ export function pointAt(track: Track, fraction: number): Point {
 	return lerp(points[lo], points[hi], edge === 0 ? 0 : (d - cumulative[lo]) / edge);
 }
 
-// Fraction of the lap at the end of the furthest completed mini-segment.
-export function segmentProgress(
+// How many mini-segments the car has completed this lap, out of how many.
+export function segmentState(
 	timingDriver: Pick<TimingDataDriver, "Sectors">,
-): { fraction: number; segmentSize: number } | null {
-	const segments = toArray(timingDriver.Sectors).flatMap((sector) => toArray(sector?.Segments));
+): { completed: number; count: number; sectorCounts: number[] } | null {
+	const sectors = toArray(timingDriver.Sectors).map((sector) => toArray(sector?.Segments));
+	const segments = sectors.flat();
 	if (segments.length === 0) return null;
 
 	let furthest = -1;
@@ -72,7 +84,114 @@ export function segmentProgress(
 		}
 	}
 
-	return { fraction: (furthest + 1) / segments.length, segmentSize: 1 / segments.length };
+	return { completed: furthest + 1, count: segments.length, sectorCounts: sectors.map((s) => s.length) };
+}
+
+// Fraction of the lap at the end of the furthest completed mini-segment, and the
+// size of the segment the car is in now. Segments are equal unless `boundaries`
+// (count + 1 lap fractions from 0 to 1) says where each one ends.
+export function segmentProgress(
+	timingDriver: Pick<TimingDataDriver, "Sectors">,
+	boundaries?: number[] | null,
+): { fraction: number; segmentSize: number } | null {
+	const state = segmentState(timingDriver);
+	if (!state) return null;
+	const { completed, count } = state;
+
+	if (boundaries?.length !== count + 1) return { fraction: completed / count, segmentSize: 1 / count };
+
+	// After the last segment the car is on the next lap's first one.
+	const next = completed === count ? boundaries[1] - boundaries[0] : boundaries[completed + 1] - boundaries[completed];
+	return { fraction: boundaries[completed], segmentSize: next };
+}
+
+// Before any lap has been timed: split the lap by best sector times, evenly
+// within each sector. Without usable sector times every segment is equal.
+export function sectorBoundaries(sectorCounts: number[], sectorSeconds: (number | null)[]): number[] {
+	const count = sectorCounts.reduce((a, b) => a + b, 0);
+	const usable =
+		sectorSeconds.length === sectorCounts.length &&
+		sectorSeconds.every((t): t is number => t !== null && Number.isFinite(t) && t > 0);
+	const total = usable ? sectorSeconds.reduce<number>((a, t) => a + (t ?? 0), 0) : 0;
+
+	const boundaries = [0];
+	sectorCounts.forEach((n, k) => {
+		const share = usable ? (sectorSeconds[k] as number) / total / n : 1 / count;
+		for (let i = 0; i < n; i++) boundaries.push(boundaries[boundaries.length - 1] + share);
+	});
+	boundaries[boundaries.length - 1] = 1;
+	return boundaries;
+}
+
+// Mini-segments are not equally long: one through a hairpin can take three times
+// one on a straight. Learn each segment's share of a lap from push laps, where
+// every segment crossing was seen one at a time.
+export class SegmentShares {
+	private cars = new Map<string, { completed: number; at: number | null; durations: number[] }>();
+	private mean: number[] = [];
+	private laps = 0;
+
+	observe(nr: string, completed: number, count: number, now: number, bestLapSeconds: number | null): void {
+		if (this.mean.length !== count) {
+			this.mean = [];
+			this.laps = 0;
+		}
+
+		const car = this.cars.get(nr);
+		if (!car) {
+			// We don't know when the car reached this point, so nothing to time yet.
+			this.cars.set(nr, { completed, at: null, durations: [] });
+			return;
+		}
+		if (completed === car.completed) return;
+
+		const from = car.completed === count ? 0 : car.completed;
+		if (completed === 0 && car.completed === count) {
+			// Segments cleared for the new lap; the finish crossing time still stands.
+			car.completed = 0;
+			car.durations = [];
+			return;
+		}
+
+		if (completed === from + 1) {
+			if (car.at !== null) car.durations[from] = (now - car.at) / 1000;
+		} else {
+			// Skipped or went backwards: this lap can't be timed segment by segment.
+			car.durations = [];
+		}
+		car.at = completed > from ? now : null;
+		car.completed = completed;
+
+		if (completed === count) {
+			const timed = car.durations.filter((d) => d !== undefined);
+			const lap = timed.reduce((a, b) => a + b, 0);
+			if (timed.length === count && bestLapSeconds && lap <= bestLapSeconds * PUSH_LAP_MARGIN)
+				this.learn(car.durations, lap);
+			car.durations = [];
+		}
+	}
+
+	reset(nr: string): void {
+		this.cars.delete(nr);
+	}
+
+	boundaries(count: number): number[] | null {
+		if (this.laps === 0 || this.mean.length !== count) return null;
+		const boundaries = [0];
+		for (const share of this.mean) boundaries.push(boundaries[boundaries.length - 1] + share);
+		boundaries[count] = 1;
+		return boundaries;
+	}
+
+	private learn(durations: number[], lap: number): void {
+		this.laps++;
+		// Running mean that keeps adapting (track evolution, wind) after enough laps.
+		const weight = 1 / Math.min(this.laps, LEARNED_LAPS);
+		durations.forEach((d, i) => {
+			const share = d / lap;
+			this.mean[i] = this.mean[i] === undefined ? share : this.mean[i] + (share - this.mean[i]) * weight;
+		});
+	}
 }
 
 export function parseLapTime(value: string | undefined): number | null {
@@ -95,8 +214,8 @@ export function lapSeconds(timingDriver: Pick<TimingDataDriver, "LastLapTime" | 
 /**
  * Advance the shown position to time `now` (ms), `dt` seconds after the previous frame.
  * The car is expected at `target + elapsed * pace`, capped at the end of the
- * segment it is in; the shown position chases that at race pace plus a
- * proportional catch-up. It never goes backwards and never passes the
+ * segment it is in; the shown position chases that at the pace measured over
+ * recent segments (the lap time until one is measured) plus a proportional catch-up. It never goes backwards and never passes the
  * end of the current segment.
  */
 export function step(
@@ -108,32 +227,87 @@ export function step(
 	dt: number,
 	moving: boolean,
 ): CarProgress {
-	if (!prev) return { shown: target, target, targetAt: now };
+	if (!prev) return { shown: target, target, targetAt: now, timed: false };
 
-	const targetAt = target === prev.target ? prev.targetAt : now;
+	const crossed = target !== prev.target;
+	const targetAt = crossed ? now : prev.targetAt;
 	const gapToTarget = wrapDelta(target - frac(prev.shown));
 
 	if (Math.abs(gapToTarget) > SNAP_GAP) {
 		// Re-anchor on the same lap count so `shown` stays monotonic.
 		const base = Math.floor(prev.shown);
 		const shown = base + target < prev.shown ? base + 1 + target : base + target;
-		return { shown, target, targetAt };
+		return { shown, target, targetAt, timed: false, pace: prev.pace };
 	}
+
+	// Time the segment just completed, so slow out-laps and cool-down laps move at their real pace.
+	let pace = prev.pace;
+	if (crossed && prev.timed) {
+		const measured = measuredPace(wrapDelta(target - prev.target), (now - prev.targetAt) / 1000);
+		if (measured !== null) pace = pace === undefined ? measured : pace + (measured - pace) * PACE_SMOOTHING;
+	}
+	const timed = crossed || prev.timed;
 
 	const confirmed = prev.shown + gapToTarget;
 
 	if (!moving) {
-		return { shown: Math.max(prev.shown, confirmed), target, targetAt };
+		return { shown: Math.max(prev.shown, confirmed), target, targetAt, timed, pace };
 	}
 
-	const pace = 1 / lapSecs;
+	const lapPace = pace ?? 1 / lapSecs;
 	const elapsed = (now - targetAt) / 1000;
-	const expected = confirmed + Math.min(elapsed * pace, segmentSize);
+	const expected = confirmed + Math.min(elapsed * lapPace, segmentSize);
 
-	const velocity = Math.max(0, pace + (expected - prev.shown) * CATCH_UP_GAIN);
+	const velocity = Math.max(0, lapPace + (expected - prev.shown) * CATCH_UP_GAIN);
 	const next = Math.min(prev.shown + velocity * dt, confirmed + segmentSize);
 
-	return { shown: Math.max(prev.shown, next), target, targetAt };
+	return { shown: Math.max(prev.shown, next), target, targetAt, timed, pace };
+}
+
+function measuredPace(distance: number, seconds: number): number | null {
+	if (distance <= 0 || seconds <= 0) return null;
+	const pace = distance / seconds;
+	return pace >= 1 / SLOWEST_LAP_SECONDS && pace <= 1 / FASTEST_LAP_SECONDS ? pace : null;
+}
+
+// Without positions we don't know where the pit lane is, and pit cars report
+// lap progress 0, so they would all stack on the finish line. Line them up in a
+// row alongside the track around the finish line instead, on whichever side has
+// more room there.
+export function pitSlots(track: Track, count: number, spacing: number, offset: number): Point[] {
+	if (count === 0 || track.length === 0) return [];
+
+	const beside = (fraction: number, side: number, out = offset): Point => {
+		const p = pointAt(track, fraction);
+		const delta = spacing / 2 / track.length;
+		const a = pointAt(track, fraction - delta);
+		const b = pointAt(track, fraction + delta);
+		const len = dist(a, b) || 1;
+		// Left normal of the driving direction, scaled to `offset`.
+		return { x: p.x - ((b.y - a.y) / len) * out * side, y: p.y + ((b.x - a.x) / len) * out * side };
+	};
+
+	// Judge the side a few offsets out: right beside the track both sides look equally clear.
+	const probe = offset * 4;
+	const side = distanceToTrack(track, beside(0, 1, probe)) >= distanceToTrack(track, beside(0, -1, probe)) ? 1 : -1;
+
+	// Slot 0 sits furthest back (pit entry side), the last slot furthest ahead (pit exit side).
+	return Array.from({ length: count }, (_, i) => beside(((i - (count - 1) / 2) * spacing) / track.length, side));
+}
+
+function distanceToTrack(track: Track, p: Point): number {
+	const { points } = track;
+	let min = Infinity;
+	for (let i = 0; i < points.length; i++) {
+		const a = points[i];
+		const b = points[(i + 1) % points.length];
+		const abx = b.x - a.x;
+		const aby = b.y - a.y;
+		const lenSq = abx * abx + aby * aby;
+		const t = lenSq === 0 ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * abx + (p.y - a.y) * aby) / lenSq));
+		min = Math.min(min, dist(p, { x: a.x + abx * t, y: a.y + aby * t }));
+	}
+	return min;
 }
 
 // Signed shortest distance on a unit circle, in (-0.5, 0.5].

@@ -43,4 +43,14 @@ describe("fetchMap", () => {
 		vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new DOMException("timeout", "TimeoutError")));
 		expect(await fetchMap(153, 2026)).toBeNull();
 	});
+	it("loads the bundled outline when Kuala Lumpur is missing upstream", async () => {
+		const map = { x: [0, 1, 2, 0], y: [0, 1, 0, 0], rotation: 0, corners: [], marshalSectors: [], outlineOnly: true };
+		const fetch = vi
+			.fn()
+			.mockResolvedValueOnce(new Response("Circuit not found", { status: 404 }))
+			.mockResolvedValueOnce(Response.json(map));
+		vi.stubGlobal("fetch", fetch);
+		expect(await fetchMap(12, 2026)).toEqual(map);
+		expect(fetch.mock.calls[1][0]).toBe("/maps/12-2026.json");
+	});
 });

@@ -1,6 +1,6 @@
 import type { Map } from "@/types/map.type";
 
-const OUTLINE_FALLBACKS = new Set(["153/2026"]);
+const OUTLINE_FALLBACKS = new Set(["153/2026", "12/2026"]);
 
 async function loadMap(url: string): Promise<Map | null> {
 	try {

@@ -100,7 +100,6 @@ const TableHeaders = ({ showPace }: HeaderProps) => (
 		<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">SECTORS</span>
 		<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
-		{showPace && <span className="text-[11px] tracking-widest text-zinc-400 uppercase">PACE</span>}
 	</div>
 );
 

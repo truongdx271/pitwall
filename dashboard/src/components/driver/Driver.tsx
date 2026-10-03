@@ -17,7 +17,6 @@ import DriverLapTime from "./DriverLapTime";
 import DriverBestLap from "./DriverBestLap";
 import DriverInfo from "./DriverInfo";
 import DriverCarMetrics from "./DriverCarMetrics";
-import DriverPace from "./DriverPace";
 import DriverProximity from "./DriverProximity";
 
 type Props = {
@@ -29,7 +28,7 @@ type Props = {
 
 export const DRIVER_GRID_GAP = "2ch";
 export const driverGridCols = (showPace: boolean) =>
-	showPace ? "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr 16ch auto" : "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr 16ch";
+	showPace ? "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr auto" : "7ch 4ch 5ch 9ch 8ch 9ch 9ch 1fr 16ch";
 // keep alias so any other import doesn't break
 export const DRIVER_GRID_COLS = driverGridCols(true);
 
@@ -91,9 +90,7 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 
 				<DriverMiniSectors sectors={timingDriver.Sectors} />
 
-				<DriverTireStack stints={appTimingDriver?.Stints} />
-
-				{showPace && <DriverPace stints={appTimingDriver?.Stints} racingNumber={driver.RacingNumber} />}
+				<DriverTireStack stints={appTimingDriver?.Stints} racingNumber={driver.RacingNumber} showPace={showPace} />
 
 				{carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>

@@ -105,9 +105,14 @@ export function segmentProgress(
 	return { fraction: boundaries[completed], segmentSize: next };
 }
 
-// Before any lap has been timed: split the lap by best sector times, evenly
-// within each sector. Without usable sector times every segment is equal.
-export function sectorBoundaries(sectorCounts: number[], sectorSeconds: (number | null)[]): number[] {
+// Before any lap has been timed: split the lap by best sector times, and within
+// each sector by `within` (that sector's segment shares, summing to 1) or evenly.
+// Without usable sector times every segment is equal.
+export function sectorBoundaries(
+	sectorCounts: number[],
+	sectorSeconds: (number | null)[],
+	within: (number[] | undefined)[] = [],
+): number[] {
 	const count = sectorCounts.reduce((a, b) => a + b, 0);
 	const usable =
 		sectorSeconds.length === sectorCounts.length &&
@@ -116,8 +121,10 @@ export function sectorBoundaries(sectorCounts: number[], sectorSeconds: (number 
 
 	const boundaries = [0];
 	sectorCounts.forEach((n, k) => {
-		const share = usable ? (sectorSeconds[k] as number) / total / n : 1 / count;
-		for (let i = 0; i < n; i++) boundaries.push(boundaries[boundaries.length - 1] + share);
+		const sector = usable ? (sectorSeconds[k] as number) / total : n / count;
+		const split = within[k]?.length === n ? within[k] : undefined;
+		for (let i = 0; i < n; i++)
+			boundaries.push(boundaries[boundaries.length - 1] + sector * (split ? split[i] : 1 / n));
 	});
 	boundaries[boundaries.length - 1] = 1;
 	return boundaries;
@@ -126,15 +133,59 @@ export function sectorBoundaries(sectorCounts: number[], sectorSeconds: (number 
 // Mini-segments are not equally long: one through a hairpin can take three times
 // one on a straight. Learn each segment's share of a lap from push laps, where
 // every segment crossing was seen one at a time.
+export type SegmentSharesSnapshot = {
+	mean: number[];
+	laps: number;
+	within: { counts: number[]; mean: (number[] | undefined)[]; runs: number[] };
+};
+
 export class SegmentShares {
 	private cars = new Map<string, { completed: number; at: number | null; durations: number[] }>();
 	private mean: number[] = [];
 	private laps = 0;
+	// Full push laps are rare early in a session (qualifying!), so also learn each
+	// sector's internal split from single clean push runs through it.
+	private within: { counts: number[]; mean: (number[] | undefined)[]; runs: number[] } = {
+		counts: [],
+		mean: [],
+		runs: [],
+	};
+	// Bumped on every lesson, so callers know when a snapshot is worth saving.
+	version = 0;
 
-	observe(nr: string, completed: number, count: number, now: number, bestLapSeconds: number | null): void {
+	// What has been learned, as plain JSON (no per-car state).
+	snapshot(): SegmentSharesSnapshot {
+		return { mean: this.mean, laps: this.laps, within: this.within };
+	}
+
+	static restore(data: unknown): SegmentShares {
+		const shares = new SegmentShares();
+		const d = data as Partial<SegmentSharesSnapshot> | null;
+		const numbers = (v: unknown): v is number[] => Array.isArray(v) && v.every((n) => typeof n === "number");
+		if (!d || !numbers(d.mean) || typeof d.laps !== "number") return shares;
+		shares.mean = d.mean;
+		shares.laps = d.laps;
+		const w = d.within;
+		if (w && numbers(w.counts) && numbers(w.runs) && Array.isArray(w.mean)) {
+			shares.within = { counts: w.counts, runs: w.runs, mean: w.mean.map((m) => (numbers(m) ? m : undefined)) };
+		}
+		return shares;
+	}
+
+	observe(
+		nr: string,
+		completed: number,
+		count: number,
+		now: number,
+		bestLapSeconds: number | null,
+		sectors?: { counts: number[]; seconds: (number | null)[] },
+	): void {
 		if (this.mean.length !== count) {
 			this.mean = [];
 			this.laps = 0;
+		}
+		if (sectors && this.within.counts.join() !== sectors.counts.join()) {
+			this.within = { counts: [...sectors.counts], mean: [], runs: [] };
 		}
 
 		const car = this.cars.get(nr);
@@ -155,12 +206,19 @@ export class SegmentShares {
 
 		if (completed === from + 1) {
 			if (car.at !== null) car.durations[from] = (now - car.at) / 1000;
+		} else if (from === 0 && completed > 1 && car.at !== null) {
+			// Some circuits never report the first segment(s) after the line (Sepang skips
+			// segment 0); split that gap evenly so the lap can still be learned.
+			const each = (now - car.at) / 1000 / completed;
+			for (let i = 0; i < completed; i++) car.durations[i] = each;
 		} else {
 			// Skipped or went backwards: this lap can't be timed segment by segment.
 			car.durations = [];
 		}
 		car.at = completed > from ? now : null;
 		car.completed = completed;
+
+		if (sectors && completed > from) this.learnSector(car.durations, completed, sectors);
 
 		if (completed === count) {
 			const timed = car.durations.filter((d) => d !== undefined);
@@ -183,8 +241,44 @@ export class SegmentShares {
 		return boundaries;
 	}
 
+	// Learned splits within each sector, with the lap split by best sector times.
+	sectorBoundaries(sectorCounts: number[], sectorSeconds: (number | null)[]): number[] {
+		const within = this.within.counts.join() === sectorCounts.join() ? this.within.mean : [];
+		return sectorBoundaries(sectorCounts, sectorSeconds, within);
+	}
+
+	// If `completed` just closed a sector whose every segment was timed at push pace, learn its split.
+	private learnSector(
+		durations: number[],
+		completed: number,
+		sectors: { counts: number[]; seconds: (number | null)[] },
+	): void {
+		let end = 0;
+		for (let k = 0; k < sectors.counts.length; k++) {
+			const start = end;
+			end += sectors.counts[k];
+			if (end !== completed) continue;
+
+			// Array.from turns holes (untimed segments) into undefined so `some` sees them.
+			const run = Array.from(durations.slice(start, end));
+			const best = sectors.seconds[k];
+			if (run.length !== sectors.counts[k] || run.some((d) => d === undefined)) return;
+			const time = run.reduce((a, b) => a + b, 0);
+			if (!best || time <= 0 || time > best * PUSH_LAP_MARGIN) return;
+
+			const runs = (this.within.runs[k] ?? 0) + 1;
+			this.within.runs[k] = runs;
+			const weight = 1 / Math.min(runs, LEARNED_LAPS);
+			const prev = this.within.mean[k];
+			this.within.mean[k] = run.map((d, i) => (prev ? prev[i] + (d / time - prev[i]) * weight : d / time));
+			this.version++;
+			return;
+		}
+	}
+
 	private learn(durations: number[], lap: number): void {
 		this.laps++;
+		this.version++;
 		// Running mean that keeps adapting (track evolution, wind) after enough laps.
 		const weight = 1 / Math.min(this.laps, LEARNED_LAPS);
 		durations.forEach((d, i) => {
@@ -262,6 +356,23 @@ export function step(
 	const next = Math.min(prev.shown + velocity * dt, confirmed + segmentSize);
 
 	return { shown: Math.max(prev.shown, next), target, targetAt, timed, pace };
+}
+
+// Marker for a car currently in the pits (see pitExitHold).
+export const PIT = -1;
+
+// After a stop the feed keeps showing the in-lap's segments (often stopping short
+// of the pit entry, before the last corner) until the car reaches a new one. Placing
+// the car there would rewind it and then race it round to the line, so hold it on
+// the line, beside the pit row, while those stale segments are shown.
+// `stale` is PIT while in the pits, then the stale segment count; undefined otherwise.
+export function pitExitHold(
+	stale: number | undefined,
+	completed: number,
+): { hold: boolean; stale: number | undefined } {
+	if (stale === PIT) return completed > 0 ? { hold: true, stale: completed } : { hold: false, stale: undefined };
+	if (stale !== undefined && stale === completed) return { hold: true, stale };
+	return { hold: false, stale: undefined };
 }
 
 function measuredPace(distance: number, seconds: number): number | null {

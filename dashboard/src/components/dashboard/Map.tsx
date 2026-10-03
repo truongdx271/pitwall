@@ -182,6 +182,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 		pitScale: PIT_SCALE,
 		garages,
 		sectorSeconds,
+		storageKey: `segmentShares:${circuitKey}:${year}`,
 	});
 
 	if (unavailable || !circuitKey) {

@@ -6,6 +6,8 @@ import {
 	parseLapTime,
 	pitSlots,
 	pointAt,
+	PIT,
+	pitExitHold,
 	SegmentShares,
 	sectorBoundaries,
 	segmentProgress,
@@ -259,10 +261,69 @@ describe("SegmentShares", () => {
 
 		shares.observe("2", 4, 4, 0, 100);
 		shares.observe("2", 0, 4, 0, 100);
-		shares.observe("2", 2, 4, 50_000, 100); // two segments at once
-		shares.observe("2", 3, 4, 75_000, 100);
+		shares.observe("2", 1, 4, 25_000, 100);
+		shares.observe("2", 3, 4, 75_000, 100); // two segments at once mid-lap
 		shares.observe("2", 4, 4, 100_000, 100);
 		expect(shares.boundaries(4)).toBeNull();
+	});
+
+	it("learns laps whose first segment is never reported, splitting that gap evenly", () => {
+		// Sepang: after the finish the feed skips segment 0 and reports segment 1 first.
+		const shares = new SegmentShares();
+		shares.observe("1", 3, 4, -40_000, 100);
+		shares.observe("1", 4, 4, 0, 100); // timed crossing of the line
+		shares.observe("1", 0, 4, 1_000, 100); // segments cleared after the line
+		shares.observe("1", 2, 4, 20_000, 100);
+		shares.observe("1", 3, 4, 60_000, 100);
+		shares.observe("1", 4, 4, 100_000, 100);
+		expect(shares.boundaries(4)?.map((v) => +v.toFixed(3))).toEqual([0, 0.1, 0.2, 0.6, 1]);
+	});
+
+	it("learns a sector's split from one clean push run through it, before any full lap", () => {
+		// Two sectors of two segments; best sectors 40 s and 60 s.
+		const shares = new SegmentShares();
+		const sectors = { counts: [2, 2], seconds: [40, 60] };
+		shares.observe("1", 1, 4, 0, 100, sectors); // first sight, untimed
+		shares.observe("1", 2, 4, 30_000, 100, sectors); // sector 1 end, but its first segment wasn't timed
+		shares.observe("1", 3, 4, 45_000, 100, sectors); // 15 s
+		shares.observe("1", 4, 4, 90_000, 100, sectors); // 45 s -> sector 2 took 60 s
+		expect(shares.boundaries(4)).toBeNull(); // no full lap yet
+		expect(shares.sectorBoundaries(sectors.counts, sectors.seconds).map((v) => +v.toFixed(3))).toEqual([
+			0, 0.2, 0.4, 0.55, 1,
+		]);
+	});
+
+	it("doesn't learn a sector from a slow run", () => {
+		const shares = new SegmentShares();
+		const sectors = { counts: [2, 2], seconds: [40, 60] };
+		shares.observe("1", 2, 4, 0, 100, sectors);
+		shares.observe("1", 3, 4, 30_000, 100, sectors);
+		shares.observe("1", 4, 4, 90_000, 100, sectors); // 90 s vs 60 s best: cool-down
+		expect(shares.sectorBoundaries(sectors.counts, sectors.seconds).map((v) => +v.toFixed(3))).toEqual([
+			0, 0.2, 0.4, 0.7, 1,
+		]);
+	});
+
+	it("restores what it learned from a snapshot, and counts each new lesson", () => {
+		const shares = new SegmentShares();
+		const sectors = { counts: [2, 2], seconds: [40, 60] };
+		expect(shares.version).toBe(0);
+		shares.observe("1", 2, 4, 0, 100, sectors);
+		shares.observe("1", 3, 4, 15_000, 100, sectors);
+		shares.observe("1", 4, 4, 60_000, 100, sectors);
+		drive(shares, "2", [10, 30, 40, 20], 2, 100);
+		expect(shares.version).toBeGreaterThan(0);
+
+		const restored = SegmentShares.restore(JSON.parse(JSON.stringify(shares.snapshot())));
+		expect(restored.boundaries(4)).toEqual(shares.boundaries(4));
+		expect(restored.sectorBoundaries(sectors.counts, sectors.seconds)).toEqual(
+			shares.sectorBoundaries(sectors.counts, sectors.seconds),
+		);
+	});
+
+	it("starts fresh from a missing or malformed snapshot", () => {
+		expect(SegmentShares.restore(null).boundaries(4)).toBeNull();
+		expect(SegmentShares.restore({ mean: "x" }).boundaries(4)).toBeNull();
 	});
 
 	it("forgets a car's lap in progress when it is reset", () => {
@@ -274,5 +335,23 @@ describe("SegmentShares", () => {
 		shares.observe("1", 3, 4, 75_000, 100);
 		shares.observe("1", 4, 4, 100_000, 100);
 		expect(shares.boundaries(4)).toBeNull();
+	});
+});
+
+describe("pitExitHold", () => {
+	it("holds a car leaving the pits on the line while the in-lap's segments are still shown", () => {
+		// In-lap stopped reporting at segment 17 (before the pit entry).
+		let r = pitExitHold(PIT, 17);
+		expect(r).toEqual({ hold: true, stale: 17 });
+		r = pitExitHold(r.stale, 17);
+		expect(r).toEqual({ hold: true, stale: 17 });
+		// Segments cleared / first new segment: drive normally again.
+		expect(pitExitHold(r.stale, 0)).toEqual({ hold: false, stale: undefined });
+		expect(pitExitHold(17, 2)).toEqual({ hold: false, stale: undefined });
+	});
+
+	it("does nothing when segments are already clear at pit exit, or the car never pitted", () => {
+		expect(pitExitHold(PIT, 0)).toEqual({ hold: false, stale: undefined });
+		expect(pitExitHold(undefined, 17)).toEqual({ hold: false, stale: undefined });
 	});
 });

@@ -6,6 +6,7 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import {
 	fetchBaseStandings,
+	fetchLatestStandings,
 	predictStandings,
 	RACE_POINTS,
 	SPRINT_POINTS,
@@ -23,51 +24,67 @@ export default function Standings() {
 
 	const hasFeed = !!feedPrediction?.Drivers;
 
+	// Outside a race: plain standings after the previous round, no live points.
 	// Keyed by session so a stale result is never shown for another race.
-	const baseKey = isRace && !hasFeed && startDate ? `${startDate}|${isSprint}` : null;
+	const baseKey = hasFeed && isRace ? null : `${startDate ?? "none"}|${isRace}|${isSprint}`;
 	const [fetched, setFetched] = useState<{ key: string; base: BaseStandings | null } | null>(null);
 	// undefined = loading, null = unavailable
 	const base = fetched && fetched.key === baseKey ? fetched.base : undefined;
 
 	useEffect(() => {
-		if (!baseKey || !startDate) return;
+		if (!baseKey) return;
 		let cancelled = false;
-		fetchBaseStandings(new Date(startDate).getFullYear(), startDate, !isSprint).then((result) => {
+		const year = startDate ? new Date(startDate).getFullYear() : new Date().getFullYear();
+		const load = async () => {
+			const round = startDate ? await fetchBaseStandings(year, startDate, isRace && !isSprint) : null;
+			// Outside a known race weekend, fall back to the season's latest standings.
+			return round ?? (isRace ? null : await fetchLatestStandings(year));
+		};
+		load().then((result) => {
 			if (!cancelled) setFetched({ key: baseKey, base: result });
 		});
 		return () => {
 			cancelled = true;
 		};
-	}, [baseKey, startDate, isSprint]);
+	}, [baseKey, startDate, isRace, isSprint]);
 
 	const computed = useMemo(
 		() =>
-			base && timingLines && drivers
-				? predictStandings(base, timingLines, drivers, isSprint ? SPRINT_POINTS : RACE_POINTS)
-				: null,
-		[base, timingLines, drivers, isSprint],
+			!base
+				? null
+				: isRace
+					? timingLines && drivers
+						? predictStandings(base, timingLines, drivers, isSprint ? SPRINT_POINTS : RACE_POINTS)
+						: null
+					: predictStandings(base, {}, drivers ?? {}, []),
+		[base, timingLines, drivers, isRace, isSprint],
 	);
 
-	const prediction = hasFeed ? feedPrediction : computed;
+	const prediction = hasFeed && isRace ? feedPrediction : computed;
 	const driverStandings = prediction?.Drivers;
 	const teamStandings = prediction?.Teams;
 
-	if (!isRace) {
-		return (
-			<div className="px-2 py-3 font-mono text-sm text-zinc-700">standings only available during a race session</div>
-		);
-	}
-
-	if (!hasFeed && base === null) {
+	if (!(hasFeed && isRace) && base === null) {
 		return (
 			<div className="px-2 py-3 font-mono text-sm text-zinc-700">
-				couldn&apos;t load the standings before this race (jolpica unavailable)
+				couldn&apos;t load the championship standings (jolpica unavailable)
 			</div>
 		);
 	}
 
+	if (base && base.drivers.length === 0 && base.teams.length === 0 && !isRace) {
+		return <div className="px-2 py-3 font-mono text-sm text-zinc-700">no standings yet this season</div>;
+	}
+
 	return (
 		<div className="max-w-5xl font-mono">
+			<div className="px-2 py-1 text-[11px] text-zinc-600">
+				{isRace
+					? "live · projected from the current running order"
+					: base?.after
+						? `after round ${base.after.round} · ${base.after.raceName}`
+						: "current standings"}
+			</div>
 			<div className="grid grid-cols-1 lg:grid-cols-2 lg:divide-x lg:divide-zinc-800">
 				{/* Drivers */}
 				<div>
@@ -76,11 +93,10 @@ export default function Standings() {
 					</div>
 					{!driverStandings && new Array(20).fill("").map((_, i) => <SkeletonRow key={i} />)}
 					{driverStandings &&
-						drivers &&
 						Object.values(driverStandings)
 							.sort((a, b) => a.PredictedPosition - b.PredictedPosition)
 							.map((driver) => {
-								const info = drivers[driver.RacingNumber];
+								const info = drivers?.[driver.RacingNumber];
 								const label = "Tla" in driver ? (driver as PredictedDriver) : null;
 								if (!info && !label?.Tla) return null;
 								const delta = driver.PredictedPosition - driver.CurrentPosition;
@@ -90,9 +106,11 @@ export default function Standings() {
 										className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5 text-sm"
 									>
 										<span className="w-[2ch] shrink-0 text-zinc-600 tabular-nums">{driver.PredictedPosition}</span>
-										<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
-											{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
-										</span>
+										{isRace && (
+											<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
+												{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
+											</span>
+										)}
 										<span
 											className={info ? "font-bold" : "font-bold text-zinc-600"}
 											style={info ? { color: `#${info.TeamColour}` } : undefined}
@@ -103,13 +121,15 @@ export default function Standings() {
 											{info?.LastName ?? label?.FamilyName}
 										</span>
 										<span className="ml-auto text-zinc-300 tabular-nums">{driver.PredictedPoints}</span>
-										<span
-											className={`w-[4ch] text-right text-[11px] tabular-nums ${driver.PredictedPoints > driver.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
-										>
-											{driver.PredictedPoints > driver.CurrentPoints
-												? `+${driver.PredictedPoints - driver.CurrentPoints}`
-												: ""}
-										</span>
+										{isRace && (
+											<span
+												className={`w-[4ch] text-right text-[11px] tabular-nums ${driver.PredictedPoints > driver.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
+											>
+												{driver.PredictedPoints > driver.CurrentPoints
+													? `+${driver.PredictedPoints - driver.CurrentPoints}`
+													: ""}
+											</span>
+										)}
 									</div>
 								);
 							})}
@@ -132,16 +152,22 @@ export default function Standings() {
 										className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5 text-sm"
 									>
 										<span className="w-[2ch] shrink-0 text-zinc-600 tabular-nums">{team.PredictedPosition}</span>
-										<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
-											{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
-										</span>
+										{isRace && (
+											<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
+												{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
+											</span>
+										)}
 										<span className="text-zinc-300">{team.TeamName}</span>
 										<span className="ml-auto text-zinc-300 tabular-nums">{team.PredictedPoints}</span>
-										<span
-											className={`w-[4ch] text-right text-[11px] tabular-nums ${team.PredictedPoints > team.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
-										>
-											{team.PredictedPoints > team.CurrentPoints ? `+${team.PredictedPoints - team.CurrentPoints}` : ""}
-										</span>
+										{isRace && (
+											<span
+												className={`w-[4ch] text-right text-[11px] tabular-nums ${team.PredictedPoints > team.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
+											>
+												{team.PredictedPoints > team.CurrentPoints
+													? `+${team.PredictedPoints - team.CurrentPoints}`
+													: ""}
+											</span>
+										)}
 									</div>
 								);
 							})}

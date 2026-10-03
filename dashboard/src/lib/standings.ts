@@ -21,7 +21,12 @@ export type BaseDriver = {
 // Drivers with points who aren't in this session's DriverList carry their own label.
 export type PredictedDriver = ChampionshipDriver & { Tla?: string; FamilyName?: string };
 export type BaseTeam = { constructorId: string; name: string; points: number; position: number };
-export type BaseStandings = { drivers: BaseDriver[]; teams: BaseTeam[] };
+// `after` names the round these standings were published after.
+export type BaseStandings = {
+	drivers: BaseDriver[];
+	teams: BaseTeam[];
+	after?: { round: number; raceName: string };
+};
 
 type TimingLine = Pick<TimingDataDriver, "RacingNumber" | "Position" | "Retired" | "Stopped">;
 
@@ -118,7 +123,7 @@ function rank<T extends { PredictedPoints: number; CurrentPosition: number; Pred
 		.forEach((row, i) => (row.PredictedPosition = i + 1));
 }
 
-type JolpicaRace = { round: string; date: string; Sprint?: unknown };
+type JolpicaRace = { round: string; raceName?: string; date: string; Sprint?: unknown };
 
 async function get<T>(path: string): Promise<T | null> {
 	try {
@@ -160,26 +165,11 @@ export async function fetchBaseStandings(
 	const base: BaseStandings = { drivers: [], teams: [] };
 
 	if (round > 1) {
-		const [ds, cs] = await Promise.all([
-			get<DriverStandingsResponse>(`${year}/${round - 1}/driverstandings.json?limit=100`),
-			get<ConstructorStandingsResponse>(`${year}/${round - 1}/constructorstandings.json?limit=100`),
-		]);
-		if (!ds || !cs) return null;
-
-		base.drivers = (ds.StandingsTable.StandingsLists[0]?.DriverStandings ?? []).map((d) => ({
-			number: d.Driver.permanentNumber ?? "",
-			code: d.Driver.code ?? "",
-			familyName: d.Driver.familyName,
-			points: parseFloat(d.points),
-			position: parseInt(d.position),
-			constructorId: d.Constructors.at(-1)?.constructorId,
-		}));
-		base.teams = (cs.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? []).map((c) => ({
-			constructorId: c.Constructor.constructorId,
-			name: c.Constructor.name,
-			points: parseFloat(c.points),
-			position: parseInt(c.position),
-		}));
+		const standings = await fetchStandings(`${year}/${round - 1}`);
+		if (!standings) return null;
+		base.drivers = standings.drivers;
+		base.teams = standings.teams;
+		base.after = afterRound(schedule.RaceTable.Races, round - 1);
 	}
 
 	if (isMainRace && race.Sprint) {
@@ -188,6 +178,49 @@ export async function fetchBaseStandings(
 	}
 
 	return base;
+}
+
+/** Latest published standings for the season (used outside a race weekend). */
+export async function fetchLatestStandings(year: number): Promise<BaseStandings | null> {
+	const [standings, schedule] = await Promise.all([
+		fetchStandings(`${year}`),
+		get<{ RaceTable: { Races: JolpicaRace[] } }>(`${year}.json?limit=100`),
+	]);
+	if (!standings) return null;
+	if (standings.round && schedule) standings.after = afterRound(schedule.RaceTable.Races, standings.round);
+	return standings;
+}
+
+function afterRound(races: JolpicaRace[], round: number): BaseStandings["after"] {
+	const race = races.find((r) => parseInt(r.round) === round);
+	return race?.raceName ? { round, raceName: race.raceName } : undefined;
+}
+
+async function fetchStandings(scope: string): Promise<(BaseStandings & { round?: number }) | null> {
+	const [ds, cs] = await Promise.all([
+		get<DriverStandingsResponse>(`${scope}/driverstandings.json?limit=100`),
+		get<ConstructorStandingsResponse>(`${scope}/constructorstandings.json?limit=100`),
+	]);
+	if (!ds || !cs) return null;
+
+	const round = parseInt(ds.StandingsTable.StandingsLists[0]?.round ?? "");
+	return {
+		round: Number.isFinite(round) ? round : undefined,
+		drivers: (ds.StandingsTable.StandingsLists[0]?.DriverStandings ?? []).map((d) => ({
+			number: d.Driver.permanentNumber ?? "",
+			code: d.Driver.code ?? "",
+			familyName: d.Driver.familyName,
+			points: parseFloat(d.points),
+			position: parseInt(d.position),
+			constructorId: d.Constructors.at(-1)?.constructorId,
+		})),
+		teams: (cs.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? []).map((c) => ({
+			constructorId: c.Constructor.constructorId,
+			name: c.Constructor.name,
+			points: parseFloat(c.points),
+			position: parseInt(c.position),
+		})),
+	};
 }
 
 export function applySprint(base: BaseStandings, results: SprintResult[]) {
@@ -230,6 +263,7 @@ function reorder(rows: { points: number; position: number }[]) {
 type DriverStandingsResponse = {
 	StandingsTable: {
 		StandingsLists: {
+			round?: string;
 			DriverStandings: {
 				position: string;
 				points: string;

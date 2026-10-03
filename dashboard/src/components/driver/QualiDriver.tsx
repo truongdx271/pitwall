@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import type { Driver, Sector, TimingDataDriver, TimingStatsDriver, PersonalBestLapTime } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
-import { formatDelta, parseTimeMs } from "@/lib/timeUtils";
+import { parseTimeMs } from "@/lib/timeUtils";
 
 import DriverTag from "./DriverTag";
 import DriverTireStack from "./DriverTireStack";
@@ -141,7 +141,7 @@ type SectorCellProps = {
  * Line 1 (big): personal best sector — the standing reference.
  * Line 2 (small): what's happening THIS lap.
  *   • in-sector  → mini-bar blocks (live pace)
- *   • completed  → sector time + Δ vs personal best
+ *   • completed  → sector time
  *   • nothing    → empty (driver between laps / no data)
  *
  * `sector.Value`        = sector timing for the CURRENT lap (non-empty while active/just finished)
@@ -157,11 +157,8 @@ function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProp
 
 	const isSessionFastest = bestSector?.Position === 1;
 
-	// Delta only for current-lap sector (sector.Value), not a cached prev-lap value
-	const deltaMs = curTime && bestTime ? parseTimeMs(curTime) - parseTimeMs(bestTime) : null;
-
 	const displayTime = curTime || prevTime;
-	const hasLine2 = hasSegs || !!displayTime || deltaMs !== null;
+	const hasLine2 = hasSegs || !!displayTime;
 
 	return (
 		<span className="flex min-w-0 flex-col items-end gap-px overflow-hidden">
@@ -176,7 +173,7 @@ function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProp
 				{bestTime || "---"}
 			</span>
 
-			{/* ── Line 2: current/prev time + Δ (pinned right) with live bars trailing left ── */}
+			{/* ── Line 2: current/prev time (pinned right) with live bars trailing left ── */}
 			{hasLine2 && (
 				<span className="flex w-full items-center justify-end gap-[0.5ch] overflow-hidden text-[11px] leading-none whitespace-nowrap">
 					{hasSegs && (
@@ -196,16 +193,6 @@ function QualiSectorCell({ sector, bestSector, showMiniSectors }: SectorCellProp
 							})}
 						>
 							{displayTime}
-						</span>
-					)}
-					{deltaMs !== null && (
-						<span
-							className={clsx("shrink-0 font-bold tabular-nums", {
-								"text-emerald-400": deltaMs < 0,
-								"text-red-500": deltaMs > 0,
-							})}
-						>
-							{formatDelta(deltaMs)}
 						</span>
 					)}
 				</span>

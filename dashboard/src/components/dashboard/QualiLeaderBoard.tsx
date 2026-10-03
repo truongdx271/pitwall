@@ -111,7 +111,7 @@ function QualiHeaders({ fastestSectors }: { fastestSectors: (number | null)[] })
 			{[0, 1, 2].map((i) => (
 				<span key={`hdr-s${i}`} className="flex items-baseline justify-end gap-[0.5ch] overflow-hidden">
 					<span className="text-[11px] tracking-widest text-zinc-400 uppercase">S{i + 1}</span>
-					<span className="text-[9px] text-zinc-600">cur/bl Δ</span>
+					<span className="text-[9px] text-zinc-600">cur/bl</span>
 					{/* fastest sector across the field (tiny reference) */}
 					{fastestSectors[i] !== null && (
 						<span className="text-[9px] text-zinc-600 tabular-nums">·{(fastestSectors[i]! / 1000).toFixed(3)}</span>

@@ -87,12 +87,6 @@ export default function QualiHelpModal({ onClose }: Props) {
 										<span className="text-amber-400">████</span> bars = driver is in this sector now
 									</li>
 									<li>number = sector time completed on this lap</li>
-									<li>
-										<span className="text-red-500">+X.XXX</span> = how much slower than their best in this sector
-									</li>
-									<li>
-										<span className="text-emerald-400">−X.XXX</span> = improving on their best sector (PB on the way)
-									</li>
 								</ul>
 							</div>
 						</div>

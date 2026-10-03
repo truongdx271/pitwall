@@ -34,3 +34,9 @@ numbered and signed (L/R) to match the TV graphic; T3 is the middle of the long
 880-1180 m right-hander and T13 the strongest right kink before T14 (checked
 against a second live-timing map, 2026-10-02). Label angles point away from
 the turn centre and rotate until they clear the track.
+
+`pitExit` (0.063) is the lap fraction where the feed reports `InPit: false`,
+measured from the FP2 archive (TimingData + Position.z, 2026-10-03): projected
+onto car 16's 1:37.522 lap, every pit exit lands at 0.062-0.065, ~15 m beside
+the track (the pit-exit line); cars rejoin the racing line at ~0.106. The map
+holds cars leaving the pits there until the feed reports a new segment.

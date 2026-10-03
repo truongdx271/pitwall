@@ -1,5 +1,7 @@
 export type Map = {
 	outlineOnly?: boolean;
+	// Our fallbacks only: lap fraction from the line where the feed reports InPit=false.
+	pitExit?: number;
 	corners: Corner[];
 	marshalLights: Corner[];
 	marshalSectors: Corner[];

@@ -38,6 +38,8 @@ type Options = {
 	// localStorage key for learned segment shares, so they carry across reloads and
 	// sessions of the weekend (learned in practice, used in qualifying and the race).
 	storageKey: string | null;
+	// Lap fraction where the feed reports cars leaving the pits; 0 (the line) if unknown.
+	pitExit: number;
 };
 
 const SAVE_INTERVAL_MS = 5_000;
@@ -74,6 +76,7 @@ export function useTrackAnimation({
 	garages,
 	sectorSeconds,
 	storageKey,
+	pitExit,
 }: Options) {
 	const track = useMemo(() => (trackPoints && trackPoints.length > 1 ? buildTrack(trackPoints) : null), [trackPoints]);
 
@@ -161,8 +164,9 @@ export function useTrackAnimation({
 				if (pit.stale === undefined) pitStale.current.delete(nr);
 				else pitStale.current.set(nr, pit.stale);
 
+				// Held at a known pit exit the car waits there (it's merging); at the line it may creep.
 				const seg = pit.hold
-					? { fraction: 0, segmentSize: boundaries[1] - boundaries[0] }
+					? { fraction: pitExit, segmentSize: pitExit > 0 ? 0 : boundaries[1] - boundaries[0] }
 					: segmentProgress(timing, boundaries);
 				if (!seg) {
 					node.style.visibility = "hidden";
@@ -193,7 +197,7 @@ export function useTrackAnimation({
 			cancelAnimationFrame(frame);
 			if (learning.version !== savedVersion) saveShares(storageKey, learning);
 		};
-	}, [enabled, track, rotation, centerX, centerY, carRadius, pitScale, garages, storageKey]);
+	}, [enabled, track, rotation, centerX, centerY, carRadius, pitScale, garages, storageKey, pitExit]);
 
 	// Stable per-driver ref callbacks.
 	const refs = useRef(new Map<string, (node: SVGGElement | null) => void>());

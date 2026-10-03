@@ -361,16 +361,16 @@ export function step(
 // Marker for a car currently in the pits (see pitExitHold).
 export const PIT = -1;
 
-// After a stop the feed keeps showing the in-lap's segments (often stopping short
-// of the pit entry, before the last corner) until the car reaches a new one. Placing
-// the car there would rewind it and then race it round to the line, so hold it on
-// the line, beside the pit row, while those stale segments are shown.
-// `stale` is PIT while in the pits, then the stale segment count; undefined otherwise.
+// The feed reports a car leaving the pits at the pit-exit line, but keeps showing
+// the segments it had (the in-lap's, often stopping short of the pit entry before
+// the last corner) until the car reaches a new one. Placing the car by those would
+// rewind it and race it round, so hold it at the pit exit until a new segment shows.
+// `stale` is PIT while in the pits, then the segment count at exit; undefined otherwise.
 export function pitExitHold(
 	stale: number | undefined,
 	completed: number,
 ): { hold: boolean; stale: number | undefined } {
-	if (stale === PIT) return completed > 0 ? { hold: true, stale: completed } : { hold: false, stale: undefined };
+	if (stale === PIT) return { hold: true, stale: completed };
 	if (stale !== undefined && stale === completed) return { hold: true, stale };
 	return { hold: false, stale: undefined };
 }

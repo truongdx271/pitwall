@@ -77,6 +77,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 	const [outlineOnly, setOutlineOnly] = useState(false);
 	const [rotation, setRotation] = useState<number>(0);
 	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
+	const [pitExit, setPitExit] = useState(0);
 	const [originalTrackPoints, setOriginalTrackPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	useEffect(() => {
@@ -134,6 +135,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 			const originalPoints = mapJson.x.map((x, index) => ({ x, y: mapJson.y[index] }));
 
 			setOutlineOnly(mapJson.outlineOnly ?? false);
+			setPitExit(mapJson.pitExit ?? 0);
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
@@ -183,6 +185,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 		garages,
 		sectorSeconds,
 		storageKey: `segmentShares:${circuitKey}:${year}`,
+		pitExit,
 	});
 
 	if (unavailable || !circuitKey) {

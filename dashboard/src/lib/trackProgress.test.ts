@@ -350,8 +350,15 @@ describe("pitExitHold", () => {
 		expect(pitExitHold(17, 2)).toEqual({ hold: false, stale: undefined });
 	});
 
-	it("does nothing when segments are already clear at pit exit, or the car never pitted", () => {
-		expect(pitExitHold(PIT, 0)).toEqual({ hold: false, stale: undefined });
+	it("also holds a car whose segments were already clear, until it reaches one", () => {
+		let r = pitExitHold(PIT, 0);
+		expect(r).toEqual({ hold: true, stale: 0 });
+		r = pitExitHold(r.stale, 0);
+		expect(r.hold).toBe(true);
+		expect(pitExitHold(r.stale, 2)).toEqual({ hold: false, stale: undefined });
+	});
+
+	it("does nothing for a car that never pitted", () => {
 		expect(pitExitHold(undefined, 17)).toEqual({ hold: false, stale: undefined });
 	});
 });

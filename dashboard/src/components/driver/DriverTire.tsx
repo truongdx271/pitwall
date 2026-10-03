@@ -23,7 +23,7 @@ const COMPOUND_BG: Record<string, string> = {
 };
 
 export default function DriverTire({ stints }: Props) {
-	const stops = stints ? stints.length - 1 : 0;
+	const stops = Math.max(0, (stints?.length ?? 0) - 1);
 	const currentStint = stints ? stints[stints.length - 1] : null;
 	const compound = currentStint?.Compound?.toLowerCase() ?? "";
 	const known = compound in COMPOUND_LETTER;

@@ -49,7 +49,9 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 	for (const s of all) boundaryOf.push(s.TotalLaps != null && s.TotalLaps > 0 ? boundaries[b++] : undefined);
 
 	return (
-		<span className={clsx("flex items-baseline whitespace-nowrap tabular-nums", showPace ? "gap-[1.5ch]" : "gap-[0.5ch]")}>
+		<span
+			className={clsx("flex items-baseline whitespace-nowrap tabular-nums", showPace ? "gap-[1.5ch]" : "gap-[0.5ch]")}
+		>
 			{recent.map((stint, i) => {
 				const compound = stint.Compound?.toLowerCase() ?? "";
 				const known = compound in COMPOUND_LETTER;
@@ -93,10 +95,7 @@ function StintPace({ entries, boundary, boundaries, current }: StintPaceProps) {
 			<span className={clsx("text-[11px]", current ? "text-zinc-300" : "text-zinc-500")}>{formatMs(avg)}</span>
 			{deg != null && (
 				<span
-					className={clsx(
-						"text-[10px]",
-						deg > 150 ? "text-red-500" : deg < -50 ? "text-emerald-500" : "text-zinc-600",
-					)}
+					className={clsx("text-[10px]", deg > 150 ? "text-red-500" : deg < -50 ? "text-emerald-500" : "text-zinc-600")}
 				>
 					{deg > 0 ? "+" : ""}
 					{(deg / 1000).toFixed(2)}

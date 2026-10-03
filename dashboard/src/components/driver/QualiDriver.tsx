@@ -10,12 +10,12 @@ import { useDataStore } from "@/stores/useDataStore";
 import { formatDelta, parseTimeMs } from "@/lib/timeUtils";
 
 import DriverTag from "./DriverTag";
-import DriverTire from "./DriverTire";
+import DriverTireStack from "./DriverTireStack";
 
 // Every column is a fixed width so the tower stays aligned regardless of what
 // each cell holds (live bars of varying length, deltas, blanks). Sector cells
 // right-align their content and clip overflow, so the times/Δ always line up.
-export const QUALI_GRID_COLS = "7ch 9ch 10ch 10ch 18ch 18ch 18ch 7ch";
+export const QUALI_GRID_COLS = "7ch 9ch 10ch 10ch 18ch 18ch 18ch 16ch";
 export const QUALI_GRID_GAP = "2ch";
 
 type Props = {
@@ -105,7 +105,7 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 					/>
 				))}
 
-				<DriverTire stints={appTimingDriver?.Stints} />
+				<DriverTireStack stints={appTimingDriver?.Stints} racingNumber={driver.RacingNumber} />
 			</div>
 
 			<Link

@@ -16,6 +16,8 @@ export type BaseDriver = {
 	points: number;
 	position: number;
 	constructorId?: string;
+	// Every constructor the driver scored for this season (jolpica's order isn't chronological).
+	constructorIds?: string[];
 };
 
 // Drivers with points who aren't in this session's DriverList carry their own label.
@@ -51,13 +53,8 @@ export function predictStandings(
 	const byNumber = new Map(base.drivers.map((d) => [d.number, d]));
 	const byCode = new Map(base.drivers.map((d) => [d.code, d]));
 
-	// Live team name -> constructorId, learned from drivers we can match.
-	const teamIdByName = new Map<string, string>();
 	const baseFor = (nr: string) => byNumber.get(nr) ?? byCode.get(driverList[nr]?.Tla ?? "");
-	for (const [nr, info] of Object.entries(driverList)) {
-		const id = baseFor(nr)?.constructorId;
-		if (id && info.TeamName && !teamIdByName.has(info.TeamName)) teamIdByName.set(info.TeamName, id);
-	}
+	const teamIdByName = matchTeams(driverList, baseFor, base.teams);
 
 	const lastDriverPos = base.drivers.reduce((max, d) => Math.max(max, d.position), 0);
 	const matched = new Set<BaseDriver>();
@@ -92,7 +89,8 @@ export function predictStandings(
 	const teamEarned = new Map<string, number>();
 	const teamDisplay = new Map<string, string>();
 	for (const [nr, info] of Object.entries(driverList)) {
-		const id = baseFor(nr)?.constructorId ?? teamIdByName.get(info.TeamName);
+		// Points go to the team the driver races for today (drivers switch teams mid-season).
+		const id = teamIdByName.get(info.TeamName) ?? baseFor(nr)?.constructorId;
 		if (!id) continue;
 		teamEarned.set(id, (teamEarned.get(id) ?? 0) + earned(nr));
 		if (info.TeamName && !teamDisplay.has(id)) teamDisplay.set(id, info.TeamName);
@@ -113,6 +111,71 @@ export function predictStandings(
 		Drivers: Object.fromEntries(drivers.map((d) => [d.RacingNumber, d])),
 		Teams: Object.fromEntries(teams.map((t) => [t.TeamName, t])),
 	};
+}
+
+const normalizeTeam = (name: string) =>
+	name
+		.toLowerCase()
+		.replace(/f1 team|racing|team/g, "")
+		.replace(/[^a-z0-9]/g, "");
+
+// Live team name (DriverList, e.g. "Racing Bulls") -> jolpica constructorId ("rb").
+// Names first ("Red Bull Racing" ~ "Red Bull"), then the constructors its drivers scored
+// for, most-voted first; a constructor goes to one live team only.
+function matchTeams(
+	driverList: Record<string, Pick<Driver, "Tla" | "TeamName">>,
+	baseFor: (nr: string) => BaseDriver | undefined,
+	teams: BaseTeam[],
+): Map<string, string> {
+	const result = new Map<string, string>();
+	const claimed = new Set<string>();
+	const liveTeams = Array.from(
+		new Set(
+			Object.values(driverList)
+				.map((d) => d.TeamName)
+				.filter(Boolean),
+		),
+	);
+
+	for (const name of liveTeams) {
+		const live = normalizeTeam(name);
+		const team = teams.find((t) => {
+			const known = normalizeTeam(t.name);
+			return (
+				live !== "" &&
+				known !== "" &&
+				!claimed.has(t.constructorId) &&
+				(live === known || live.includes(known) || known.includes(live))
+			);
+		});
+		if (team) {
+			result.set(name, team.constructorId);
+			claimed.add(team.constructorId);
+		}
+	}
+
+	const votes = liveTeams
+		.filter((name) => !result.has(name))
+		.map((name) => {
+			const count = new Map<string, number>();
+			for (const [nr, info] of Object.entries(driverList)) {
+				if (info.TeamName !== name) continue;
+				const b = baseFor(nr);
+				for (const id of b?.constructorIds ?? (b?.constructorId ? [b.constructorId] : [])) {
+					count.set(id, (count.get(id) ?? 0) + 1);
+				}
+			}
+			return { name, ranked: Array.from(count.entries()).sort((a, z) => z[1] - a[1]) };
+		})
+		.sort((a, z) => (z.ranked[0]?.[1] ?? 0) - (a.ranked[0]?.[1] ?? 0));
+
+	for (const { name, ranked } of votes) {
+		const pick = ranked.find(([id]) => !claimed.has(id));
+		if (!pick) continue;
+		result.set(name, pick[0]);
+		claimed.add(pick[0]);
+	}
+	return result;
 }
 
 // Ties keep the pre-race order (we don't have countback data).
@@ -213,6 +276,7 @@ async function fetchStandings(scope: string): Promise<(BaseStandings & { round?:
 			points: parseFloat(d.points),
 			position: parseInt(d.position),
 			constructorId: d.Constructors.at(-1)?.constructorId,
+			constructorIds: d.Constructors.map((c) => c.constructorId),
 		})),
 		teams: (cs.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? []).map((c) => ({
 			constructorId: c.Constructor.constructorId,

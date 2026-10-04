@@ -117,3 +117,42 @@ describe("applySprint", () => {
 		expect(b.drivers.find((d) => d.code === "HAM")?.position).toBe(3);
 	});
 });
+
+describe("predictStandings constructors", () => {
+	it("credits a driver's points to the team they race for today, not their last team in the standings", () => {
+		// 2026 Bahrain GP: Lawson races for Racing Bulls; jolpica lists him under rb and red_bull.
+		const base: BaseStandings = {
+			drivers: [
+				{ number: "3", code: "VER", points: 163, position: 1, constructorId: "red_bull", constructorIds: ["red_bull"] },
+				{ number: "6", code: "HAD", points: 86, position: 2, constructorId: "red_bull", constructorIds: ["red_bull"] },
+				{
+					number: "30",
+					code: "LAW",
+					points: 59,
+					position: 3,
+					constructorId: "red_bull",
+					constructorIds: ["rb", "red_bull"],
+				},
+				{ number: "41", code: "LIN", points: 37, position: 4, constructorId: "rb", constructorIds: ["rb"] },
+			],
+			teams: [
+				{ constructorId: "red_bull", name: "Red Bull", points: 263, position: 1 },
+				{ constructorId: "rb", name: "RB F1 Team", points: 83, position: 2 },
+			],
+		};
+		const list = {
+			"3": { Tla: "VER", TeamName: "Red Bull Racing" },
+			"6": { Tla: "HAD", TeamName: "Red Bull Racing" },
+			"30": { Tla: "LAW", TeamName: "Racing Bulls" },
+			"41": { Tla: "LIN", TeamName: "Racing Bulls" },
+		};
+		const result = predictStandings(
+			base,
+			{ "3": line("3", 1), "6": line("6", 7), "30": line("30", 8), "41": line("41", 10) },
+			list,
+			RACE_POINTS,
+		);
+		expect(result.Teams["Red Bull Racing"]?.PredictedPoints).toBe(263 + 25 + 6);
+		expect(result.Teams["Racing Bulls"]?.PredictedPoints).toBe(83 + 4 + 1);
+	});
+});

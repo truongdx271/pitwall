@@ -31,7 +31,7 @@ const COMPOUND_BG: Record<string, string> = {
 
 const EMPTY_ENTRIES: LapTimeEntry[] = [];
 
-// Most recent stints, oldest -> newest; earlier ones dimmed.
+// Most recent stints, newest (current) on the left; earlier ones dimmed.
 // With showPace, each stint box is followed by its push-lap average and degradation.
 export default function DriverTireStack({ stints, racingNumber, showPace = false, max = 3 }: Props) {
 	const entries = useHistoryStore((s) => (showPace ? (s.lapTimes[racingNumber] ?? EMPTY_ENTRIES) : EMPTY_ENTRIES));
@@ -52,27 +52,32 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 		<span
 			className={clsx("flex items-baseline whitespace-nowrap tabular-nums", showPace ? "gap-[1.5ch]" : "gap-[0.5ch]")}
 		>
-			{recent.map((stint, i) => {
-				const compound = stint.Compound?.toLowerCase() ?? "";
-				const known = compound in COMPOUND_LETTER;
-				const current = i === recent.length - 1;
-				const boundary = boundaryOf[offset + i];
+			{recent
+				.map((_, j) => recent.length - 1 - j)
+				.map((i) => {
+					const stint = recent[i];
+					const compound = stint.Compound?.toLowerCase() ?? "";
+					const known = compound in COMPOUND_LETTER;
+					const current = i === recent.length - 1;
+					const boundary = boundaryOf[offset + i];
 
-				return (
-					<span key={i} className="flex items-baseline gap-[0.5ch]">
-						<span
-							className={clsx(
-								"inline-block min-w-[4ch] px-[0.3ch] leading-none font-bold",
-								known ? COMPOUND_BG[compound] : "bg-zinc-700 text-black",
-								!current && "opacity-40",
+					return (
+						<span key={i} className="flex items-baseline gap-[0.5ch]">
+							<span
+								className={clsx(
+									"inline-block min-w-[4ch] px-[0.3ch] leading-none font-bold",
+									known ? COMPOUND_BG[compound] : "bg-zinc-700 text-black",
+									!current && "opacity-40",
+								)}
+							>
+								{known ? COMPOUND_LETTER[compound] : "?"} {stintLaps(stint)}
+							</span>
+							{showPace && (
+								<StintPace entries={entries} boundary={boundary} boundaries={boundaries} current={current} />
 							)}
-						>
-							{known ? COMPOUND_LETTER[compound] : "?"} {stintLaps(stint)}
 						</span>
-						{showPace && <StintPace entries={entries} boundary={boundary} boundaries={boundaries} current={current} />}
-					</span>
-				);
-			})}
+					);
+				})}
 		</span>
 	);
 }

@@ -50,7 +50,7 @@ export default function RaceHelpModal({ onClose }: Props) {
 							<Row label="LAP" desc="Last completed lap. If there is none yet, shows the best lap of the session." />
 							<Row label="BEST" desc="Driver's best lap of the race." />
 							<Row label="SECTORS" desc="Live mini-sector bars (see below)." />
-							<Row label="TYRE" desc="Last 3 stints (oldest to current): compound and laps on each set." />
+							<Row label="TYRE" desc="Last 3 stints (current first, then older): compound and laps on each set." />
 							<Row
 								label="PACE"
 								desc="Average pace per stint, excluding pit in/out laps. Toggle with the PACE button (see below)."

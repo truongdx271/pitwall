@@ -54,7 +54,7 @@ export default function QualiHelpModal({ onClose }: Props) {
 								accentText="green = lap PB · violet = fastest of all"
 							/>
 							<Row label="S1 / S2 / S3" desc="Sector columns (see below)." />
-							<Row label="TYRE" desc="Last 3 stints (oldest to current): compound and laps on each set." />
+							<Row label="TYRE" desc="Last 3 stints (current first, then older): compound and laps on each set." />
 						</div>
 					</section>
 

@@ -1,0 +1,14 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "pitwall-web",
+	"main": ".open-next/worker.js",
+	"compatibility_date": "2026-09-01",
+	// global_fetch_strictly_public lets SSR fetch the other workers.dev workers (avoids error 1042).
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+	"observability": { "enabled": true },
+	"vars": {
+		"NEXT_PUBLIC_LIVE_URL": "https://pitwall-realtime.pitwall-realtime.workers.dev",
+		"API_URL": "https://pitwall-api.pitwall-realtime.workers.dev"
+	}
+}

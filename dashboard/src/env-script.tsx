@@ -8,6 +8,7 @@ import { isRuntimeEnv } from "@/lib/runtimeEnv";
 
 export const getPublicEnv = () => ({
 	NEXT_PUBLIC_LIVE_URL: process.env.NEXT_PUBLIC_LIVE_URL,
+	NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 export default async function EnvScript() {

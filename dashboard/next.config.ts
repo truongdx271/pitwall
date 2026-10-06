@@ -4,7 +4,10 @@ import pack from "./package.json" with { type: "json" };
 
 import "@/env";
 
-const output = process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined;
+// NEXT_EXPORT=1 is the static Cloudflare build: plain files, no server. Route handlers are named
+// route.server.ts so only server builds pick them up.
+const staticExport = process.env.NEXT_EXPORT === "1";
+const output = staticExport ? "export" : process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined;
 const compress = process.env.NEXT_NO_COMPRESS === "1";
 
 const frameDisableHeaders = [
@@ -27,11 +30,14 @@ const frameDisableHeaders = [
 
 const config: NextConfig = {
 	output,
+	pageExtensions: staticExport ? ["tsx", "ts"] : ["tsx", "ts", "server.ts"],
 	compress,
 	env: {
 		version: pack.version,
 	},
 	images: {
+		// No optimizer without a server; every next/image source is an SVG anyway.
+		unoptimized: staticExport,
 		remotePatterns: [
 			{
 				protocol: "https",
@@ -40,7 +46,8 @@ const config: NextConfig = {
 			},
 		],
 	},
-	headers: async () => frameDisableHeaders,
+	// The static build ships them as cloudflare/_headers (Workers static assets) instead.
+	headers: staticExport ? undefined : async () => frameDisableHeaders,
 };
 
 export default config;

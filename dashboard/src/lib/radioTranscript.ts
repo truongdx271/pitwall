@@ -1,12 +1,13 @@
 // Helpers for fetching team radio transcripts via /api/radio/transcript
 // (proxied to the Rust api, which transcribes each clip once with Groq Whisper).
+// The static Cloudflare build has no proxy and passes the API worker's URL as apiBase.
 
 export const MAX_ATTEMPTS = 4;
 
 const DEFAULT_RETRY_S = 10;
 
-export function transcriptUrl(sessionPath: string, clipPath: string): string {
-	return `/api/radio/transcript?path=${encodeURIComponent(sessionPath + clipPath)}`;
+export function transcriptUrl(sessionPath: string, clipPath: string, apiBase = ""): string {
+	return `${apiBase}/api/radio/transcript?path=${encodeURIComponent(sessionPath + clipPath)}`;
 }
 
 // Only 503 (Groq rate limit) is worth retrying; everything else is final.

@@ -10,9 +10,9 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"prettier": "prettier --write src",
-		"cf:build": "STATIC_PUBLIC_ENV=1 NEXT_PUBLIC_LIVE_URL=https://pitwall-realtime.pitwall-realtime.workers.dev API_URL=https://pitwall-api.pitwall-realtime.workers.dev opennextjs-cloudflare build",
-		"cf:preview": "yarn cf:build && opennextjs-cloudflare preview",
-		"cf:deploy": "yarn cf:build && opennextjs-cloudflare deploy"
+		"cf:build": "NEXT_EXPORT=1 STATIC_PUBLIC_ENV=1 NEXT_PUBLIC_LIVE_URL=https://pitwall-realtime.pitwall-realtime.workers.dev NEXT_PUBLIC_API_URL=https://pitwall-api.pitwall-realtime.workers.dev API_URL=https://pitwall-api.pitwall-realtime.workers.dev next build && cp cloudflare/_headers out/",
+		"cf:preview": "yarn cf:build && wrangler dev",
+		"cf:deploy": "yarn cf:build && wrangler deploy"
 	},
 	"dependencies": {
 		"@headlessui/react": "2.2.10",
@@ -30,7 +30,6 @@
 		"zustand": "5.0.14"
 	},
 	"devDependencies": {
-		"@opennextjs/cloudflare": "^1.20.8",
 		"@tailwindcss/postcss": "4.3.0",
 		"@types/node": "22.19.20",
 		"@types/pako": "2.0.4",

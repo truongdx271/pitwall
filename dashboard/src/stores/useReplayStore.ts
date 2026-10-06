@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 // Dev-only: controls the recorded-session replay (see components/dev/ReplayOverlay.tsx
-// and app/api/dev/replay/route.ts). Only `mode`, `sessionId` and `speed` are persisted;
+// and app/api/dev/replay/route.server.ts). Only `mode`, `sessionId` and `speed` are persisted;
 // everything else is runtime state.
 
 export type ReplayMode = "live" | "replay";

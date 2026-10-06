@@ -1,8 +1,6 @@
 import { connection } from "next/server";
-import { utc } from "moment";
 
-import Countdown from "@/components/schedule/Countdown";
-import Round from "@/components/schedule/Round";
+import { NextRoundView } from "@/components/schedule/ScheduleView";
 
 import { env } from "@/env";
 import type { Round as RoundType } from "@/types/schedule.type";
@@ -24,33 +22,5 @@ export const getNext = async () => {
 };
 
 export default async function NextRound() {
-	const next = await getNext();
-
-	if (!next) {
-		return (
-			<div className="flex h-32 flex-col items-center justify-center font-mono">
-				<p className="text-[11px] tracking-widest text-zinc-600 uppercase">no upcoming weekend found</p>
-			</div>
-		);
-	}
-
-	const nextSession = next.sessions.filter((s) => utc(s.start) > utc() && s.kind.toLowerCase() !== "race")[0];
-	const nextRace = next.sessions.find((s) => s.kind.toLowerCase() == "race");
-
-	return (
-		<div className="mb-4 grid grid-cols-1 gap-8 sm:grid-cols-2">
-			{nextSession || nextRace ? (
-				<div className="flex flex-col gap-6">
-					{nextSession && <Countdown next={nextSession} type="other" />}
-					{nextRace && <Countdown next={nextRace} type="race" />}
-				</div>
-			) : (
-				<div className="flex flex-col items-center justify-center font-mono">
-					<p className="text-[11px] tracking-widest text-zinc-600 uppercase">no upcoming sessions found</p>
-				</div>
-			)}
-
-			<Round round={next} />
-		</div>
-	);
+	return <NextRoundView next={await getNext()} />;
 }

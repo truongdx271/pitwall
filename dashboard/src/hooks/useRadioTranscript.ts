@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { env } from "@/env";
 import { retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
 
 export type TranscriptState = { status: "loading" } | { status: "done"; text: string } | { status: "unavailable" };
@@ -24,7 +25,7 @@ export function useRadioTranscript(sessionPath: string | undefined, clipPath: st
 
 		const attempt = async (n: number) => {
 			try {
-				const res = await fetch(transcriptUrl(sessionPath, clipPath), { signal: controller.signal });
+				const res = await fetch(transcriptUrl(sessionPath, clipPath, env.NEXT_PUBLIC_API_URL), { signal: controller.signal });
 
 				if (res.ok) {
 					const { text } = (await res.json()) as { text: string };

@@ -10,6 +10,12 @@ describe("transcriptUrl", () => {
 			"/api/radio/transcript?path=2026%2F2026-05-24_Canadian_Grand_Prix%2F2026-05-24_Race%2FTeamRadio%2FLEC_16_20260524_130022.mp3",
 		);
 	});
+
+	it("calls the API directly when given its base URL (static Cloudflare build)", () => {
+		expect(transcriptUrl("2026/x/y/", "TeamRadio/LEC_16_20260524_130022.mp3", "https://pitwall-api.example.dev")).toBe(
+			"https://pitwall-api.example.dev/api/radio/transcript?path=2026%2Fx%2Fy%2FTeamRadio%2FLEC_16_20260524_130022.mp3",
+		);
+	});
 });
 
 describe("retryDelayMs", () => {

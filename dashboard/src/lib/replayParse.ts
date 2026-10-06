@@ -1,4 +1,4 @@
-// Pure parsing helpers for the dev replay route (src/app/api/dev/replay/route.ts).
+// Pure parsing helpers for the dev replay route (src/app/api/dev/replay/route.server.ts).
 // Kept here so they can be unit-tested without the Node file-streaming machinery.
 
 // Topics the dashboard folds into `state` (see useDataEngine.ts). Everything else in

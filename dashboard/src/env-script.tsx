@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import Script from "next/script";
 
 import { PUBLIC_ENV_KEY } from "@/env";
+import { isRuntimeEnv } from "@/lib/runtimeEnv";
 
 // only list env vars that can be exposed to the client
 
@@ -10,7 +11,7 @@ export const getPublicEnv = () => ({
 });
 
 export default async function EnvScript() {
-	await connection();
+	if (isRuntimeEnv(process.env)) await connection();
 
 	const env = getPublicEnv();
 

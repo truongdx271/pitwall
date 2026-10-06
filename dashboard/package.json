@@ -10,7 +10,7 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"prettier": "prettier --write src",
-		"cf:build": "NEXT_PUBLIC_LIVE_URL=https://pitwall-realtime.pitwall-realtime.workers.dev API_URL=https://pitwall-api.pitwall-realtime.workers.dev opennextjs-cloudflare build",
+		"cf:build": "STATIC_PUBLIC_ENV=1 NEXT_PUBLIC_LIVE_URL=https://pitwall-realtime.pitwall-realtime.workers.dev API_URL=https://pitwall-api.pitwall-realtime.workers.dev opennextjs-cloudflare build",
 		"cf:preview": "yarn cf:build && opennextjs-cloudflare preview",
 		"cf:deploy": "yarn cf:build && opennextjs-cloudflare deploy"
 	},

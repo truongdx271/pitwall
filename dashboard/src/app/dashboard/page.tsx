@@ -79,7 +79,7 @@ export default function Page() {
 								<Map />
 							</div>
 							<div className="flex h-[40vh] min-h-64 flex-col overflow-hidden border-t border-zinc-800 md:h-auto md:min-h-0 md:border-t-0 md:border-l">
-								<div className="min-h-0 flex-[2] pt-2">
+								<div className="min-h-0 flex-1 pt-2">
 									<RadioTranscripts />
 								</div>
 								<div className="flex min-h-0 flex-1 flex-col border-t border-zinc-800 pt-1">

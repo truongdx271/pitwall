@@ -78,8 +78,18 @@ export default function Page() {
 							<div className="h-[40vh] min-h-64 overflow-hidden py-2 md:h-auto md:min-h-0">
 								<Map />
 							</div>
-							<div className="h-[40vh] min-h-64 overflow-hidden border-t border-zinc-800 py-2 md:h-auto md:min-h-0 md:border-t-0 md:border-l">
-								<RadioTranscripts />
+							<div className="flex h-[40vh] min-h-64 flex-col overflow-hidden border-t border-zinc-800 md:h-auto md:min-h-0 md:border-t-0 md:border-l">
+								<div className="min-h-0 flex-[2] pt-2">
+									<RadioTranscripts />
+								</div>
+								<div className="flex min-h-0 flex-1 flex-col border-t border-zinc-800 pt-1">
+									<span className="border-b border-zinc-900 px-2 pb-1 font-mono text-[11px] tracking-widest text-zinc-400 uppercase">
+										Race control
+									</span>
+									<div className="min-h-0 flex-1 overflow-y-auto">
+										<RaceControl />
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

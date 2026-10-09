@@ -38,6 +38,11 @@ describe("fetchMap", () => {
 		expect(await fetchMap(153, 2026)).toEqual(map);
 		expect(fetch.mock.calls[1][0]).toBe("/maps/153-2026.json");
 	});
+	it("adds the measured pit exit to a provider layout that lacks one", async () => {
+		const map = { x: [0, 1, 2, 0], y: [0, 1, 0, 0], rotation: 0, corners: [], marshalSectors: [] };
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json(map)));
+		expect(await fetchMap(61, 2026)).toEqual({ ...map, pitExit: 0.052 });
+	});
 	it("handles a timeout or network error", async () => {
 		vi.spyOn(console, "error").mockImplementation(() => {});
 		vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new DOMException("timeout", "TimeoutError")));

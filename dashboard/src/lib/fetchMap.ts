@@ -25,9 +25,14 @@ async function loadMap(url: string): Promise<Map | null> {
 	}
 }
 
+// Lap fraction where the feed reports InPit: false, for provider layouts (which
+// don't carry one). Measured from archive TimingData + Position.z; see public/maps/README.md.
+const PIT_EXITS: Record<string, number> = { "61/2026": 0.052 };
+
 export const fetchMap = async (circuitKey: number, year = new Date().getFullYear()): Promise<Map | null> => {
 	const map = await loadMap(`https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`);
-	if (map) return map;
+	const pitExit = PIT_EXITS[`${circuitKey}/${year}`];
+	if (map) return pitExit !== undefined && map.pitExit === undefined ? { ...map, pitExit } : map;
 	if (OUTLINE_FALLBACKS.has(`${circuitKey}/${year}`)) return loadMap(`/maps/${circuitKey}-${year}.json`);
 	return null;
 };

@@ -40,3 +40,11 @@ measured from the FP2 archive (TimingData + Position.z, 2026-10-03): projected
 onto car 16's 1:37.522 lap, every pit exit lands at 0.062-0.065, ~15 m beside
 the track (the pit-exit line); cars rejoin the racing line at ~0.106. The map
 holds cars leaving the pits there until the feed reports a new segment.
+
+## Singapore (circuit 61, 2026)
+
+The provider layout is used as is; only `pitExit` (0.052) is added in
+`src/lib/fetchMap.ts`. Measured from the FP1 archive (2026-10-09): projecting
+each car's Position.z sample at `InPit: false` onto the provider outline, all 75
+pit exits land at 0.050-0.054, ~19 m beside the track. Lap-count ticks land
+within ~3 m of outline point 0, so point 0 is the finish line.

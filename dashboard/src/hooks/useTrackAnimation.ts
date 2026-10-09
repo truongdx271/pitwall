@@ -116,7 +116,8 @@ export function useTrackAnimation({
 		let savedAt = 0;
 
 		// Tucked against the track edge; running cars on the straight may draw over them.
-		const slots = pitSlots(track, garages.length, carRadius * pitScale * 2.3, carRadius);
+		// Neighbours overlap by ~40% so the row stays near the pit straight instead of spilling past it.
+		const slots = pitSlots(track, garages.length, carRadius * pitScale * 1.2, carRadius);
 
 		const tick = (t: number) => {
 			const dt = Math.min((t - last) / 1000, 0.25); // background tabs return huge gaps

@@ -39,7 +39,7 @@ describe("teamColours", () => {
 		const list = { "31": haas };
 		expect(teamColours(list)).toBe(list);
 	});
-	it("keeps white text on the Cadillac yellow", () => {
-		expect(textOn(CADILLAC_YELLOW)).toBe("#fff");
+	it("puts black text on the Cadillac yellow", () => {
+		expect(textOn(CADILLAC_YELLOW)).toBe("#000");
 	});
 });

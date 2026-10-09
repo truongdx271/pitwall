@@ -9,15 +9,14 @@ export function isLight(hex: string): boolean {
 }
 
 // The feed sends Cadillac a grey (909090) that is hard to tell from Haas (9C9FA2).
-// Shown as yellow with white text, by the user's choice.
+// Shown as yellow (black text, via textOn) by the user's choice.
 export const CADILLAC_YELLOW = "E6B800";
 
 const TEAM_COLOUR_OVERRIDES: Record<string, string> = { Cadillac: CADILLAC_YELLOW };
-const WHITE_TEXT = new Set([CADILLAC_YELLOW]);
 
 // Readable text colour on top of a team colour.
 export function textOn(hex: string | undefined): "#000" | "#fff" {
-	return hex && isLight(hex) && !WHITE_TEXT.has(hex) ? "#000" : "#fff";
+	return hex && isLight(hex) ? "#000" : "#fff";
 }
 
 // Applies TEAM_COLOUR_OVERRIDES to a DriverList; returns the same object when nothing changes.

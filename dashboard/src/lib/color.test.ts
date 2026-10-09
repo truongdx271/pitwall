@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isLight, textOn } from "@/lib/color";
+import { CADILLAC_YELLOW, isLight, teamColours, textOn } from "@/lib/color";
 
 describe("isLight", () => {
 	it("treats bright team colours as light", () => {
@@ -26,5 +26,20 @@ describe("textOn", () => {
 		expect(textOn("FF8000")).toBe("#000");
 		expect(textOn("3671C6")).toBe("#fff");
 		expect(textOn(undefined)).toBe("#fff");
+	});
+});
+
+describe("teamColours", () => {
+	const haas = { TeamName: "Haas F1 Team", TeamColour: "9C9FA2" };
+	it("paints Cadillac yellow so it stands apart from Haas grey", () => {
+		const list = { "11": { TeamName: "Cadillac", TeamColour: "909090" }, "31": haas };
+		expect(teamColours(list)).toEqual({ "11": { TeamName: "Cadillac", TeamColour: CADILLAC_YELLOW }, "31": haas });
+	});
+	it("returns the same object when nothing changes", () => {
+		const list = { "31": haas };
+		expect(teamColours(list)).toBe(list);
+	});
+	it("keeps white text on the Cadillac yellow", () => {
+		expect(textOn(CADILLAC_YELLOW)).toBe("#fff");
 	});
 });

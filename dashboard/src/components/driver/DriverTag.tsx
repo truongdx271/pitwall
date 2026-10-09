@@ -1,4 +1,4 @@
-import { isLight } from "@/lib/color";
+import { textOn } from "@/lib/color";
 
 type Props = {
 	teamColor: string;
@@ -9,7 +9,7 @@ type Props = {
 
 export default function DriverTag({ position, teamColor, short, className }: Props) {
 	const bg = teamColor ? `#${teamColor}` : "#444";
-	const fg = teamColor ? (isLight(teamColor) ? "#000" : "#fff") : "#fff";
+	const fg = textOn(teamColor);
 
 	return (
 		<span className={`flex items-baseline gap-[0.5ch] overflow-hidden ${className ?? ""}`}>

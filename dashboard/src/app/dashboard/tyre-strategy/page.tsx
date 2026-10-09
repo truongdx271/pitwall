@@ -3,7 +3,7 @@
 import { useDataStore } from "@/stores/useDataStore";
 import { stintLaps, tyreLapScale } from "@/lib/tyreStrategy";
 import type { Stint } from "@/types/state.type";
-import { isLight } from "@/lib/color";
+import { textOn } from "@/lib/color";
 
 const COMPOUND_COLORS: Record<string, string> = {
 	SOFT: "#E8002D",
@@ -91,7 +91,7 @@ export default function TyreStrategy() {
 					if (!driver) return null;
 
 					const teamColor = driver.TeamColour ? `#${driver.TeamColour}` : "#444";
-					const textColor = driver.TeamColour && isLight(driver.TeamColour) ? "#000" : "#fff";
+					const textColor = textOn(driver.TeamColour);
 					const stints = d.Stints ?? [];
 					const pitLaps = getPitLaps(stints);
 

@@ -4,6 +4,7 @@ import type { Driver, RadioCapture } from "@/types/state.type";
 import { useDataStore } from "@/stores/useDataStore";
 import { useRadioTranscript } from "@/hooks/useRadioTranscript";
 import { sortUtc } from "@/lib/sorting";
+import { hasWords } from "@/lib/radioTranscript";
 
 import DriverTag from "@/components/driver/DriverTag";
 
@@ -48,7 +49,7 @@ function TranscriptLine({ driver, capture, sessionPath }: LineProps) {
 	const transcript = useRadioTranscript(sessionPath, capture.Path);
 
 	if (transcript.status === "unavailable") return null;
-	if (transcript.status === "done" && !transcript.text) return null;
+	if (transcript.status === "done" && !hasWords(transcript.text)) return null;
 
 	return (
 		<li className="flex items-start gap-[1ch] border-b border-zinc-900 px-2 py-1 text-sm">

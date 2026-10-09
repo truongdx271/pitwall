@@ -17,3 +17,8 @@ export function retryDelayMs(status: number, retryAfter: string | null, attempt:
 	const secs = Number(retryAfter);
 	return (Number.isFinite(secs) && secs > 0 ? secs : DEFAULT_RETRY_S) * 1000;
 }
+
+// Whisper returns "." or similar for near-silent clips; those aren't worth a row.
+export function hasWords(text: string): boolean {
+	return /[0-9A-Za-z\u00C0-\u1FFF\u3040-\uFFEF]/.test(text);
+}

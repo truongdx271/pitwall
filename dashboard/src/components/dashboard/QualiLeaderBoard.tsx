@@ -7,6 +7,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { sortPos } from "@/lib/sorting";
 import { parseTimeMs } from "@/lib/timeUtils";
+import { sessionPartPrefix } from "@/lib/sessionPart";
 import { useLoadingGrace } from "@/hooks/useLoadingGrace";
 
 import QualiDriver, { QUALI_GRID_COLS, QUALI_GRID_GAP } from "@/components/driver/QualiDriver";
@@ -17,6 +18,7 @@ export default function QualiLeaderBoard() {
 	const drivers = useDataStore(({ state }) => state?.DriverList);
 	const driversTiming = useDataStore(({ state }) => state?.TimingData);
 	const timingStats = useDataStore(({ state }) => state?.TimingStats);
+	const sessionName = useDataStore(({ state }) => state?.SessionInfo?.Name ?? "");
 	const noData = !drivers || !driversTiming;
 	const graceOver = useLoadingGrace();
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
@@ -56,7 +58,7 @@ export default function QualiLeaderBoard() {
 			<div className="w-full overflow-x-auto font-mono text-base">
 				<div className="flex items-center justify-between border-b border-zinc-800 px-2 py-0.5">
 					<span className="text-[11px] tracking-widest text-zinc-600 uppercase">
-						{sessionPart ? `Q${sessionPart}` : "QUALIFYING"}
+						{sessionPart ? `${sessionPartPrefix(sessionName) || "Q"}${sessionPart}` : "QUALIFYING"}
 					</span>
 					<button
 						onClick={() => setHelpOpen(true)}

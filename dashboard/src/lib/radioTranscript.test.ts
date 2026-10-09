@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { MAX_ATTEMPTS, retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
+import { MAX_ATTEMPTS, hasWords, retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
 
 describe("transcriptUrl", () => {
 	it("joins session and clip path and encodes it", () => {
@@ -34,5 +34,19 @@ describe("retryDelayMs", () => {
 
 	it("never retries other statuses", () => {
 		for (const status of [400, 404, 501, 502]) expect(retryDelayMs(status, "7", 1)).toBeNull();
+	});
+});
+
+describe("hasWords", () => {
+	it("rejects punctuation-only or blank transcripts", () => {
+		expect(hasWords(".")).toBe(false);
+		expect(hasWords(" ... ")).toBe(false);
+		expect(hasWords("…")).toBe(false);
+		expect(hasWords("")).toBe(false);
+	});
+	it("accepts any letter or digit", () => {
+		expect(hasWords("Box, box.")).toBe(true);
+		expect(hasWords("P3")).toBe(true);
+		expect(hasWords("Đúng")).toBe(true);
 	});
 });

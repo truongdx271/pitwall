@@ -4,17 +4,7 @@ import { utc, duration } from "moment";
 
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
-
-const sessionPartPrefix = (name: string) => {
-	switch (name) {
-		case "Sprint Qualifying":
-			return "SQ";
-		case "Qualifying":
-			return "Q";
-		default:
-			return "";
-	}
-};
+import { sessionPartPrefix } from "@/lib/sessionPart";
 
 export default function SessionInfo() {
 	const clock = useDataStore((state) => state.state?.ExtrapolatedClock);

@@ -53,6 +53,8 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 	const carMetrics = useSettingsStore((state) => state.carMetrics);
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.RacingNumber));
 
+	const danger = sessionPart != undefined && inDangerZone(position, sessionPart);
+
 	return (
 		<motion.div
 			layout="position"
@@ -62,7 +64,9 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 					"opacity-30": timingDriver.KnockedOut || timingDriver.Retired || timingDriver.Stopped,
 					"bg-sky-950/60": favoriteDriver,
 					"bg-violet-950/60": hasFastest,
-					"bg-red-950/60": sessionPart != undefined && inDangerZone(position, sessionPart),
+					"bg-red-950/60": danger,
+					// Zebra stripes by position (stable while rows reorder); highlights win.
+					"bg-zinc-900": !favoriteDriver && !hasFastest && !danger && position % 2 === 0,
 				},
 			)}
 		>

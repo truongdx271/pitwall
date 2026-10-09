@@ -49,6 +49,8 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 				{
 					"opacity-25": isOut,
 					"bg-violet-950/60": hasFastestLap,
+					// Zebra stripes by position (stable while rows reorder); highlights win.
+					"bg-zinc-900": !hasFastestLap && position % 2 === 0,
 				},
 			)}
 		>

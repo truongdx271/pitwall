@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CADILLAC_YELLOW, isLight, teamColours, textOn } from "@/lib/color";
+import { AUDI_BURGUNDY, CADILLAC_YELLOW, isLight, teamColours, textOn } from "@/lib/color";
 
 describe("isLight", () => {
 	it("treats bright team colours as light", () => {
@@ -38,6 +38,12 @@ describe("teamColours", () => {
 	it("returns the same object when nothing changes", () => {
 		const list = { "31": haas };
 		expect(teamColours(list)).toBe(list);
+	});
+	it("paints Audi burgundy so it stands apart from Ferrari red, with white text", () => {
+		const ferrari = { TeamName: "Ferrari", TeamColour: "ED1131" };
+		const list = { "27": { TeamName: "Audi", TeamColour: "F50537" }, "16": ferrari };
+		expect(teamColours(list)).toEqual({ "27": { TeamName: "Audi", TeamColour: AUDI_BURGUNDY }, "16": ferrari });
+		expect(textOn(AUDI_BURGUNDY)).toBe("#fff");
 	});
 	it("puts black text on the Cadillac yellow", () => {
 		expect(textOn(CADILLAC_YELLOW)).toBe("#000");

@@ -11,8 +11,10 @@ export function isLight(hex: string): boolean {
 // The feed sends Cadillac a grey (909090) that is hard to tell from Haas (9C9FA2).
 // Shown as yellow (black text, via textOn) by the user's choice.
 export const CADILLAC_YELLOW = "E6B800";
+// Audi's red (F50537) is nearly Ferrari's (ED1131); a deep burgundy keeps it Audi-red.
+export const AUDI_BURGUNDY = "8A1538";
 
-const TEAM_COLOUR_OVERRIDES: Record<string, string> = { Cadillac: CADILLAC_YELLOW };
+const TEAM_COLOUR_OVERRIDES: Record<string, string> = { Cadillac: CADILLAC_YELLOW, Audi: AUDI_BURGUNDY };
 
 // Readable text colour on top of a team colour.
 export function textOn(hex: string | undefined): "#000" | "#fff" {

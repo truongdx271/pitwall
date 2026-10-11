@@ -3,6 +3,7 @@ import { create } from "zustand";
 import type { CarsData, Positions, State } from "@/types/state.type";
 
 import { teamColours } from "@/lib/color";
+import { timingAppStints } from "@/lib/stintFolding";
 
 // main store
 
@@ -25,6 +26,8 @@ export const useDataStore = create<DataStore>((set) => ({
 		set((prev) => {
 			if (partialState?.DriverList)
 				partialState = { ...partialState, DriverList: teamColours(partialState.DriverList) };
+			if (partialState?.TimingAppData)
+				partialState = { ...partialState, TimingAppData: timingAppStints(partialState.TimingAppData) };
 			return {
 				state: partialState
 					? {

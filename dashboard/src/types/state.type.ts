@@ -71,6 +71,7 @@ export type Stint = {
 	TotalLaps?: number;
 	Compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
 	New?: string; // TRUE | FALSE
+	TyresNotChanged?: string; // "1" when a new stint kept the same tyres
 };
 
 export type WeatherData = {

@@ -14,7 +14,14 @@ export const CADILLAC_YELLOW = "E6B800";
 // Audi's red (F50537) is nearly Ferrari's (ED1131); a deep burgundy keeps it Audi-red.
 export const AUDI_BURGUNDY = "8A1538";
 
-const TEAM_COLOUR_OVERRIDES: Record<string, string> = { Cadillac: CADILLAC_YELLOW, Audi: AUDI_BURGUNDY };
+// Alpine's blue (00A1E8) joins five other blue-ish teams; pink (white text) by the user's choice.
+export const ALPINE_PINK = "E0418F";
+
+const TEAM_COLOUR_OVERRIDES: Record<string, string> = {
+	Cadillac: CADILLAC_YELLOW,
+	Audi: AUDI_BURGUNDY,
+	Alpine: ALPINE_PINK,
+};
 
 // Readable text colour on top of a team colour.
 export function textOn(hex: string | undefined): "#000" | "#fff" {

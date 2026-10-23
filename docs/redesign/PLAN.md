@@ -117,14 +117,19 @@ is done this lap (no fallback to the previous lap).
 
 ## PR 6 · Live: practice (SPEC §5, §13.2)
 
-- [ ] Add a practice recording to `dev-sessions/manifest.json` (SPEC §13).
-- [ ] Route by `SessionInfo.Type` in `dashboard/page.tsx`.
-- [ ] `lib/longRun.ts` with vitest (107% filter, at least 5 consecutive laps, average,
+- [x] Add a practice recording to `dev-sessions/manifest.json` (SPEC §13).
+- [x] Route by `SessionInfo.Type` in `dashboard/page.tsx`.
+- [x] `lib/longRun.ts` with vitest (107% filter, at least 5 consecutive laps, average,
       least-squares degradation).
-- [ ] `PracticeLeaderBoard`: LAPS column, pace view TYRE · AVG · DEG, STATUS including Long
+- [x] `PracticeLeaderBoard`: LAPS column, pace view TYRE · AVG · DEG, STATUS including Long
       run. STATUS lines up with quali.
 
 **Done when** it matches `Practice.png` on the practice replay.
+
+Notes: livetiming's static API now answers 401, so no practice recording could be downloaded.
+The `practice` replay patches the **race** recording to a practice session instead of the
+quali one: it has real long runs to check against. Lap order and gaps there are the race's.
+The race pace view now shows the average only (SPEC §3.2); degradation is practice-only.
 
 ## PR 7 · Map tab (SPEC §6)
 

@@ -8,7 +8,7 @@ import { REPLAY_SPEEDS, useReplayStore, type ReplaySpeed } from "@/stores/useRep
 // Keep in sync with dashboard/dev-sessions/manifest.json.
 // `available: false` = shown but disabled (no recording yet).
 const SESSIONS: { id: string; label: string; available: boolean }[] = [
-	{ id: "practice", label: "Practice", available: false },
+	{ id: "practice", label: "Practice", available: true },
 	{ id: "qualifying", label: "Qualifying", available: true },
 	{ id: "race", label: "Race", available: true },
 ];

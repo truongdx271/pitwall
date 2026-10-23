@@ -8,12 +8,14 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
+import PracticeLeaderBoard from "@/components/dashboard/PracticeLeaderBoard";
 import RaceControl from "@/components/dashboard/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
 import TrackViolations from "@/components/dashboard/TrackViolations";
 import TrackPanel from "@/components/dashboard/TrackPanel";
 import MessagesPanel from "@/components/dashboard/MessagesPanel";
 import { parseTab } from "@/components/shell/tabs";
+import { sessionKind } from "@/lib/sessionKind";
 
 import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
 import LapTimesPage from "@/app/dashboard/lap-times/page";
@@ -33,8 +35,11 @@ export default function Page() {
 
 function Dashboard() {
 	const activeTab = parseTab(useSearchParams().get("tab"));
-	const sessionName = useDataStore((state) => state.state?.SessionInfo?.Name ?? "");
-	const isQuali = sessionName.toLowerCase().includes("qualifying");
+	const kind = useDataStore((state) => sessionKind(state.state?.SessionInfo));
+	const isPractice = kind === "practice";
+	const isQuali = kind === "qualifying";
+	// Practice and quali share the 860px table width.
+	const wideTable = isPractice || isQuali;
 
 	return (
 		<div className="flex h-full w-full flex-col">
@@ -47,15 +52,15 @@ function Dashboard() {
 						<div
 							className={clsx(
 								"min-w-0 xl:h-full xl:overflow-y-auto",
-								isQuali ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
+								wideTable ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
 							)}
 						>
-							{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
+							{isPractice ? <PracticeLeaderBoard /> : isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
 						</div>
 						<div
 							className={clsx(
 								"flex min-w-0 flex-col gap-3 xl:h-full",
-								isQuali ? "flex-[1_1_480px]" : "flex-[1_1_500px]",
+								wideTable ? "flex-[1_1_480px]" : "flex-[1_1_500px]",
 							)}
 						>
 							<TrackPanel className="shrink-0" />

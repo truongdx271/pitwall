@@ -123,7 +123,16 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 
 // Current-lap sector time large on the left, the personal-best sector small on the right,
 // the mini-sector bar underneath (SPEC §4; the old cell had them the other way round).
-function QualiSectorCell({ sector, best }: { sector: Sector | undefined; best: string | undefined }) {
+export function QualiSectorCell({
+	sector,
+	best,
+	hideBest = false,
+}: {
+	sector: Sector | undefined;
+	best: string | undefined;
+	/** Practice pace view: the sector column is too narrow for both times. */
+	hideBest?: boolean;
+}) {
 	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
 	const showBestSectors = useSettingsStore((state) => state.showBestSectors);
 
@@ -140,7 +149,7 @@ function QualiSectorCell({ sector, best }: { sector: Sector | undefined; best: s
 				>
 					{sector?.Value || "—"}
 				</span>
-				{showBestSectors && best && <span className="text-[11px] text-fg-3">{best}</span>}
+				{showBestSectors && !hideBest && best && <span className="text-[11px] text-fg-3">{best}</span>}
 			</span>
 			{showMiniSectors && (
 				<span className="flex h-[3px] gap-px" aria-hidden>

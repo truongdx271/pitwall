@@ -16,3 +16,10 @@ export const SECTOR_GRID_GAP = "8px";
 //                     P    DRIVER GAP  BEST LAST S1·S2·S3      TYRE  STATUS
 export const QUALI_GRID_COLS = "24px 48px 72px 80px 80px minmax(0, 1fr) 120px 92px";
 export const QUALI_SECTOR_GAP = "10px";
+
+// Practice (SPEC §5): the quali columns plus LAPS; STATUS stays the last 92px column.
+//                P    DRIVER GAP  BEST LAST S1·S2·S3            LAPS TYRE  STATUS
+export const practiceGridCols = (pace: boolean) =>
+	pace
+		? "24px 48px 72px 80px 80px minmax(150px, 1fr) 40px 280px 92px"
+		: "24px 48px 72px 80px 80px minmax(0, 1fr) 40px 120px 92px";

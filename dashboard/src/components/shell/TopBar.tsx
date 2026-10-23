@@ -6,6 +6,7 @@ import Link from "next/link";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
+import { sessionKind } from "@/lib/sessionKind";
 
 import RaceHelpModal from "@/components/dashboard/RaceHelpModal";
 import QualiHelpModal from "@/components/dashboard/QualiHelpModal";
@@ -21,9 +22,8 @@ type Props = {
 // 52px top bar (SPEC §2.1): logo, the six tabs, then Live chip, Schedule, Help, Settings.
 export default function TopBar({ connected }: Props) {
 	const hasSession = useDataStore((s) => !!s.state?.SessionInfo);
-	const sessionName = useDataStore((s) => s.state?.SessionInfo?.Name ?? "");
 	const [helpOpen, setHelpOpen] = useState(false);
-	const isQuali = sessionName.toLowerCase().includes("qualifying");
+	const isQuali = useDataStore((s) => sessionKind(s.state?.SessionInfo)) === "qualifying";
 
 	return (
 		<header className="flex min-h-[52px] flex-wrap items-center gap-x-5 gap-y-1 border-b border-border px-4 py-1">

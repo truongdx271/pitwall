@@ -79,6 +79,12 @@ export const useDataEngine = (
 		posBuffer.clear();
 	};
 
+	// Start over: the data source changed (live <-> replay, replay restart).
+	const reset = () => {
+		resetAll();
+		sessionPathRef.current = null;
+	};
+
 	const trackSession = (path: string | undefined, via: "initial" | "update") => {
 		if (isNewSession(sessionPathRef.current, path)) {
 			resetAll();
@@ -198,5 +204,6 @@ export const useDataEngine = (
 		handleUpdate,
 		handleInitial,
 		maxDelay,
+		reset,
 	};
 };

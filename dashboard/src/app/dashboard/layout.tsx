@@ -31,7 +31,12 @@ export default function DashboardLayout({ children }: Props) {
 	// The feed moved to another session: clear the screen, and reconnect when only an update
 	// announced it, so the relay sends the new session's full state.
 	const retryRef = useRef<() => void>(() => {});
-	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores, {
+	const {
+		handleInitial,
+		handleUpdate,
+		maxDelay,
+		reset: resetEngine,
+	} = useDataEngine(stores, {
 		onSessionChange: (via) => {
 			useDataStore.getState().setState(null);
 			useDataStore.getState().setCarsData(null);
@@ -60,10 +65,13 @@ export default function DashboardLayout({ children }: Props) {
 	// Clear accumulated state whenever the data source changes (live <-> replay,
 	// session switch, restart) so nothing leaks between sessions.
 	useEffect(() => {
+		resetEngine();
 		useDataStore.getState().setState(null);
 		useDataStore.getState().setCarsData(null);
 		useDataStore.getState().setPositions(null);
 		useHistoryStore.getState().reset();
+		// resetEngine only touches refs; it doesn't need to be a dependency.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [replayActive, replaySessionId, replayEpoch]);
 
 	// The delay buffer shows a "Syncing..." wall while it fills; force it off during

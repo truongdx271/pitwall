@@ -25,3 +25,11 @@ export const inKnockoutZone = (
 	const cutoff = knockoutCutoff(noEntries, sessionPart);
 	return cutoff != null && position > cutoff;
 };
+
+/** How many cars this part knocks out (e.g. 22 − 16 = 6 in Q1), or null when unknown. */
+export const knockedOutCount = (noEntries: number[] | undefined, sessionPart: number | undefined): number | null => {
+	const cutoff = knockoutCutoff(noEntries, sessionPart);
+	const entries = sessionPart ? noEntries?.[sessionPart - 1] : undefined;
+	if (cutoff == null || !entries || entries <= cutoff) return null;
+	return entries - cutoff;
+};

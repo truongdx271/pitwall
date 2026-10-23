@@ -189,11 +189,17 @@ segment per radar frame). Standings keep the column order of `Standings.png` (GA
 
 ## PR 11 · Home, Schedule, Help, Settings (SPEC §14)
 
-- [ ] The four pages restyled.
-- [ ] One Help content source, used by both `/help` and the top-bar modal. Delete
+- [x] The four pages restyled.
+- [x] One Help content source, used by both `/help` and the top-bar modal. Delete
       `RaceHelpModal` and `QualiHelpModal`.
 
 **Done when** they match `Home.png`, `Schedule.png`, `Help.png` and `Settings.png`.
+
+Notes: the Home preview card is static sample data (SPEC §14). The country codes on the
+schedule come from the existing `countryCodeMap` in `Round.tsx`. On the Docker (server) build
+the schedule now hydrates on the client, so time-dependent bits can log a hydration warning;
+the Cloudflare static export is unaffected. The old `/help` building blocks (`Note`,
+complications, tyre icons) are now unused and can go in the final pass.
 
 ## PR 12 · Mobile (SPEC §11)
 

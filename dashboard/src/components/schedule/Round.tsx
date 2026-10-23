@@ -41,57 +41,65 @@ const countryCodeMap: Record<string, string> = {
 	"United States": "USA",
 };
 
+// Exported for the next-round card.
+export const countryCode = (name: string) => countryCodeMap[name] ?? "???";
+
+// A weekend in the schedule grid (Schedule.png): country, dates, then sessions by day.
 export default function Round({ round, nextName }: Props) {
-	const countryCode = countryCodeMap[round.countryName] ?? "???";
+	const isNext = round.name === nextName;
+	const thisWeekend = isNext && utc().isBetween(utc(round.start).subtract(1, "day"), utc(round.end));
 
 	return (
-		<div className={clsx("font-mono", round.over && "opacity-50")}>
-			<div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-				<div className="flex items-center gap-[2ch]">
-					<span className="text-sm text-zinc-500">[{countryCode}]</span>
-					<span className="text-sm tracking-wide text-zinc-300 uppercase">{round.countryName}</span>
-					{round.name === nextName &&
-						(utc().isBetween(utc(round.start), utc(round.end)) ? (
-							<span className="text-[11px] tracking-widest text-emerald-500 uppercase">● current</span>
-						) : (
-							<span className="text-[11px] tracking-widest text-indigo-400 uppercase">→ up next</span>
-						))}
-					{round.over && <span className="text-[11px] tracking-widest text-zinc-600 uppercase">✗ over</span>}
-				</div>
-
-				<div className="flex items-center gap-[1ch] text-sm tabular-nums">
-					<span className="text-zinc-400">{formatMonth(round.start, round.end)}</span>
-					<span className="text-zinc-600">{formatDayRange(round.start, round.end)}</span>
-				</div>
+		<article
+			className={clsx(
+				"flex flex-col rounded-panel border bg-surface-1 p-4",
+				isNext ? "border-border-strong" : "border-border",
+				round.over && "opacity-50",
+			)}
+		>
+			<div className="flex items-center gap-2.5 border-b border-border pb-3">
+				<span className="rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg-2">
+					{countryCode(round.countryName)}
+				</span>
+				<span className="text-[15px] font-semibold">{round.countryName}</span>
+				{isNext && (
+					<span className="rounded-md bg-personal-best/14 px-1.5 py-0.5 text-[11px] font-semibold text-personal-best">
+						{thisWeekend ? "This weekend" : "Up next"}
+					</span>
+				)}
+				{round.over && <span className="text-[11px] text-fg-3">Over</span>}
+				<span className="ml-auto text-[13px] text-fg-2">
+					{formatMonth(round.start, round.end)} {formatDayRange(round.start, round.end)}
+				</span>
 			</div>
 
-			<div className="grid grid-cols-3 gap-4 pt-2">
+			<div className="grid grid-cols-3 gap-4 pt-3">
 				{groupSessionByDay(round.sessions).map((day, i) => (
-					<div className="flex flex-col" key={`round.day.${i}`}>
-						<p className="my-2 text-[11px] tracking-widest text-zinc-500 uppercase">
+					<div className="flex flex-col gap-2" key={`round.day.${i}`}>
+						<p className="text-[11px] font-medium tracking-[0.04em] text-fg-3 uppercase">
 							{utc(day.date).local().format("ddd")}
 						</p>
-
-						<div className="flex flex-col gap-2">
-							{day.sessions.map((session, j) => (
-								<div
-									key={`round.day.${i}.session.${j}`}
-									className={clsx("flex flex-col", !round.over && utc(session.end).isBefore(now()) && "opacity-50")}
+						{day.sessions.map((session, j) => (
+							<div
+								key={`round.day.${i}.session.${j}`}
+								className={clsx("flex flex-col", !round.over && utc(session.end).isBefore(now()) && "opacity-50")}
+							>
+								<p
+									className={clsx(
+										"truncate text-[13px]",
+										session.kind.toLowerCase() === "race" ? "font-semibold text-fg-1" : "text-fg-1",
+									)}
 								>
-									<p className="w-28 overflow-hidden text-xs text-ellipsis whitespace-nowrap text-zinc-300 sm:w-auto">
-										{session.kind}
-									</p>
-									<p className="text-[11px] text-zinc-600 tabular-nums">
-										{utc(session.start).local().format("HH:mm")}
-										{" - "}
-										{utc(session.end).local().format("HH:mm")}
-									</p>
-								</div>
-							))}
-						</div>
+									{session.kind}
+								</p>
+								<p className="font-mono text-[11px] text-fg-3 tabular-nums">
+									{utc(session.start).local().format("HH:mm")}–{utc(session.end).local().format("HH:mm")}
+								</p>
+							</div>
+						))}
 					</div>
 				))}
 			</div>
-		</div>
+		</article>
 	);
 }

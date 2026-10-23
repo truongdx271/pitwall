@@ -80,17 +80,9 @@ function Dashboard() {
 					</div>
 				)}
 
-				{activeTab === "weather" && (
-					<div className="h-[calc(100vh-8rem)] overflow-y-auto">
-						<WeatherPage />
-					</div>
-				)}
+				{activeTab === "weather" && <WeatherPage />}
 
-				{activeTab === "standings" && (
-					<div className="h-[calc(100vh-8rem)] overflow-y-auto">
-						<StandingsPage />
-					</div>
-				)}
+				{activeTab === "standings" && <StandingsPage />}
 			</div>
 		</div>
 	);

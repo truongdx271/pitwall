@@ -21,6 +21,8 @@ type Props = {
 	 */
 	variant?: "panel" | "feed";
 	onShowTranscript?: () => void;
+	/** Shown in place of the transcript, e.g. "Transcript unavailable". */
+	note?: string;
 };
 
 const clock = (iso: string) => utc(iso).local().format("HH:mm:ss");
@@ -29,7 +31,15 @@ const length = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)
 
 // One team radio clip: play/pause, a decorative waveform (the feed has no amplitude data,
 // SPEC §7), and the transcript.
-export default function RadioClip({ capture, driver, src, transcript, variant = "panel", onShowTranscript }: Props) {
+export default function RadioClip({
+	capture,
+	driver,
+	src,
+	transcript,
+	variant = "panel",
+	onShowTranscript,
+	note,
+}: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const rafRef = useRef<number | null>(null);
 	const [playing, setPlaying] = useState(false);
@@ -128,7 +138,11 @@ export default function RadioClip({ capture, driver, src, transcript, variant = 
 
 				{!feed && <Waveform bars={bars} played={played} />}
 
-				<Transcript transcript={transcript} feed={feed} onShow={onShowTranscript} />
+				{note ? (
+					<p className="text-xs text-fg-3">{note}</p>
+				) : (
+					<Transcript transcript={transcript} feed={feed} onShow={onShowTranscript} />
+				)}
 			</div>
 
 			<audio
@@ -141,7 +155,8 @@ export default function RadioClip({ capture, driver, src, transcript, variant = 
 					stopTick();
 				}}
 				onError={() => setFailed(true)}
-				onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+				// Streamed clips can report an infinite duration; keep 0 (unknown) then.
+				onLoadedMetadata={(e) => setDuration(Number.isFinite(e.currentTarget.duration) ? e.currentTarget.duration : 0)}
 			/>
 		</article>
 	);

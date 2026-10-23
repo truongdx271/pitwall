@@ -69,4 +69,20 @@ describe("incident parsing", () => {
 		expect(list).toHaveLength(1);
 		expect(list[0]).toMatchObject({ cars: ["27"], status: "penalty", summary: "Speeding in the pit lane" });
 	});
+
+	it("merges a one-car penalty into the two-car incident it came from", () => {
+		const list = incidents([
+			{
+				Message:
+					"FIA STEWARDS: TURN 10 INCIDENT INVOLVING CARS 81 (PIA) AND 23 (ALB) UNDER INVESTIGATION - CAUSING A COLLISION (16:25:37)",
+				Utc: "2026-05-24T20:10:00Z",
+			},
+			{
+				Message: "FIA STEWARDS: 10 SECOND TIME PENALTY FOR CAR 81 (PIA) - CAUSING A COLLISION (16:25:37)",
+				Utc: "2026-05-24T20:20:00Z",
+			},
+		]);
+		expect(list).toHaveLength(1);
+		expect(list[0]).toMatchObject({ cars: ["81", "23"], status: "penalty" });
+	});
 });

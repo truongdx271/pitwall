@@ -58,7 +58,7 @@ const sentenceCase = (text: string) => {
  * and offence (noted → under investigation → penalty) collapse into one.
  */
 export const incidents = (messages: { Message: string; Utc: string }[]): Incident[] => {
-	const byKey = new Map<string, Incident>();
+	const list: (Incident & { reason: string })[] = [];
 	const sorted = [...messages].sort((a, b) => Date.parse(a.Utc) - Date.parse(b.Utc));
 
 	for (const msg of sorted) {
@@ -67,9 +67,17 @@ export const incidents = (messages: { Message: string; Utc: string }[]): Inciden
 		if (!status || cars.length === 0 || /TRACK LIMITS/i.test(msg.Message)) continue;
 
 		const reason = incidentReason(msg.Message);
-		const key = `${[...cars].sort().join(",")}|${reason}`;
-		byKey.set(key, { cars, summary: sentenceCase(reason) || "Incident", status, utc: msg.Utc });
+		// Same offence and the same cars, or a subset: a penalty names only the car it hits.
+		const known = list.find((inc) => inc.reason === reason && cars.every((nr) => inc.cars.includes(nr)));
+		if (known) {
+			known.status = status;
+			known.utc = msg.Utc;
+		} else {
+			list.push({ cars, reason, summary: sentenceCase(reason) || "Incident", status, utc: msg.Utc });
+		}
 	}
 
-	return Array.from(byKey.values()).sort((a, b) => Date.parse(b.utc) - Date.parse(a.utc));
+	return list
+		.map(({ cars, summary, status, utc }) => ({ cars, summary, status, utc }))
+		.sort((a, b) => Date.parse(b.utc) - Date.parse(a.utc));
 };

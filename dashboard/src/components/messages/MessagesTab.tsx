@@ -23,7 +23,7 @@ type Filter = "all" | "radio" | "rc";
 
 type Item = { kind: "rc"; utc: string; msg: Message } | { kind: "radio"; utc: string; capture: RadioCapture };
 
-export const RC_STATUS_TAG: Record<RcStatus, string> = {
+const RC_STATUS_TAG: Record<RcStatus, string> = {
 	noted: "bg-surface-3 text-fg-2",
 	investigation: "bg-slower/14 text-slower",
 	penalty: "bg-loss/14 text-loss",
@@ -198,11 +198,16 @@ function RadioFeedItem({ capture, driver, sessionPath }: RadioFeedItemProps) {
 	const [wanted, setWanted] = useState(false);
 	const transcript = useRadioTranscript(sessionPath, capture.Path, { enabled: wanted });
 
-	if (!driver || !sessionPath || transcript.status === "unavailable") return null;
-	if (transcript.status === "done" && !hasWords(transcript.text)) return null;
+	if (!driver || !sessionPath) return null;
+	// Hide failed or wordless clips, unless the viewer asked for this one: then say why.
+	const wordless = transcript.status === "done" && !hasWords(transcript.text);
+	if (!wanted && (transcript.status === "unavailable" || wordless)) return null;
 
 	return (
 		<RadioClip
+			note={
+				transcript.status === "unavailable" ? "Transcript unavailable" : wordless ? "No words in this clip" : undefined
+			}
 			variant="feed"
 			capture={capture}
 			driver={driver}
@@ -232,7 +237,7 @@ function IncidentsPanel() {
 				{list.length === 0 && <p className="px-3 py-4 text-[13px] text-fg-2">No incidents so far</p>}
 				{list.map((inc) => (
 					<div
-						key={`${inc.utc}.${inc.cars.join(",")}`}
+						key={`${inc.utc}.${inc.cars.join(",")}.${inc.summary}`}
 						className="flex items-center gap-3 border-b border-border px-3 py-2.5"
 					>
 						<span className="flex shrink-0 flex-wrap gap-1">

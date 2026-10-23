@@ -32,7 +32,8 @@ export default function TrackMap() {
 				<MapOrderList kind={kind} title={title} />
 			</div>
 
-			<div className="flex min-h-[420px] min-w-0 flex-[999_1_520px] flex-col">
+			{/* On phones the map comes first, the order list under it. */}
+			<div className="flex min-h-[420px] min-w-0 flex-[999_1_520px] flex-col max-md:order-first">
 				<MapPanel name={session?.Meeting.Circuit.ShortName} />
 			</div>
 

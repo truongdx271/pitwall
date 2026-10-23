@@ -11,7 +11,7 @@ export default function DriverMiniSectors({ sectors = [] }: Props) {
 	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
 
 	return (
-		<span className="flex items-center gap-[2ch]">
+		<span className="flex flex-wrap items-center gap-x-[2ch] gap-y-1">
 			{sectors.map((sector, i) => {
 				const value = sector.Value || sector.PreviousValue || "";
 

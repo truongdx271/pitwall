@@ -22,7 +22,7 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 						aria-pressed={isActive}
 						onClick={() => onSelect?.(option.value)}
 						className={clsx(
-							"h-[30px] cursor-pointer rounded-md px-2.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-fg-1",
+							"h-[30px] cursor-pointer rounded-md px-2.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-fg-1 max-md:h-11",
 							isActive ? "bg-surface-3 text-fg-1" : "text-fg-2 hover:text-fg-1",
 						)}
 					>

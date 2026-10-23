@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 import {
 	fetchBaseStandings,
@@ -30,6 +31,8 @@ export default function Standings() {
 
 	const hasFeed = !!feedPrediction?.Drivers;
 	const [mode, setMode] = useState<StandingsMode>("live");
+	const isMobile = useIsMobile();
+	const [table, setTable] = useState<"drivers" | "teams">("drivers");
 
 	// Outside a race: plain standings after the previous round, no live points.
 	// Keyed by session so a stale result is never shown for another race.
@@ -85,6 +88,117 @@ export default function Standings() {
 	const view: StandingsMode = isRace ? mode : "before";
 	const teamColour = (name: string) => Object.values(drivers ?? {}).find((d) => d.TeamName === name)?.TeamColour;
 
+	const driverRows = (
+		<>
+			<StandingsHeader first="DRIVER" race={view === "live"} />
+			{!driverStandings && new Array(22).fill("").map((_, i) => <SkeletonRow key={i} />)}
+			{driverStandings &&
+				standingsRows(Object.values(driverStandings), view)
+					// Skip drivers we can't label before striping, so the zebra stays even.
+					.filter((row) => drivers?.[row.entry.RacingNumber] || "Tla" in row.entry)
+					.map((row, i) => {
+						const info = drivers?.[row.entry.RacingNumber];
+						const label = "Tla" in row.entry ? (row.entry as PredictedDriver) : null;
+						return (
+							<StandingsLine
+								key={row.entry.RacingNumber}
+								row={row}
+								zebra={i % 2 === 1}
+								colour={info?.TeamColour}
+								race={view === "live"}
+								name={
+									<>
+										<DriverChip short={info?.Tla ?? label?.Tla ?? "?"} teamColor={info?.TeamColour} />
+										<span className="truncate font-sans text-[13px] text-fg-1">
+											{info?.LastName ?? label?.FamilyName}
+										</span>
+									</>
+								}
+							/>
+						);
+					})}
+		</>
+	);
+
+	const teamRows = (
+		<>
+			<StandingsHeader first="TEAM" race={view === "live"} />
+			{!teamStandings && new Array(11).fill("").map((_, i) => <SkeletonRow key={i} />)}
+			{teamStandings &&
+				standingsRows(Object.values(teamStandings), view).map((row, i) => {
+					const colour = teamColour(row.entry.TeamName);
+					return (
+						<StandingsLine
+							key={row.entry.TeamName}
+							row={row}
+							zebra={i % 2 === 1}
+							colour={colour}
+							race={view === "live"}
+							tall
+							name={
+								<>
+									<span
+										aria-hidden
+										className="h-[18px] w-1.5 shrink-0 rounded-sm"
+										style={{ backgroundColor: colour ? `#${colour}` : "var(--color-fg-3)" }}
+									/>
+									<span className="truncate font-sans text-[13px] font-medium text-fg-1">{row.entry.TeamName}</span>
+								</>
+							}
+						/>
+					);
+				})}
+		</>
+	);
+
+	const caption = isRace
+		? view === "live"
+			? "If the race finished in the current order. Row shading = points relative to the leader; brighter part = points from this race."
+			: "Standings before this race."
+		: base?.after
+			? `After round ${base.after.round} · ${base.after.raceName}`
+			: "Current standings";
+
+	// Phone (StandingsMobile.png): one table at a time, picked by a Drivers / Constructors toggle.
+	if (isMobile) {
+		return (
+			<div className="flex flex-col gap-2 p-2">
+				<div className="flex items-center justify-between gap-2">
+					<SegmentedControls
+						selected={table}
+						onSelect={setTable}
+						options={[
+							{ label: "Drivers", value: "drivers" },
+							{ label: "Constructors", value: "teams" },
+						]}
+					/>
+					{isRace && (
+						<button
+							type="button"
+							role="switch"
+							aria-checked={mode === "live"}
+							onClick={() => setMode(mode === "live" ? "before" : "live")}
+							className="flex h-11 cursor-pointer items-center gap-2.5 rounded-control border border-border px-3 text-[13px] text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1"
+						>
+							Live projection
+							<span
+								aria-hidden
+								className={clsx(
+									"flex h-6 w-10 items-center rounded-full p-0.5 transition-colors",
+									mode === "live" ? "justify-end bg-gain" : "justify-start bg-surface-3",
+								)}
+							>
+								<span className="size-5 rounded-full bg-bg" />
+							</span>
+						</button>
+					)}
+				</div>
+				{!isRace && <span className="px-1 text-xs text-fg-2">{caption}</span>}
+				<div className="flex flex-col">{table === "drivers" ? driverRows : teamRows}</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex flex-col gap-3 p-3">
 			<div className="flex flex-wrap items-center gap-3">
@@ -98,75 +212,16 @@ export default function Standings() {
 						]}
 					/>
 				)}
-				<span className="text-xs text-fg-2">
-					{isRace
-						? view === "live"
-							? "If the race finished in the current order. Row shading = points relative to the leader; brighter part = points from this race."
-							: "Standings before this race."
-						: base?.after
-							? `After round ${base.after.round} · ${base.after.raceName}`
-							: "Current standings"}
-				</span>
+				<span className="text-xs text-fg-2">{caption}</span>
 			</div>
 
 			<div className="flex flex-wrap items-start gap-3">
 				<Panel title="Drivers" className="min-w-0 flex-[1_1_560px] px-1.5 pb-2">
-					<StandingsHeader first="DRIVER" race={view === "live"} />
-					{!driverStandings && new Array(22).fill("").map((_, i) => <SkeletonRow key={i} />)}
-					{driverStandings &&
-						standingsRows(Object.values(driverStandings), view)
-							// Skip drivers we can't label before striping, so the zebra stays even.
-							.filter((row) => drivers?.[row.entry.RacingNumber] || "Tla" in row.entry)
-							.map((row, i) => {
-								const info = drivers?.[row.entry.RacingNumber];
-								const label = "Tla" in row.entry ? (row.entry as PredictedDriver) : null;
-								return (
-									<StandingsLine
-										key={row.entry.RacingNumber}
-										row={row}
-										zebra={i % 2 === 1}
-										colour={info?.TeamColour}
-										race={view === "live"}
-										name={
-											<>
-												<DriverChip short={info?.Tla ?? label?.Tla ?? "?"} teamColor={info?.TeamColour} />
-												<span className="truncate font-sans text-[13px] text-fg-1">
-													{info?.LastName ?? label?.FamilyName}
-												</span>
-											</>
-										}
-									/>
-								);
-							})}
+					{driverRows}
 				</Panel>
 
 				<Panel title="Constructors" className="min-w-0 flex-[1_1_520px] px-1.5 pb-2">
-					<StandingsHeader first="TEAM" race={view === "live"} />
-					{!teamStandings && new Array(11).fill("").map((_, i) => <SkeletonRow key={i} />)}
-					{teamStandings &&
-						standingsRows(Object.values(teamStandings), view).map((row, i) => {
-							const colour = teamColour(row.entry.TeamName);
-							return (
-								<StandingsLine
-									key={row.entry.TeamName}
-									row={row}
-									zebra={i % 2 === 1}
-									colour={colour}
-									race={view === "live"}
-									tall
-									name={
-										<>
-											<span
-												aria-hidden
-												className="h-[18px] w-1.5 shrink-0 rounded-sm"
-												style={{ backgroundColor: colour ? `#${colour}` : "var(--color-fg-3)" }}
-											/>
-											<span className="truncate font-sans text-[13px] font-medium text-fg-1">{row.entry.TeamName}</span>
-										</>
-									}
-								/>
-							);
-						})}
+					{teamRows}
 				</Panel>
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode, useEffect, useRef } from "react";
+import clsx from "clsx";
 
 import { useDataEngine } from "@/hooks/useDataEngine";
 import { useWakeLock } from "@/hooks/useWakeLock";
@@ -18,6 +19,8 @@ import { latestSessionStatus } from "@/lib/trackStatus";
 
 import ReplayOverlay from "@/components/dev/ReplayOverlay";
 import TopBar from "@/components/shell/TopBar";
+import { MobileBottomBar, MobileHeader, MobileStatusRow } from "@/components/mobile/MobileChrome";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import SessionStrip from "@/components/shell/SessionStrip";
 import TrackStatusBanner from "@/components/shell/TrackStatusBanner";
 import { ReconnectingCard, SyncingCard } from "@/components/shell/StateCards";
@@ -93,6 +96,8 @@ export default function DashboardLayout({ children }: Props) {
 	const delay = useSettingsStore((state) => state.delay);
 	const syncing = delay > maxDelay;
 
+	const isMobile = useIsMobile();
+
 	useWakeLock();
 
 	const ended = useDataStore(
@@ -103,18 +108,20 @@ export default function DashboardLayout({ children }: Props) {
 	const reconnecting = !replayActive && !live.connected && live.hasData;
 
 	return (
-		<div className="flex h-screen w-full flex-col">
+		<div className="flex h-dvh w-full flex-col">
 			<ReplayOverlay />
-			<TopBar connected={connected} />
+			{isMobile ? <MobileHeader connected={connected} /> : <TopBar connected={connected} />}
 
 			{syncing && !ended ? (
 				<SyncingCard buffered={maxDelay} delay={delay} />
 			) : (
 				<>
-					<SessionStrip />
+					{isMobile ? <MobileStatusRow /> : <SessionStrip />}
 					<TrackStatusBanner />
 					{reconnecting && <ReconnectingCard lastMessageAt={live.lastMessageAt} retry={live.retry} />}
-					<div className="no-scrollbar w-full flex-1 overflow-auto">{children}</div>
+					{/* On phones the bottom bar covers the last 60px. */}
+					<div className={clsx("no-scrollbar w-full flex-1 overflow-auto", isMobile && "pb-[60px]")}>{children}</div>
+					{isMobile && <MobileBottomBar />}
 				</>
 			)}
 		</div>

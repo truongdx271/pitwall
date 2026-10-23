@@ -61,7 +61,7 @@ export default function LiveChip({ connected, hasSession }: Props) {
 				aria-haspopup="dialog"
 				onClick={() => setOpen(!open)}
 				className={clsx(
-					"flex h-9 cursor-pointer items-center gap-2 rounded-control border border-border-subtle bg-surface-1 px-3 text-[13px] focus-visible:outline-2 focus-visible:outline-fg-1",
+					"flex h-9 cursor-pointer items-center gap-2 rounded-control border border-border-subtle bg-surface-1 px-3 text-[13px] focus-visible:outline-2 focus-visible:outline-fg-1 max-md:h-11",
 					state === "nosession" ? "text-fg-2" : "text-fg-1",
 				)}
 			>

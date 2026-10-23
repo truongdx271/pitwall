@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 import { useHistoryStore } from "@/stores/useHistoryStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { sortPos } from "@/lib/sorting";
 import { stintLaps } from "@/lib/tyreStrategy";
 import { displaySpeed, pitStops, stintSegments, strategyAxis, topSpeeds } from "@/lib/strategy";
@@ -29,6 +30,30 @@ const TYRE_LETTER: Record<string, string> = { SOFT: "S", MEDIUM: "M", HARD: "H",
 // Strategy tab (SPEC §8, Strategy.png): tyre strategy on the left, lap times and speed traps
 // on the right. The logic is the old Tyres, Lap Times and Speed Traps pages'.
 export default function StrategyTab() {
+	const isMobile = useIsMobile();
+	const [section, setSection] = useState<"tyres" | "laps" | "traps">("tyres");
+
+	// Phones: one section at a time, picked with sub-tabs (SPEC §11).
+	if (isMobile) {
+		return (
+			<div className="flex flex-col gap-2.5 p-2">
+				<SegmentedControls
+					className="self-start"
+					selected={section}
+					onSelect={setSection}
+					options={[
+						{ label: "Tyres", value: "tyres" },
+						{ label: "Lap times", value: "laps" },
+						{ label: "Speed traps", value: "traps" },
+					]}
+				/>
+				{section === "tyres" && <TyreStrategyPanel />}
+				{section === "laps" && <LapTimesPanel />}
+				{section === "traps" && <SpeedTrapsPanel />}
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:flex-nowrap">
 			<div className="flex min-w-0 flex-[999_1_760px] flex-col">

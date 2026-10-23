@@ -69,11 +69,7 @@ function Dashboard() {
 					</div>
 				)}
 
-				{activeTab === "map" && (
-					<div className="h-[calc(100vh-12rem)]">
-						<TrackMapPage />
-					</div>
-				)}
+				{activeTab === "map" && <TrackMapPage />}
 
 				{/* Messages and Strategy stack the old views until PR 8 and PR 9 redesign them. */}
 				{activeTab === "messages" && (

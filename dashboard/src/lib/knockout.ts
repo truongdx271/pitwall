@@ -11,10 +11,8 @@ const FALLBACK_CUTOFF: Record<number, number> = { 1: 15, 2: 10 };
 export const knockoutCutoff = (noEntries: number[] | undefined, sessionPart: number | undefined): number | null => {
 	if (!sessionPart) return null;
 
-	if (noEntries?.some((n) => n > 0)) {
-		const advancing = noEntries[sessionPart];
-		return advancing != null && advancing > 0 ? advancing : null;
-	}
+	const advancing = noEntries?.[sessionPart];
+	if (advancing != null && advancing > 0) return advancing;
 
 	return FALLBACK_CUTOFF[sessionPart] ?? null;
 };

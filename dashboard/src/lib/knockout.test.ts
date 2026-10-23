@@ -27,6 +27,7 @@ describe("knockoutCutoff", () => {
 	it("falls back when NoEntries is still the zeroed placeholder", () => {
 		// Australia 2026 sends [0, 0, 0] before the real counts arrive.
 		expect(knockoutCutoff([0, 0, 0], 1)).toBe(15);
+		expect(knockoutCutoff([22, 0, 0], 2)).toBe(10);
 	});
 });
 

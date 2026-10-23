@@ -1,8 +1,7 @@
 import { AnimatePresence } from "motion/react";
-import { useEffect, useRef } from "react";
 
-import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
+import { useRaceControlChime } from "@/hooks/useRaceControlChime";
 
 import { sortUtc } from "@/lib/sorting";
 
@@ -12,38 +11,7 @@ export default function RaceControl() {
 	const messages = useDataStore((state) => state.state?.RaceControlMessages?.Messages);
 	const gmtOffset = useDataStore((state) => state.state?.SessionInfo?.GmtOffset);
 
-	const raceControlChime = useSettingsStore((state) => state.raceControlChime);
-	const raceControlChimeVolume = useSettingsStore((state) => state.raceControlChimeVolume);
-
-	const chimeRef = useRef<HTMLAudioElement | null>(null);
-	const pastMessageTimestamps = useRef<string[] | null>(null);
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			const chime = new Audio("/sounds/chime.mp3");
-			chime.volume = raceControlChimeVolume / 100;
-			chimeRef.current = chime;
-			return () => {
-				chimeRef.current = null;
-			};
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		if (typeof window === "undefined") return;
-		if (messages === undefined || messages === null) return;
-		if (!pastMessageTimestamps.current) {
-			pastMessageTimestamps.current = messages.map((msg) => msg.Utc);
-			return;
-		}
-		const newMessages = messages.filter((msg) => !pastMessageTimestamps.current?.includes(msg.Utc));
-		if (newMessages.length > 0 && raceControlChime) {
-			chimeRef.current?.play();
-		}
-		pastMessageTimestamps.current = messages.map((msg) => msg.Utc);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [messages]);
+	useRaceControlChime(messages);
 
 	return (
 		<ul className="flex flex-col font-mono">
@@ -68,10 +36,10 @@ const SkeletonMessage = ({ index }: { index: number }) => {
 	const long = index % 5 === 0;
 	const mid = index % 3 === 0;
 	return (
-		<li className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5 font-mono text-sm">
-			<span className="inline-block h-3 w-14 animate-pulse rounded-sm bg-zinc-800" />
+		<li className="flex items-baseline gap-[1ch] border-b border-border px-2 py-0.5 font-mono text-sm">
+			<span className="inline-block h-3 w-14 animate-pulse rounded-sm bg-surface-2" />
 			<span
-				className="inline-block h-3 animate-pulse rounded-sm bg-zinc-800"
+				className="inline-block h-3 animate-pulse rounded-sm bg-surface-2"
 				style={{ width: long ? "70%" : mid ? "50%" : "35%" }}
 			/>
 		</li>

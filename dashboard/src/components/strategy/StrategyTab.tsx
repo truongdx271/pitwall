@@ -80,15 +80,18 @@ function TyreStrategyPanel() {
 							</li>
 						))}
 					</ul>
-					<SegmentedControls
-						className="ml-auto"
-						selected={mode}
-						onSelect={setMode}
-						options={[
-							{ label: "Laps so far", value: "so-far" },
-							{ label: "Full race", value: "full" },
-						]}
-					/>
+					{/* Practice and quali have no race distance, so there is no full-race axis. */}
+					{scheduledLaps > 0 && (
+						<SegmentedControls
+							className="ml-auto"
+							selected={mode}
+							onSelect={setMode}
+							options={[
+								{ label: "Laps so far", value: "so-far" },
+								{ label: "Full race", value: "full" },
+							]}
+						/>
+					)}
 				</>
 			}
 		>

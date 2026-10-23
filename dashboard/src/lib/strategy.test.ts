@@ -28,6 +28,11 @@ describe("pitStops", () => {
 		expect(pitStops([stint("SOFT", 2)])).toBe(0);
 		expect(pitStops([stint("INTERMEDIATE", 12), stint("MEDIUM", 2)])).toBe(1);
 	});
+
+	it("counts a stop as soon as the feed opens the new stint, before its first lap", () => {
+		// In the pit lane the car is on the new set already: "M 0", stop 1.
+		expect(pitStops([stint("SOFT", 20), stint("MEDIUM", 0)])).toBe(1);
+	});
 });
 
 describe("strategyAxis", () => {

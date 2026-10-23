@@ -9,7 +9,7 @@ import { sortPos } from "@/lib/sorting";
 
 import DriverChip from "@/components/driver/DriverChip";
 
-// Map footer (SPEC §3.3): the cars in the pit lane, the retired ones, and the followed legend.
+// Map footer (SPEC §3.3): the cars in the pit lane and the retired ones.
 export default function PitLaneFooter() {
 	const drivers = useDataStore((s) => s.state?.DriverList);
 	const timing = useDataStore((s) => s.state?.TimingData);
@@ -29,10 +29,6 @@ export default function PitLaneFooter() {
 					<span>Retired</span>
 				</>
 			)}
-			<span className="ml-auto flex items-center gap-1.5">
-				<span aria-hidden className="size-3 rounded-full border-2 border-fg-1" />
-				Followed driver
-			</span>
 		</div>
 	);
 }

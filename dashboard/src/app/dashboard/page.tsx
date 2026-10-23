@@ -8,12 +8,12 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
-import RaceControl from "@/components/dashboard/RaceControl";
-import TeamRadios from "@/components/dashboard/TeamRadios";
-import TrackViolations from "@/components/dashboard/TrackViolations";
+import PracticeLeaderBoard from "@/components/dashboard/PracticeLeaderBoard";
 import TrackPanel from "@/components/dashboard/TrackPanel";
 import MessagesPanel from "@/components/dashboard/MessagesPanel";
+import MessagesTab from "@/components/messages/MessagesTab";
 import { parseTab } from "@/components/shell/tabs";
+import { sessionKind } from "@/lib/sessionKind";
 
 import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
 import LapTimesPage from "@/app/dashboard/lap-times/page";
@@ -33,8 +33,11 @@ export default function Page() {
 
 function Dashboard() {
 	const activeTab = parseTab(useSearchParams().get("tab"));
-	const sessionName = useDataStore((state) => state.state?.SessionInfo?.Name ?? "");
-	const isQuali = sessionName.toLowerCase().includes("qualifying");
+	const kind = useDataStore((state) => sessionKind(state.state?.SessionInfo));
+	const isPractice = kind === "practice";
+	const isQuali = kind === "qualifying";
+	// Practice and quali share the 860px table width.
+	const wideTable = isPractice || isQuali;
 
 	return (
 		<div className="flex h-full w-full flex-col">
@@ -43,40 +46,32 @@ function Dashboard() {
 				{activeTab === "live" && (
 					// Table on the left; Track over Messages on the right, Messages filling the rest.
 					// Below 1280px the right column wraps under the table (SPEC §0).
-					<div className={clsx("flex w-full flex-wrap items-stretch gap-3 p-3", !isQuali && "xl:h-full")}>
-						{isQuali ? (
-							// The old quali table is wider than 840px; it gets the full width until PR 5
-							// moves it onto the new grid.
-							<div className="min-w-0 flex-[1_1_100%]">
-								<QualiLeaderBoard />
-							</div>
-						) : (
-							<div className="min-w-0 flex-[999_1_840px] xl:h-full xl:overflow-y-auto">
-								<LeaderBoard />
-							</div>
-						)}
-						<div className={clsx("flex min-w-0 flex-[1_1_500px] flex-col gap-3", !isQuali && "xl:h-full")}>
+					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 xl:h-full">
+						<div
+							className={clsx(
+								"min-w-0 xl:h-full xl:overflow-y-auto",
+								wideTable ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
+							)}
+						>
+							{isPractice ? <PracticeLeaderBoard /> : isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
+						</div>
+						<div
+							className={clsx(
+								"flex min-w-0 flex-col gap-3 xl:h-full",
+								wideTable ? "flex-[1_1_480px]" : "flex-[1_1_500px]",
+							)}
+						>
 							<TrackPanel className="shrink-0" />
 							<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 xl:max-h-none" />
 						</div>
 					</div>
 				)}
 
-				{activeTab === "map" && (
-					<div className="h-[calc(100vh-12rem)]">
-						<TrackMapPage />
-					</div>
-				)}
+				{activeTab === "map" && <TrackMapPage />}
 
-				{/* Messages and Strategy stack the old views until PR 8 and PR 9 redesign them. */}
-				{activeTab === "messages" && (
-					<div className="flex flex-col divide-y divide-border">
-						<RaceControl />
-						<TeamRadios />
-						<TrackViolations />
-					</div>
-				)}
+				{activeTab === "messages" && <MessagesTab />}
 
+				{/* Strategy stacks the old views until PR 9 redesigns it. */}
 				{activeTab === "strategy" && (
 					<div className="flex flex-col divide-y divide-border">
 						<TyreStrategyPage />

@@ -103,46 +103,65 @@ and are hidden.
 
 ## PR 5 · Live: qualifying (SPEC §4)
 
-- [ ] `lib/driverStatus.ts` with vitest (In pit / Out lap / Push lap / On track).
-- [ ] The quali table on the new grid, with sector cells showing current big and PB small.
-- [ ] The KNOCKOUT divider, KO rows and the note above the table.
-- [ ] Reuse `TrackPanel` and `MessagesPanel` unchanged.
+- [x] `lib/driverStatus.ts` with vitest (In pit / Out lap / Push lap / On track).
+- [x] The quali table on the new grid, with sector cells showing current big and PB small.
+- [x] The KNOCKOUT divider, KO rows and the note above the table.
+- [x] Reuse `TrackPanel` and `MessagesPanel` unchanged.
 
 **Done when** it matches `Quali.png` on the quali replay, and STATUS changes as cars leave
 the pits and start a lap.
 
+Notes: `driverStatus` already takes a `longRun` flag for PR 6. Retired and stopped cars are
+dimmed like knocked-out ones, as before. The current-lap sector shows "—" until the sector
+is done this lap (no fallback to the previous lap).
+
 ## PR 6 · Live: practice (SPEC §5, §13.2)
 
-- [ ] Add a practice recording to `dev-sessions/manifest.json` (SPEC §13).
-- [ ] Route by `SessionInfo.Type` in `dashboard/page.tsx`.
-- [ ] `lib/longRun.ts` with vitest (107% filter, at least 5 consecutive laps, average,
+- [x] Add a practice recording to `dev-sessions/manifest.json` (SPEC §13).
+- [x] Route by `SessionInfo.Type` in `dashboard/page.tsx`.
+- [x] `lib/longRun.ts` with vitest (107% filter, at least 5 consecutive laps, average,
       least-squares degradation).
-- [ ] `PracticeLeaderBoard`: LAPS column, pace view TYRE · AVG · DEG, STATUS including Long
+- [x] `PracticeLeaderBoard`: LAPS column, pace view TYRE · AVG · DEG, STATUS including Long
       run. STATUS lines up with quali.
 
 **Done when** it matches `Practice.png` on the practice replay.
 
+Notes: livetiming's static API now answers 401, so no practice recording could be downloaded.
+The `practice` replay patches the **race** recording to a practice session instead of the
+quali one: it has real long runs to check against. Lap order and gaps there are the race's.
+The race pace view now shows the average only (SPEC §3.2); degradation is practice-only.
+
 ## PR 7 · Map tab (SPEC §6)
 
-- [ ] Three-column layout. Clicking a row toggles `favoriteDrivers`. The corner-numbers
+- [x] Three-column layout. Clicking a row toggles `favoriteDrivers`. The corner-numbers
       checkbox is bound to the setting.
-- [ ] Race order list with +/−.
-- [ ] Quali "On a push lap" panel (Δ OWN PB, Δ cut-off, KO tag, footer note), with vitest
+- [x] Race order list with +/−.
+- [x] Quali "On a push lap" panel (Δ OWN PB, Δ cut-off, KO tag, footer note), with vitest
       for the delta sums.
-- [ ] Practice "Long runs" panel.
+- [x] Practice "Long runs" panel.
 
 **Done when** it matches `Map.png`, `MapQuali.png` and `MapPractice.png` on the three
 replays.
 
+Notes: a sector that just set the driver's PB is already in `TimingStats.BestSectors`, so
+Δ OWN PB reads 0 for it (shown green); the feed doesn't keep the previous PB. The practice
+order list shows BEST and LAPS as SPEC §6.4 says (the PNG shows GAP). The map header shows
+`Circuit.ShortName` ("Montreal"), the only circuit name in the feed.
+
 ## PR 8 · Messages tab (SPEC §7)
 
-- [ ] Feed with the segment filter, driver filter and chime checkbox.
-- [ ] Radio items: play/pause, hashed decorative waveform, duration, transcript or "Show
+- [x] Feed with the segment filter, driver filter and chime checkbox.
+- [x] Radio items: play/pause, hashed decorative waveform, duration, transcript or "Show
       transcript".
-- [ ] RC status tags parsed from the text (vitest on real message strings from the replays).
-- [ ] Incidents and Track limits panels.
+- [x] RC status tags parsed from the text (vitest on real message strings from the replays).
+- [x] Incidents and Track limits panels.
 
 **Done when** it matches `Messages.png`.
+
+Notes: status tags and incidents are parsed from the stewards' wording (`lib/rcStatus`). The
+Radio count includes clips that turn out to have no words. Deleting `DriverViolations` drops
+its "+5s → Pn" penalty-position hint; `lib/calculatePosition.ts` is now unused and can go in
+the final pass.
 
 ## PR 9 · Strategy tab (SPEC §8)
 

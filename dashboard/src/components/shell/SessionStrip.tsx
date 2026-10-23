@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { sessionPartPrefix } from "@/lib/sessionPart";
+import { sessionKind } from "@/lib/sessionKind";
 import { circuitLocalTime, sessionRemaining } from "@/lib/sessionClock";
 import { latestSessionStatus, trackStatusView, type TrackStatusKind } from "@/lib/trackStatus";
 
@@ -39,8 +40,9 @@ export default function SessionStrip() {
 	);
 
 	const status = trackStatusView(statusCode, sessionStatus);
-	const isQuali = session?.Type === "Qualifying" || !!session?.Name.toLowerCase().includes("qualifying");
-	const isRace = !isQuali && session?.Type === "Race";
+	const kind = sessionKind(session);
+	const isQuali = kind === "qualifying";
+	const isRace = kind === "race";
 
 	return (
 		<section

@@ -3,13 +3,19 @@ import clsx from "clsx";
 import type { Stint } from "@/types/state.type";
 
 import { stintLaps } from "@/lib/tyreStrategy";
-import { getStintBoundaries, stintAvgMs, stintDegradation, formatMs, type StintBoundary } from "@/lib/stints";
+import { getStintBoundaries, stintAvgMs, formatMs, type StintBoundary } from "@/lib/stints";
+import { slopeMsPerLap, validStintLaps } from "@/lib/longRun";
 import { useHistoryStore, type LapTimeEntry } from "@/stores/useHistoryStore";
 
 type Props = {
 	stints: Stint[] | undefined;
 	racingNumber: string;
 	showPace?: boolean;
+	/**
+	 * Practice pace: average and degradation over the stint's valid laps (107% of bestMs).
+	 * Without it (race) the pace view shows the push-lap average only (SPEC §3.2, §5).
+	 */
+	practiceBestMs?: number;
 	max?: number;
 };
 
@@ -33,7 +39,7 @@ const EMPTY_ENTRIES: LapTimeEntry[] = [];
 
 // Most recent stints, newest (current) on the left; earlier ones dimmed.
 // With showPace, each stint box is followed by its push-lap average and degradation.
-export default function DriverTireStack({ stints, racingNumber, showPace = false, max = 3 }: Props) {
+export default function DriverTireStack({ stints, racingNumber, showPace = false, practiceBestMs, max = 3 }: Props) {
 	const entries = useHistoryStore((s) => (showPace ? (s.lapTimes[racingNumber] ?? EMPTY_ENTRIES) : EMPTY_ENTRIES));
 
 	const all = stints ?? [];
@@ -49,7 +55,13 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 	for (const s of all) boundaryOf.push(s.TotalLaps != null && s.TotalLaps > 0 ? boundaries[b++] : undefined);
 
 	return (
-		<span className={clsx("flex items-center font-mono whitespace-nowrap tabular-nums", showPace ? "gap-3" : "gap-1")}>
+		<span
+			className={clsx(
+				"flex min-w-0 items-center font-mono whitespace-nowrap tabular-nums",
+				// Three stints with their pace can be wider than the column; clip rather than spill.
+				showPace ? "gap-3 overflow-hidden" : "gap-1",
+			)}
+		>
 			{recent
 				.map((_, j) => recent.length - 1 - j)
 				.map((i) => {
@@ -71,7 +83,13 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 								{known ? COMPOUND_LETTER[compound] : "?"} {stintLaps(stint)}
 							</span>
 							{showPace && (
-								<StintPace entries={entries} boundary={boundary} boundaries={boundaries} current={current} />
+								<StintPace
+									entries={entries}
+									boundary={boundary}
+									boundaries={boundaries}
+									current={current}
+									practiceBestMs={practiceBestMs}
+								/>
 							)}
 						</span>
 					);
@@ -85,11 +103,20 @@ type StintPaceProps = {
 	boundary: StintBoundary | undefined;
 	boundaries: StintBoundary[];
 	current: boolean;
+	practiceBestMs: number | undefined;
 };
 
-function StintPace({ entries, boundary, boundaries, current }: StintPaceProps) {
-	const avg = boundary ? stintAvgMs(entries, boundary, boundaries) : null;
-	const deg = boundary ? stintDegradation(entries, boundary, boundaries) : null;
+function StintPace({ entries, boundary, boundaries, current, practiceBestMs }: StintPaceProps) {
+	let avg: number | null = null;
+	let deg: number | null = null;
+
+	if (boundary && practiceBestMs != null) {
+		const valid = validStintLaps(entries, boundary, boundaries, practiceBestMs);
+		if (valid.length >= 2) avg = valid.reduce((sum, l) => sum + l.ms, 0) / valid.length;
+		deg = valid.length >= 3 ? slopeMsPerLap(valid) : null;
+	} else if (boundary) {
+		avg = stintAvgMs(entries, boundary, boundaries);
+	}
 
 	if (avg == null) return <span className="text-xs text-fg-3">—</span>;
 

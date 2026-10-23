@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inKnockoutZone, knockoutCutoff } from "./knockout";
+import { inKnockoutZone, knockedOutCount, knockoutCutoff } from "./knockout";
 
 describe("knockoutCutoff", () => {
 	const noEntries = [22, 16, 10];
@@ -51,5 +51,17 @@ describe("inKnockoutZone", () => {
 	it("uses the fallback cut-off when NoEntries is missing", () => {
 		expect(inKnockoutZone(16, undefined, 1)).toBe(true);
 		expect(inKnockoutZone(15, undefined, 1)).toBe(false);
+	});
+});
+
+describe("knockedOutCount", () => {
+	it("is the cars in this part minus the ones that advance", () => {
+		expect(knockedOutCount([22, 16, 10], 1)).toBe(6);
+		expect(knockedOutCount([22, 16, 10], 2)).toBe(6);
+	});
+
+	it("is unknown in Q3 or without NoEntries", () => {
+		expect(knockedOutCount([22, 16, 10], 3)).toBeNull();
+		expect(knockedOutCount(undefined, 1)).toBeNull();
 	});
 });

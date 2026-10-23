@@ -2,6 +2,15 @@
 	"$comment": "Dev-only replay sessions. Files are resolved relative to DEV_REPLAY_DIR (defaults to the repo root, i.e. dashboard/..). format: 'signalr-raw' = raw F1 SignalR dump ({I,R} first line, then {M:[{A:[topic,data,utc]}]}). format: 'sse' = one {event,data,t} per line, as written by scripts/record-live.mjs. 'skipMs' fast-forwards past the dead lead-in so the replay lands near the action (green light / Q1); an explicit ?t= overrides it. Optional 'patch' is deep-merged onto the initial state and onto every SessionInfo update (used to fake a session type, e.g. practice from a qualifying recording).",
 	"sessions": [
 		{
+			"id": "practice",
+			"label": "Practice",
+			"$comment": "No practice recording: livetiming's static API now answers 401. The race recording patched to a practice session has real long runs, which a patched quali can't show; lap order and gaps are the race's.",
+			"file": "canada-2026-race.jsonl",
+			"format": "signalr-raw",
+			"skipMs": 3960000,
+			"patch": { "SessionInfo": { "Name": "Practice 2", "Type": "Practice" } }
+		},
+		{
 			"id": "qualifying",
 			"label": "Qualifying",
 			"file": "canada-2026-qualifying.jsonl",

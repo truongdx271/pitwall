@@ -11,6 +11,7 @@ import DriverGap from "@/components/driver/DriverGap";
 import DriverLapTime from "@/components/driver/DriverLapTime";
 
 import { sortPos } from "@/lib/sorting";
+import { inKnockoutZone } from "@/lib/knockout";
 
 import { useDataStore } from "@/stores/useDataStore";
 import type { Driver, TimingDataDriver } from "@/types/state.type";
@@ -63,19 +64,9 @@ type TrackMapDriverProps = {
 const hasDRS = (drs: number) => drs > 9;
 const possibleDRS = (drs: number) => drs === 8;
 
-const inDangerZone = (position: number, sessionPart: number) => {
-	switch (sessionPart) {
-		case 1:
-			return position > 15;
-		case 2:
-			return position > 10;
-		default:
-			return false;
-	}
-};
-
 const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps) => {
 	const sessionPart = useDataStore((state) => state.state?.TimingData?.SessionPart);
+	const noEntries = useDataStore((state) => state.state?.TimingData?.NoEntries);
 	const timingStatsDriver = useDataStore((state) => state.state?.TimingStats?.Lines[driver.RacingNumber]);
 	const appTimingDriver = useDataStore((state) => state.state?.TimingAppData?.Lines[driver.RacingNumber]);
 	const hasFastest = timingStatsDriver?.PersonalBestLapTime.Position == 1;
@@ -89,7 +80,7 @@ const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps)
 				"opacity-30": timingDriver.KnockedOut || timingDriver.Retired || timingDriver.Stopped,
 				"bg-sky-950/60": favoriteDriver,
 				"bg-violet-950/60": hasFastest,
-				"bg-red-950/60": sessionPart != undefined && inDangerZone(position, sessionPart),
+				"bg-red-950/60": inKnockoutZone(position, noEntries, sessionPart),
 			})}
 		>
 			<div className="grid items-center" style={{ columnGap: GRID_GAP, gridTemplateColumns: GRID_COLS }}>

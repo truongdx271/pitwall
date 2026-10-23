@@ -1,12 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 import { useHistoryStore } from "@/stores/useHistoryStore";
 import { parseTimeMs } from "@/lib/timeUtils";
 import { getStintBoundaries, formatMs } from "@/lib/stints";
-import { stintLaps } from "@/lib/tyreStrategy";
 import { longRun, type LongRun } from "@/lib/longRun";
 
 import Panel from "@/components/ui/Panel";
@@ -29,27 +29,23 @@ export default function LongRunsPanel() {
 	const app = useDataStore((s) => s.state?.TimingAppData);
 	const lapTimes = useHistoryStore((s) => s.lapTimes);
 
-	const runs: { nr: string; run: LongRun; compound: string; laps: string }[] = [];
-	for (const line of Object.values(timing?.Lines ?? {})) {
-		const stints = app?.Lines[line.RacingNumber]?.Stints ?? [];
-		const boundaries = getStintBoundaries(stints);
-		const current = boundaries.find((b) => b.isActive);
-		const run = longRun(
-			lapTimes[line.RacingNumber] ?? [],
-			current,
-			boundaries,
-			parseTimeMs(line.BestLapTime?.Value ?? ""),
-		);
-		const stint = stints[stints.length - 1];
-		if (run && stint)
-			runs.push({
-				nr: line.RacingNumber,
-				run,
-				compound: stint.Compound?.toLowerCase() ?? "",
-				laps: String(stintLaps(stint)),
-			});
-	}
-	runs.sort((a, b) => a.run.avgMs - b.run.avgMs);
+	// Recomputed only when laps, stints or best laps change, not on every timing tick.
+	const bestLaps = Object.values(timing?.Lines ?? {})
+		.map((l) => `${l.RacingNumber}:${l.BestLapTime?.Value ?? ""}`)
+		.join(",");
+	const runs = useMemo(() => {
+		const out: { nr: string; run: LongRun; compound: string }[] = [];
+		for (const line of Object.values(timing?.Lines ?? {})) {
+			const boundaries = getStintBoundaries(app?.Lines?.[line.RacingNumber]?.Stints ?? []);
+			// The last stint with laps: a just-fitted set has none yet, so the previous one runs on.
+			const current = boundaries[boundaries.length - 1];
+			const best = parseTimeMs(line.BestLapTime?.Value ?? "");
+			const run = longRun(lapTimes[line.RacingNumber] ?? [], current, boundaries, best);
+			if (run && current) out.push({ nr: line.RacingNumber, run, compound: current.compound.toLowerCase() });
+		}
+		return out.sort((a, b) => a.run.avgMs - b.run.avgMs);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [app, lapTimes, bestLaps]);
 
 	const fastest = runs[0]?.run.avgMs;
 	const slowest = runs[runs.length - 1]?.run.avgMs;
@@ -79,7 +75,7 @@ export default function LongRunsPanel() {
 			<div className="min-h-0 flex-1 overflow-y-auto px-1.5 pt-1 pb-1.5">
 				{runs.length === 0 && <p className="px-1.5 py-4 text-[13px] text-fg-2">No long runs yet this session</p>}
 
-				{runs.map(({ nr, run, compound, laps }) => {
+				{runs.map(({ nr, run, compound }) => {
 					const driver = drivers?.[nr];
 					if (!driver || fastest == null) return null;
 					const tyre = TYRE[compound];
@@ -102,7 +98,7 @@ export default function LongRunsPanel() {
 									tyre ? `${tyre.bg} text-bg` : "bg-surface-3 text-fg-2",
 								)}
 							>
-								{tyre?.letter ?? "?"} {laps}
+								{tyre?.letter ?? "?"} {run.laps}
 							</span>
 							<span className="flex min-w-0 flex-col gap-1">
 								<span className="text-fg-1">{formatMs(run.avgMs)}</span>

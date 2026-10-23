@@ -25,10 +25,15 @@ describe("pushLapDeltas", () => {
 		expect(pushLapDeltas([s("22.800", true), s(""), s("")], own, ref).sessionBest).toBe(true);
 	});
 
-	it("has no delta without a best to compare", () => {
+	it("has no delta when a completed sector has no best to compare", () => {
 		const d = pushLapDeltas([s("22.800"), s(""), s("")], [undefined, undefined, undefined], ref);
 		expect(d.ownMs).toBeNull();
 		expect(d.refMs).toBeCloseTo(-300);
+
+		// S2 has no own best: summing S1 alone would compare a different set of sectors.
+		const gap = pushLapDeltas([s("22.950"), s("25.100"), s("")], ["23.000", undefined, undefined], ref);
+		expect(gap.ownMs).toBeNull();
+		expect(gap.refMs).toBeCloseTo(50);
 		expect(pushLapDeltas([s(""), s(""), s("")], own, ref)).toEqual({
 			completed: 0,
 			ownMs: null,

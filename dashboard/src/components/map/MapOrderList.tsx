@@ -123,7 +123,7 @@ type RowProps = {
 };
 
 function OrderRow({ kind, position, knockout, driver, line, poleMs }: RowProps) {
-	const app = useDataStore((s) => s.state?.TimingAppData?.Lines[driver.RacingNumber]);
+	const app = useDataStore((s) => s.state?.TimingAppData?.Lines?.[driver.RacingNumber]);
 	const hasFastest = useDataStore(
 		(s) => s.state?.TimingStats?.Lines[driver.RacingNumber]?.PersonalBestLapTime?.Position === 1,
 	);

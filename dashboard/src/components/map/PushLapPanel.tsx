@@ -24,7 +24,7 @@ export default function PushLapPanel() {
 	const cutoff = knockoutCutoff(timing?.NoEntries, timing?.SessionPart);
 	const refPos = cutoff ?? 1;
 	const refLine = lines[refPos - 1];
-	const refBest = (stats?.Lines[refLine?.RacingNumber ?? ""]?.BestSectors ?? []).map((s) => s?.Value);
+	const refBest = (stats?.Lines?.[refLine?.RacingNumber ?? ""]?.BestSectors ?? []).map((s) => s?.Value);
 	const refLabel = `P${refPos}`;
 
 	const pushers = lines
@@ -65,7 +65,7 @@ export default function PushLapPanel() {
 				{pushers.map(({ line, position }) => {
 					const driver = drivers?.[line.RacingNumber];
 					if (!driver) return null;
-					const ownBest = (stats?.Lines[line.RacingNumber]?.BestSectors ?? []).map((s) => s?.Value);
+					const ownBest = (stats?.Lines?.[line.RacingNumber]?.BestSectors ?? []).map((s) => s?.Value);
 					const d = pushLapDeltas(line.Sectors, ownBest, refBest);
 					const isRef = refLine?.RacingNumber === line.RacingNumber;
 					const ko = cutoff != null && position > cutoff;

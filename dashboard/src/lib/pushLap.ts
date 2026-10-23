@@ -28,8 +28,9 @@ export const pushLapDeltas = (
 	refBest: (string | undefined)[],
 ): PushLapDeltas => {
 	let completed = 0;
-	let own: number | null = null;
-	let ref: number | null = null;
+	// null: nothing compared yet; undefined: a completed sector had no best to compare.
+	let own: number | null | undefined = null;
+	let ref: number | null | undefined = null;
 	let sessionBest = false;
 
 	for (let i = 0; i < 3; i++) {
@@ -38,13 +39,14 @@ export const pushLapDeltas = (
 		completed++;
 		if (sectors[i]?.OverallFastest) sessionBest = true;
 
+		// A sum only means something when every completed sector has its comparison.
 		const o = ms(ownBest[i]);
-		if (o != null) own = (own ?? 0) + (t - o);
+		own = o == null || own === undefined ? undefined : (own ?? 0) + (t - o);
 		const r = ms(refBest[i]);
-		if (r != null) ref = (ref ?? 0) + (t - r);
+		ref = r == null || ref === undefined ? undefined : (ref ?? 0) + (t - r);
 	}
 
-	return { completed, ownMs: own, refMs: ref, sessionBest };
+	return { completed, ownMs: own ?? null, refMs: ref ?? null, sessionBest };
 };
 
 /** "−0.103" / "+0.052" in seconds. */

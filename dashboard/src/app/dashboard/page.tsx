@@ -12,12 +12,10 @@ import PracticeLeaderBoard from "@/components/dashboard/PracticeLeaderBoard";
 import TrackPanel from "@/components/dashboard/TrackPanel";
 import MessagesPanel from "@/components/dashboard/MessagesPanel";
 import MessagesTab from "@/components/messages/MessagesTab";
+import StrategyTab from "@/components/strategy/StrategyTab";
 import { parseTab } from "@/components/shell/tabs";
 import { sessionKind } from "@/lib/sessionKind";
 
-import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
-import LapTimesPage from "@/app/dashboard/lap-times/page";
-import SpeedTrapsPage from "@/app/dashboard/speed-traps/page";
 import StandingsPage from "@/app/dashboard/standings/page";
 import TrackMapPage from "@/app/dashboard/track-map/page";
 import WeatherPage from "@/app/dashboard/weather/page";
@@ -71,14 +69,7 @@ function Dashboard() {
 
 				{activeTab === "messages" && <MessagesTab />}
 
-				{/* Strategy stacks the old views until PR 9 redesigns it. */}
-				{activeTab === "strategy" && (
-					<div className="flex flex-col divide-y divide-border">
-						<TyreStrategyPage />
-						<LapTimesPage />
-						<SpeedTrapsPage />
-					</div>
-				)}
+				{activeTab === "strategy" && <StrategyTab />}
 
 				{activeTab === "weather" && (
 					<div className="h-[calc(100vh-8rem)] overflow-y-auto">

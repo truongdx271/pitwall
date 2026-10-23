@@ -85,10 +85,10 @@ export default function SpeedTraps() {
 										<SpeedVal cell={stats?.BestSpeeds?.I2} unit={unit} />
 									</td>
 									<td className="px-2 py-0.5 text-right">
-										<SpeedVal cell={stats?.BestSpeeds?.Fl} unit={unit} />
+										<SpeedVal cell={stats?.BestSpeeds?.FL} unit={unit} />
 									</td>
 									<td className="px-2 py-0.5 text-right">
-										<SpeedVal cell={stats?.BestSpeeds?.St} unit={unit} />
+										<SpeedVal cell={stats?.BestSpeeds?.ST} unit={unit} />
 									</td>
 								</tr>
 							);

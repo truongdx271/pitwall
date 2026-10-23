@@ -22,7 +22,7 @@ export default function Panel({ title, header, className, children }: Props) {
 		>
 			{(title || header) && (
 				<div className="flex min-h-11 items-center gap-3 px-3 py-1.5">
-					{title && <h2 className="text-sm font-semibold text-fg-1">{title}</h2>}
+					{title && <h2 className="text-sm font-semibold whitespace-nowrap text-fg-1">{title}</h2>}
 					{header}
 				</div>
 			)}

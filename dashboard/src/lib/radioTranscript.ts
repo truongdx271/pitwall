@@ -22,3 +22,11 @@ export function retryDelayMs(status: number, retryAfter: string | null, attempt:
 export function hasWords(text: string): boolean {
 	return /[0-9A-Za-z\u00C0-\u1FFF\u3040-\uFFEF]/.test(text);
 }
+
+/**
+ * A clip the message lists will hide: its transcript failed, or came back without words
+ * (Whisper returns "." for near-silent clips). Clips still being transcribed count as shown.
+ */
+export function radioClipHidden(text: string | undefined, failed: boolean): boolean {
+	return failed || (text !== undefined && !hasWords(text));
+}

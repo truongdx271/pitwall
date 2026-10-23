@@ -10,8 +10,10 @@ import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useRadioTranscript } from "@/hooks/useRadioTranscript";
 import { useRaceControlChime } from "@/hooks/useRaceControlChime";
-import { hasWords } from "@/lib/radioTranscript";
+import { hasWords, radioClipHidden } from "@/lib/radioTranscript";
+import { useTranscriptStore } from "@/stores/useTranscriptStore";
 import { incidentCars, incidents, rcStatus, RC_STATUS_LABEL, type RcStatus } from "@/lib/rcStatus";
+import { utcMs } from "@/lib/utcMs";
 
 import Panel from "@/components/ui/Panel";
 import SelectMultiple from "@/components/ui/SelectMultiple";
@@ -56,6 +58,10 @@ function Feed() {
 	const setChime = useSettingsStore((s) => s.setRaceControlChime);
 	const [filter, setFilter] = useState<Filter>("all");
 	const [only, setOnly] = useState<string[]>([]);
+	// Clips the viewer asked to transcribe stay listed (and counted) whatever comes back.
+	const [asked, setAsked] = useState<string[]>([]);
+	const texts = useTranscriptStore((s) => s.texts);
+	const failed = useTranscriptStore((s) => s.failed);
 
 	useRaceControlChime(messages);
 
@@ -68,10 +74,15 @@ function Feed() {
 		.map((msg) => ({ kind: "rc", utc: msg.Utc, msg }));
 	const radio: Item[] = (captures ?? [])
 		.filter((c) => byDriver([c.RacingNumber]))
+		.filter(
+			(c) =>
+				asked.includes(c.Path) ||
+				!radioClipHidden(texts[`${sessionPath}${c.Path}`], !!failed[`${sessionPath}${c.Path}`]),
+		)
 		.map((capture) => ({ kind: "radio", utc: capture.Utc, capture }));
 
 	const items = (filter === "rc" ? rc : filter === "radio" ? radio : [...rc, ...radio]).sort(
-		(a, b) => Date.parse(b.utc) - Date.parse(a.utc),
+		(a, b) => utcMs(b.utc) - utcMs(a.utc),
 	);
 
 	const filters: { id: Filter; label: string; count: number }[] = [
@@ -135,6 +146,8 @@ function Feed() {
 					) : (
 						<RadioFeedItem
 							key={`radio.${item.capture.Path}`}
+							wanted={asked.includes(item.capture.Path)}
+							onAsk={() => setAsked((a) => [...a, item.capture.Path])}
 							capture={item.capture}
 							driver={drivers?.[item.capture.RacingNumber]}
 							sessionPath={sessionPath}
@@ -188,14 +201,15 @@ function RcFeedItem({ msg }: { msg: Message }) {
 }
 
 type RadioFeedItemProps = {
+	wanted: boolean;
+	onAsk: () => void;
 	capture: RadioCapture;
 	driver: Driver | undefined;
 	sessionPath: string | undefined;
 };
 
-function RadioFeedItem({ capture, driver, sessionPath }: RadioFeedItemProps) {
+function RadioFeedItem({ wanted, onAsk, capture, driver, sessionPath }: RadioFeedItemProps) {
 	// The feed fetches a transcript when asked; ones already fetched elsewhere show straight away.
-	const [wanted, setWanted] = useState(false);
 	const transcript = useRadioTranscript(sessionPath, capture.Path, { enabled: wanted });
 
 	if (!driver || !sessionPath) return null;
@@ -213,7 +227,7 @@ function RadioFeedItem({ capture, driver, sessionPath }: RadioFeedItemProps) {
 			driver={driver}
 			src={`https://livetiming.formula1.com/static/${sessionPath}${capture.Path}`}
 			transcript={transcript}
-			onShowTranscript={() => setWanted(true)}
+			onShowTranscript={onAsk}
 		/>
 	);
 }

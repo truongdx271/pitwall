@@ -28,7 +28,18 @@ type Props = {
 
 export default function DashboardLayout({ children }: Props) {
 	const stores = useStores();
-	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
+	// The feed moved to another session: clear the screen, and reconnect when only an update
+	// announced it, so the relay sends the new session's full state.
+	const retryRef = useRef<() => void>(() => {});
+	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores, {
+		onSessionChange: (via) => {
+			useDataStore.getState().setState(null);
+			useDataStore.getState().setCarsData(null);
+			useDataStore.getState().setPositions(null);
+			useHistoryStore.getState().reset();
+			if (via === "update") retryRef.current();
+		},
+	});
 
 	// Dev replay: when a recorded session is selected, swap the live SSE for the
 	// /api/dev/replay stream. Only one of the two is ever connected.
@@ -40,6 +51,9 @@ export default function DashboardLayout({ children }: Props) {
 	const live = useSocket({ handleInitial, handleUpdate }, { enabled: !replayActive });
 	const dev = useReplaySocket({ handleInitial, handleUpdate }, { enabled: replayActive });
 	const connected = replayActive ? dev.connected : live.connected;
+	useEffect(() => {
+		retryRef.current = replayActive ? () => {} : live.retry;
+	}, [replayActive, live.retry]);
 
 	useHistoryEngine();
 

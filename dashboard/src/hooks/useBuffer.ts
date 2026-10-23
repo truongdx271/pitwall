@@ -88,8 +88,14 @@ export const useBuffer = <T>() => {
 		return bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
 	};
 
+	// Drop every frame, e.g. when the feed moves to another session.
+	const clear = () => {
+		bufferRef.current = [];
+	};
+
 	return {
 		push,
+		clear,
 		pushTimed,
 		latest,
 		delayed,

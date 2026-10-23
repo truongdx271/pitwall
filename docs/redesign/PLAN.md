@@ -103,13 +103,17 @@ and are hidden.
 
 ## PR 5 · Live: qualifying (SPEC §4)
 
-- [ ] `lib/driverStatus.ts` with vitest (In pit / Out lap / Push lap / On track).
-- [ ] The quali table on the new grid, with sector cells showing current big and PB small.
-- [ ] The KNOCKOUT divider, KO rows and the note above the table.
-- [ ] Reuse `TrackPanel` and `MessagesPanel` unchanged.
+- [x] `lib/driverStatus.ts` with vitest (In pit / Out lap / Push lap / On track).
+- [x] The quali table on the new grid, with sector cells showing current big and PB small.
+- [x] The KNOCKOUT divider, KO rows and the note above the table.
+- [x] Reuse `TrackPanel` and `MessagesPanel` unchanged.
 
 **Done when** it matches `Quali.png` on the quali replay, and STATUS changes as cars leave
 the pits and start a lap.
+
+Notes: `driverStatus` already takes a `longRun` flag for PR 6. Retired and stopped cars are
+dimmed like knocked-out ones, as before. The current-lap sector shows "—" until the sector
+is done this lap (no fallback to the previous lap).
 
 ## PR 6 · Live: practice (SPEC §5, §13.2)
 

@@ -173,10 +173,14 @@ the final pass.
 
 ## PR 10 · Weather and Standings (SPEC §9, §10)
 
-- [ ] Weather: map panel, timeline, Conditions card.
-- [ ] Standings: Live projection / Before this race, fill-style rows, GAP and +RACE.
+- [x] Weather: map panel, timeline, Conditions card.
+- [x] Standings: Live projection / Before this race, fill-style rows, GAP and +RACE.
 
 **Done when** it matches `Weather.png` and `Standings.png`.
+
+Notes: `weather/map-timeline.tsx` (drag scrubber) is replaced by `frame-timeline.tsx` (one
+segment per radar frame). Standings keep the column order of `Standings.png` (GAP, PTS,
++RACE). Outside a race there is only one view, so the Live / Before toggle is hidden.
 
 ## PR 11 · Home, Schedule, Help, Settings (SPEC §14)
 

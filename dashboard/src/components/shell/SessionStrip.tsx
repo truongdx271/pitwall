@@ -37,11 +37,8 @@ export default function SessionStrip() {
 	const sessionStatus = useDataStore((s) =>
 		latestSessionStatus(s.state?.SessionData?.StatusSeries, s.state?.SessionStatus?.Status),
 	);
-	const delay = useSettingsStore((s) => s.delay);
-	const now = useNow();
 
 	const status = trackStatusView(statusCode, sessionStatus);
-	const localTime = circuitLocalTime(now, session?.GmtOffset, delay);
 	const isQuali = session?.Type === "Qualifying" || !!session?.Name.toLowerCase().includes("qualifying");
 	const isRace = !isQuali && session?.Type === "Race";
 
@@ -61,18 +58,13 @@ export default function SessionStrip() {
 					{session && (
 						<span className="truncate text-xs text-fg-2">
 							{session.Name} · {session.Meeting.Circuit.ShortName}
-							{localTime && (
-								<>
-									{" · "}
-									<span className="font-mono text-fg-1 tabular-nums">{localTime}</span> local
-								</>
-							)}
+							<LocalTime gmtOffset={session.GmtOffset} />
 						</span>
 					)}
 				</div>
 			</div>
 
-			{session && (isRace ? <RaceProgress /> : <SessionTime isQuali={isQuali} now={now} />)}
+			{session && (isRace ? <RaceProgress /> : <SessionTime isQuali={isQuali} />)}
 
 			<WeatherInline />
 
@@ -112,7 +104,22 @@ function RaceProgress() {
 	);
 }
 
-function SessionTime({ isQuali, now }: { isQuali: boolean; now: number }) {
+// The two ticking values live in their own components so only they re-render every second.
+function LocalTime({ gmtOffset }: { gmtOffset: string }) {
+	const delay = useSettingsStore((s) => s.delay);
+	const localTime = circuitLocalTime(useNow(), gmtOffset, delay);
+	if (!localTime) return null;
+
+	return (
+		<>
+			{" · "}
+			<span className="font-mono text-fg-1 tabular-nums">{localTime}</span> local
+		</>
+	);
+}
+
+function SessionTime({ isQuali }: { isQuali: boolean }) {
+	const now = useNow();
 	const clock = useDataStore((s) => s.state?.ExtrapolatedClock);
 	const part = useDataStore((s) => s.state?.TimingData?.SessionPart);
 	const sessionName = useDataStore((s) => s.state?.SessionInfo?.Name ?? "");

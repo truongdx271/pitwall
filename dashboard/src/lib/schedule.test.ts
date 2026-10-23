@@ -4,15 +4,7 @@ import { firstUpcoming, loadSchedule, nextSession } from "@/lib/schedule";
 import type { Round } from "@/types/schedule.type";
 
 const round = (name: string, over: boolean): Round =>
-	({
-		name,
-		countryName: name,
-		countryKey: null,
-		start: "2026-10-04T07:00:00Z",
-		end: "2026-10-04T15:00:00Z",
-		sessions: [],
-		over,
-	}) as Round;
+	({ name, countryName: name, countryKey: null, start: "2026-10-04T07:00:00Z", end: "2026-10-04T15:00:00Z", sessions: [], over }) as Round;
 
 describe("firstUpcoming", () => {
 	it("returns the first round that is not over", () => {

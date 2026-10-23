@@ -80,14 +80,16 @@ type ReconnectingProps = {
 
 // Shown while the live socket is down but we still have older data on screen.
 export function ReconnectingCard({ lastMessageAt, retry }: ReconnectingProps) {
-	const [now, setNow] = useState(() => Date.now());
+	// Read the ref from the timer, not during render.
+	const [ago, setAgo] = useState<number | null>(null);
 	useEffect(() => {
-		const id = setInterval(() => setNow(Date.now()), 1000);
+		const tick = () => {
+			const last = lastMessageAt.current;
+			setAgo(last ? Math.max(0, Math.round((Date.now() - last) / 1000)) : null);
+		};
+		const id = setInterval(tick, 1000);
 		return () => clearInterval(id);
-	}, []);
-
-	const last = lastMessageAt.current;
-	const ago = last ? Math.max(0, Math.round((now - last) / 1000)) : null;
+	}, [lastMessageAt]);
 
 	return (
 		<div

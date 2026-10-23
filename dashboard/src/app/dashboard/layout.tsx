@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: Props) {
 	);
 
 	// Live socket down with data on screen: say how stale it is. Replay has no retry.
-	const reconnecting = !replayActive && !live.connected && live.lastMessageAt.current != null;
+	const reconnecting = !replayActive && !live.connected && live.hasData;
 
 	return (
 		<div className="flex h-screen w-full flex-col">

@@ -114,28 +114,30 @@ export default function Standings() {
 					<StandingsHeader first="DRIVER" race={view === "live"} />
 					{!driverStandings && new Array(22).fill("").map((_, i) => <SkeletonRow key={i} />)}
 					{driverStandings &&
-						standingsRows(Object.values(driverStandings), view).map((row, i) => {
-							const info = drivers?.[row.entry.RacingNumber];
-							const label = "Tla" in row.entry ? (row.entry as PredictedDriver) : null;
-							if (!info && !label?.Tla) return null;
-							return (
-								<StandingsLine
-									key={row.entry.RacingNumber}
-									row={row}
-									zebra={i % 2 === 1}
-									colour={info?.TeamColour}
-									race={view === "live"}
-									name={
-										<>
-											<DriverChip short={info?.Tla ?? label?.Tla ?? "?"} teamColor={info?.TeamColour} />
-											<span className="truncate font-sans text-[13px] text-fg-1">
-												{info?.LastName ?? label?.FamilyName}
-											</span>
-										</>
-									}
-								/>
-							);
-						})}
+						standingsRows(Object.values(driverStandings), view)
+							// Skip drivers we can't label before striping, so the zebra stays even.
+							.filter((row) => drivers?.[row.entry.RacingNumber] || "Tla" in row.entry)
+							.map((row, i) => {
+								const info = drivers?.[row.entry.RacingNumber];
+								const label = "Tla" in row.entry ? (row.entry as PredictedDriver) : null;
+								return (
+									<StandingsLine
+										key={row.entry.RacingNumber}
+										row={row}
+										zebra={i % 2 === 1}
+										colour={info?.TeamColour}
+										race={view === "live"}
+										name={
+											<>
+												<DriverChip short={info?.Tla ?? label?.Tla ?? "?"} teamColor={info?.TeamColour} />
+												<span className="truncate font-sans text-[13px] text-fg-1">
+													{info?.LastName ?? label?.FamilyName}
+												</span>
+											</>
+										}
+									/>
+								);
+							})}
 				</Panel>
 
 				<Panel title="Constructors" className="min-w-0 flex-[1_1_520px] px-1.5 pb-2">
@@ -225,6 +227,7 @@ function StandingsLine({ row, zebra, colour, race, name, tall }: LineProps) {
 			<span className="text-right text-fg-2">{row.position}</span>
 			<span
 				className={clsx("text-[10px]", row.moved > 0 ? "text-gain" : "text-loss")}
+				role={row.moved ? "img" : undefined}
 				aria-label={row.moved ? `${row.moved > 0 ? "up" : "down"} ${Math.abs(row.moved)}` : undefined}
 			>
 				{row.moved > 0 ? "▲" : row.moved < 0 ? "▼" : ""}

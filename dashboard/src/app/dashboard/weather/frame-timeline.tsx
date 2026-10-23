@@ -77,9 +77,12 @@ export default function FrameTimeline({ frames, setFrame }: Props) {
 					{frames.map((f, i) => (
 						<span
 							key={f.id}
-							className={clsx("flex-1 truncate", i === index ? "font-semibold text-fg-1" : f.forecast && "text-pit")}
+							className={clsx(
+								"flex-1 truncate",
+								i === index ? "font-semibold text-fg-1" : i === now ? "text-fg-1" : f.forecast && "text-pit",
+							)}
 						>
-							{i % 2 === 0 || i === index ? clock(f.time) : ""}
+							{i === now && i !== index ? "now" : i % 2 === 0 || i === index ? clock(f.time) : ""}
 						</span>
 					))}
 				</div>

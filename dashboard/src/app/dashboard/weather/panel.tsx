@@ -68,8 +68,9 @@ function Conditions({ weather }: { weather: NonNullable<Weather> }) {
 	const humidity = Math.round(parseFloat(weather.Humidity));
 	const pressure = parseFloat(weather.Pressure);
 	const windSpeed = parseFloat(weather.WindSpeed);
-	const windDeg = parseInt(weather.WindDirection);
-	const windDir = getWindDirection(windDeg);
+	const windDeg = parseInt(weather.WindDirection) || 0;
+	// Nearest of the eight points, so the label agrees with the arrow.
+	const windDir = getWindDirection((Math.round(windDeg / 45) * 45) % 360);
 
 	return (
 		<div className="grid grid-cols-2 gap-2.5 px-3">

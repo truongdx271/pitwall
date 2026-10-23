@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -111,7 +111,8 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 		};
 	}, [query, city]);
 
-	const setFrame = (idx: number) => {
+	// Stable, so the timeline only repaints when the frame changes.
+	const setFrame = useCallback((idx: number) => {
 		const map = mapRef.current;
 		if (!map) return;
 		const prev = `rainviewer-frame-${currentFrameRef.current}`;
@@ -119,7 +120,7 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 		if (map.getLayer(prev)) map.setPaintProperty(prev, "raster-opacity", 0);
 		if (map.getLayer(next)) map.setPaintProperty(next, "raster-opacity", 0.8);
 		currentFrameRef.current = idx;
-	};
+	}, []);
 
 	return (
 		<div className="relative h-full w-full">
@@ -127,7 +128,7 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 
 			{ready && frames.length > 0 && (
 				<div className="absolute right-3 bottom-3 left-3 z-20">
-					<FrameTimeline frames={frames} setFrame={setFrame} />
+					<FrameTimeline key={frames[0].time} frames={frames} setFrame={setFrame} />
 				</div>
 			)}
 

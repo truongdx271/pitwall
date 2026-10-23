@@ -64,16 +64,14 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 
 				<DriverChip short={driver.Tla} teamColor={driver.TeamColour} />
 
-				<DeltaCell
-					delta={out ? { kind: "none" } : positionDelta(gridPos, parseInt(timingDriver.Position), hasFastest)}
-				/>
+				<DeltaCell delta={positionDelta(out ? undefined : gridPos, parseInt(timingDriver.Position), hasFastest)} />
 
-				<ProximityMeter interval={timingDriver.IntervalToPositionAhead?.Value} />
+				<ProximityMeter interval={out ? undefined : timingDriver.IntervalToPositionAhead?.Value} />
 
 				<GapCell timingDriver={timingDriver} out={out} />
 
 				<span className="text-right text-fg-2">
-					{timingDriver.Position === "1" ? "—" : timingDriver.IntervalToPositionAhead?.Value || "—"}
+					{out || timingDriver.Position === "1" ? "—" : timingDriver.IntervalToPositionAhead?.Value || "—"}
 				</span>
 
 				<span
@@ -145,7 +143,7 @@ function ProximityMeter({ interval }: { interval: string | undefined }) {
 					key={k}
 					className={clsx(
 						"h-full flex-1 rounded-[1px]",
-						k < filled ? (filled === 4 ? "bg-loss" : "bg-slower") : "bg-[#262b33]",
+						k < filled ? (filled === 4 ? "bg-loss" : "bg-slower") : "bg-surface-3",
 					)}
 				/>
 			))}

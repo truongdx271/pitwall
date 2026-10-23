@@ -61,7 +61,7 @@ export default function LeaderBoard() {
 			}
 		>
 			<div className="overflow-x-auto">
-				<div className="min-w-[840px]">
+				<div className={showPace ? "min-w-[940px]" : "min-w-[840px]"}>
 					{showTableHeader && <TableHeaders showPace={showPace} />}
 
 					<div className="pt-1">

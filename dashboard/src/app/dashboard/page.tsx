@@ -57,7 +57,7 @@ function Dashboard() {
 						)}
 						<div className={clsx("flex min-w-0 flex-[1_1_500px] flex-col gap-3", !isQuali && "xl:h-full")}>
 							<TrackPanel className="shrink-0" />
-							<MessagesPanel className="min-h-[260px] flex-1" />
+							<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 xl:max-h-none" />
 						</div>
 					</div>
 				)}

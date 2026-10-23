@@ -24,12 +24,16 @@ Tick the boxes as you go and note anything you deferred under the PR.
 
 A small bug fix, independent of the redesign.
 
-- [ ] Add a helper (e.g. `lib/knockout.ts`) that derives the cut-off from
+- [x] Add a helper (e.g. `lib/knockout.ts`) that derives the cut-off from
       `TimingData.NoEntries[SessionPart]`, with today's 15/10 as a fallback.
-- [ ] Use it in `Driver.tsx`, `track-map/page.tsx` and the quali board in place of the
+- [x] Use it in `Driver.tsx`, `track-map/page.tsx` and the quali board in place of the
       hardcoded `inDangerZone`.
-- [ ] Vitest: `[22, 16, 10]` gives P17+ in Q1, P11+ in Q2 and nothing in Q3. A missing
+- [x] Vitest: `[22, 16, 10]` gives P17+ in Q1, P11+ in Q2 and nothing in Q3. A missing
       `NoEntries` falls back.
+
+Notes: a part whose `NoEntries` entry is 0 also falls back (Australia 2026 sends `[0, 0, 0]`
+before the real counts). The unused `Qualifying.tsx` still hardcodes 15/10 for its comparison
+driver; it goes away in the final pass.
 
 **Done when** the Canada 2026 quali replay shows P17–P22 in the danger zone during Q1.
 

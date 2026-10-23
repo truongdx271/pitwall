@@ -7,6 +7,7 @@ import type { MessageInitial, MessageUpdate } from "@/types/message.type";
 
 import { inflateSafe } from "@/lib/inflate";
 import { utcToLocalMs } from "@/lib/utcToLocalMs";
+import { isNewSession } from "@/lib/sessionGuard";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
@@ -21,7 +22,19 @@ type Props = {
 	updateCarData: (car: CarsData) => void;
 };
 
-export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Props) => {
+type Options = {
+	/**
+	 * Called when the feed moves to another session, after the buffers are cleared. `via`
+	 * says whether a fresh initial state came with it or only an update (then the caller
+	 * should reconnect to get the new session's full state).
+	 */
+	onSessionChange?: (via: "initial" | "update") => void;
+};
+
+export const useDataEngine = (
+	{ updateState, updatePosition, updateCarData }: Props,
+	{ onSessionChange }: Options = {},
+) => {
 	const buffers = {
 		ExtrapolatedClock: useStatefulBuffer(),
 		TopThree: useStatefulBuffer(),
@@ -57,7 +70,31 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+	// Path of the session the buffers hold; a different one means start over.
+	const sessionPathRef = useRef<string | null>(null);
+
+	const resetAll = () => {
+		Object.values(buffers).forEach((buffer) => buffer.reset());
+		carBuffer.clear();
+		posBuffer.clear();
+	};
+
+	// Start over: the data source changed (live <-> replay, replay restart).
+	const reset = () => {
+		resetAll();
+		sessionPathRef.current = null;
+	};
+
+	const trackSession = (path: string | undefined, via: "initial" | "update") => {
+		if (isNewSession(sessionPathRef.current, path)) {
+			resetAll();
+			onSessionChange?.(via);
+		}
+		if (path) sessionPathRef.current = path;
+	};
+
 	const handleInitial = ({ CarDataZ: carZ, PositionZ: posZ, ...initial }: MessageInitial) => {
+		trackSession(initial.SessionInfo?.Path, "initial");
 		updateState(initial);
 
 		Object.keys(buffers).forEach((key) => {
@@ -80,6 +117,7 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 	};
 
 	const handleUpdate = ({ CarDataZ: carZ, PositionZ: posZ, ...update }: MessageUpdate) => {
+		trackSession(update.SessionInfo?.Path, "update");
 		Object.keys(buffers).forEach((key) => {
 			const data = update[key as keyof typeof update];
 			const buffer = buffers[key as keyof typeof buffers];
@@ -166,5 +204,6 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 		handleUpdate,
 		handleInitial,
 		maxDelay,
+		reset,
 	};
 };

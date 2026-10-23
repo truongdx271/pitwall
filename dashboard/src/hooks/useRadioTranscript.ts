@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { env } from "@/env";
 import { retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
+import { useTranscriptStore } from "@/stores/useTranscriptStore";
 
 export type TranscriptState =
 	| { status: "idle" }
 	| { status: "loading" }
 	| { status: "done"; text: string }
 	| { status: "unavailable" };
-
-// Survives remounts (tab switches, list reshuffles) so a clip is fetched once per page load.
-const transcripts = new Map<string, string>();
 
 /**
  * `enabled: false` waits for the viewer (the Messages feed's "Show transcript"): nothing is
@@ -23,14 +21,12 @@ export function useRadioTranscript(
 ): TranscriptState {
 	const key = sessionPath ? sessionPath + clipPath : null;
 
-	// Only a final "unavailable" needs state; "done" lives in the module cache and
-	// everything else is "loading". setState only runs in async callbacks, which
-	// keeps react-hooks/set-state-in-effect happy.
-	const [failedKey, setFailedKey] = useState<string | null>(null);
-	const [, setVersion] = useState(0);
+	// Text and failures live in a shared store; store writes only run in async callbacks.
+	const text = useTranscriptStore((s) => (key ? s.texts[key] : undefined));
+	const failed = useTranscriptStore((s) => (key ? !!s.failed[key] : false));
 
 	useEffect(() => {
-		if (!enabled || !key || !sessionPath || transcripts.has(key)) return;
+		if (!enabled || !key || !sessionPath || useTranscriptStore.getState().texts[key] !== undefined) return;
 
 		const controller = new AbortController();
 		let timer: ReturnType<typeof setTimeout> | undefined;
@@ -43,20 +39,19 @@ export function useRadioTranscript(
 
 				if (res.ok) {
 					const { text } = (await res.json()) as { text: string };
-					transcripts.set(key, text);
-					setVersion((v) => v + 1);
+					useTranscriptStore.getState().setText(key, text);
 					return;
 				}
 
 				const delay = retryDelayMs(res.status, res.headers.get("Retry-After"), n);
 				if (delay === null) {
-					setFailedKey(key);
+					useTranscriptStore.getState().setFailed(key);
 					return;
 				}
 
 				timer = setTimeout(() => attempt(n + 1), delay);
 			} catch {
-				if (!controller.signal.aborted) setFailedKey(key);
+				if (!controller.signal.aborted) useTranscriptStore.getState().setFailed(key);
 			}
 		};
 
@@ -68,8 +63,7 @@ export function useRadioTranscript(
 		};
 	}, [enabled, key, sessionPath, clipPath]);
 
-	const text = key ? transcripts.get(key) : undefined;
 	if (text !== undefined) return { status: "done", text };
-	if (key === null || failedKey === key) return { status: "unavailable" };
+	if (key === null || failed) return { status: "unavailable" };
 	return enabled ? { status: "loading" } : { status: "idle" };
 }

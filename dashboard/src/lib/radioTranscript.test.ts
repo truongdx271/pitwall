@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { MAX_ATTEMPTS, hasWords, retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
+import { MAX_ATTEMPTS, hasWords, radioClipHidden, retryDelayMs, transcriptUrl } from "@/lib/radioTranscript";
 
 describe("transcriptUrl", () => {
 	it("joins session and clip path and encodes it", () => {
@@ -48,5 +48,18 @@ describe("hasWords", () => {
 		expect(hasWords("Box, box.")).toBe(true);
 		expect(hasWords("P3")).toBe(true);
 		expect(hasWords("Đúng")).toBe(true);
+	});
+});
+
+describe("radioClipHidden", () => {
+	it("hides failed and wordless clips", () => {
+		expect(radioClipHidden(undefined, true)).toBe(true);
+		// US GP FP1: Whisper returned "." for a near-silent HER clip.
+		expect(radioClipHidden(".", false)).toBe(true);
+	});
+
+	it("keeps clips with words and clips still being transcribed", () => {
+		expect(radioClipHidden("Thank you.", false)).toBe(false);
+		expect(radioClipHidden(undefined, false)).toBe(false);
 	});
 });

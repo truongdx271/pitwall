@@ -9,7 +9,9 @@ import type { Driver, Message, RadioCapture } from "@/types/state.type";
 import { useDataStore } from "@/stores/useDataStore";
 import { useRadioTranscript } from "@/hooks/useRadioTranscript";
 import { useRaceControlChime } from "@/hooks/useRaceControlChime";
-import { hasWords } from "@/lib/radioTranscript";
+import { hasWords, radioClipHidden } from "@/lib/radioTranscript";
+import { useTranscriptStore } from "@/stores/useTranscriptStore";
+import { utcMs } from "@/lib/utcMs";
 
 import Panel from "@/components/ui/Panel";
 import RadioClip from "@/components/messages/RadioClip";
@@ -28,6 +30,8 @@ export default function MessagesPanel({ className }: { className?: string }) {
 	const drivers = useDataStore((s) => s.state?.DriverList);
 	const sessionPath = useDataStore((s) => s.state?.SessionInfo?.Path);
 	const [filter, setFilter] = useState<Filter>("all");
+	const texts = useTranscriptStore((s) => s.texts);
+	const failed = useTranscriptStore((s) => s.failed);
 
 	useRaceControlChime(messages);
 
@@ -35,13 +39,15 @@ export default function MessagesPanel({ className }: { className?: string }) {
 	const rc: Item[] = (messages ?? [])
 		.filter((msg) => (msg.Flag ? msg.Flag.toLowerCase() !== "blue" : true))
 		.map((msg) => ({ kind: "rc", utc: msg.Utc, msg }));
+	// Count and list only the clips that will show: wordless or failed transcripts are hidden.
 	const radio: Item[] = [...(captures ?? [])]
-		.sort((a, b) => Date.parse(b.Utc) - Date.parse(a.Utc))
+		.filter((c) => !radioClipHidden(texts[`${sessionPath}${c.Path}`], !!failed[`${sessionPath}${c.Path}`]))
+		.sort((a, b) => utcMs(b.Utc) - utcMs(a.Utc))
 		.slice(0, MAX_CLIPS)
 		.map((capture) => ({ kind: "radio", utc: capture.Utc, capture }));
 
 	const items = (filter === "rc" ? rc : filter === "radio" ? radio : [...rc, ...radio]).sort(
-		(a, b) => Date.parse(b.utc) - Date.parse(a.utc),
+		(a, b) => utcMs(b.utc) - utcMs(a.utc),
 	);
 
 	const filters: { id: Filter; label: string; count: number }[] = [

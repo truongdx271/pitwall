@@ -1,3 +1,5 @@
+import { utcMs } from "@/lib/utcMs";
+
 // Race control status tags and incidents, parsed from the message text (SPEC §7). The feed
 // has no structured field for these, so the rules follow the stewards' fixed wording.
 
@@ -59,7 +61,7 @@ const sentenceCase = (text: string) => {
  */
 export const incidents = (messages: { Message: string; Utc: string }[]): Incident[] => {
 	const list: (Incident & { reason: string })[] = [];
-	const sorted = [...messages].sort((a, b) => Date.parse(a.Utc) - Date.parse(b.Utc));
+	const sorted = [...messages].sort((a, b) => utcMs(a.Utc) - utcMs(b.Utc));
 
 	for (const msg of sorted) {
 		const status = rcStatus(msg.Message);
@@ -79,5 +81,5 @@ export const incidents = (messages: { Message: string; Utc: string }[]): Inciden
 
 	return list
 		.map(({ cars, summary, status, utc }) => ({ cars, summary, status, utc }))
-		.sort((a, b) => Date.parse(b.utc) - Date.parse(a.utc));
+		.sort((a, b) => utcMs(b.utc) - utcMs(a.utc));
 };

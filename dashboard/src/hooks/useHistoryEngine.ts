@@ -13,6 +13,15 @@ export const useHistoryEngine = () => {
 
 	useEffect(() => {
 		const processState = (state: DataStore) => {
+			// A cleared store (new data source or new session) means a new lap history: forget
+			// what the previous session recorded, or its lap counts would hide the new laps.
+			if (!state.state) {
+				bootstrappedRef.current = false;
+				prevLapsRef.current = {};
+				prevLapRef.current = 0;
+				return;
+			}
+
 			// Bootstrap from server-side LapHistory on first load
 			if (!bootstrappedRef.current && state.state?.LapHistory) {
 				const history = state.state.LapHistory;

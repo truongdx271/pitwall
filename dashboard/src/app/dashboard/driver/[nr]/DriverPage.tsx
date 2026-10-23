@@ -184,8 +184,8 @@ export default function DriverPage({ params }: Props) {
 								[
 									["I1", timingStats.BestSpeeds.I1],
 									["I2", timingStats.BestSpeeds.I2],
-									["FL", timingStats.BestSpeeds.Fl],
-									["ST", timingStats.BestSpeeds.St],
+									["FL", timingStats.BestSpeeds.FL],
+									["ST", timingStats.BestSpeeds.ST],
 								] as const
 							).map(([label, speed]) => (
 								<div key={label} className="flex flex-col">

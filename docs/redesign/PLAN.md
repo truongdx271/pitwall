@@ -165,11 +165,16 @@ the final pass.
 
 ## PR 9 · Strategy tab (SPEC §8)
 
-- [ ] Tyre strategy chart with the Laps so far / Full race axis.
-- [ ] Lap times compare (5 drivers).
-- [ ] Speed traps top 5, with an empty state.
+- [x] Tyre strategy chart with the Laps so far / Full race axis.
+- [x] Lap times compare (5 drivers).
+- [x] Speed traps top 5, with an empty state.
 
 **Done when** it matches `Strategy.png`.
+
+Notes: the feed names the finish-line and speed-trap readings `FL` and `ST`; the types said
+`Fl`/`St`, so they were always empty (old speed-trap and driver pages too). Fixed here.
+"Full race" only shows when the feed has a race distance. "Full table" still links to the
+old `/dashboard/speed-traps` page.
 
 ## PR 10 · Weather and Standings (SPEC §9, §10)
 

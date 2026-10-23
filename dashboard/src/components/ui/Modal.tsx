@@ -19,7 +19,7 @@ export default function Modal({ children, open }: Props) {
 					role="dialog"
 					aria-modal
 				>
-					<div className="fixed inset-0 backdrop-blur-xs transition-opacity" />
+					<div className="fixed inset-0 bg-bg/60 backdrop-blur-xs transition-opacity" />
 
 					<div className="fixed inset-0 z-40 w-screen overflow-y-auto">
 						<div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -27,7 +27,7 @@ export default function Modal({ children, open }: Props) {
 								initial={{ opacity: 0, scale: 0.9 }}
 								exit={{ opacity: 0, scale: 0.9 }}
 								animate={{ opacity: 1, scale: 1 }}
-								className="relative overflow-hidden rounded-xl bg-zinc-900 p-4 shadow-xl"
+								className="relative overflow-hidden rounded-panel border border-border bg-surface-1 p-4 text-left shadow-xl"
 							>
 								{children}
 							</motion.div>

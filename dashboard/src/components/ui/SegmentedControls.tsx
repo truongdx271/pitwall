@@ -12,16 +12,18 @@ type Props<T> = {
 
 export default function SegmentedControls<T>({ id, className, options, selected, onSelect }: Props<T>) {
 	return (
-		<div id={id} className={clsx("inline-flex border border-zinc-700", className)}>
+		<div id={id} className={clsx("inline-flex gap-0.5 rounded-control bg-bg p-0.5", className)}>
 			{options.map((option) => {
 				const isActive = option.value === selected;
 				return (
 					<button
+						type="button"
 						key={String(option.label)}
+						aria-pressed={isActive}
 						onClick={() => onSelect?.(option.value)}
 						className={clsx(
-							"cursor-pointer px-4 py-1.5 font-mono text-[11px] tracking-widest uppercase transition-colors",
-							isActive ? "bg-zinc-200 text-black" : "text-zinc-600 hover:text-zinc-300",
+							"h-[30px] cursor-pointer rounded-md px-2.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-fg-1",
+							isActive ? "bg-surface-3 text-fg-1" : "text-fg-2 hover:text-fg-1",
 						)}
 					>
 						{option.label}

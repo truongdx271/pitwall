@@ -150,13 +150,18 @@ order list shows BEST and LAPS as SPEC §6.4 says (the PNG shows GAP). The map h
 
 ## PR 8 · Messages tab (SPEC §7)
 
-- [ ] Feed with the segment filter, driver filter and chime checkbox.
-- [ ] Radio items: play/pause, hashed decorative waveform, duration, transcript or "Show
+- [x] Feed with the segment filter, driver filter and chime checkbox.
+- [x] Radio items: play/pause, hashed decorative waveform, duration, transcript or "Show
       transcript".
-- [ ] RC status tags parsed from the text (vitest on real message strings from the replays).
-- [ ] Incidents and Track limits panels.
+- [x] RC status tags parsed from the text (vitest on real message strings from the replays).
+- [x] Incidents and Track limits panels.
 
 **Done when** it matches `Messages.png`.
+
+Notes: status tags and incidents are parsed from the stewards' wording (`lib/rcStatus`). The
+Radio count includes clips that turn out to have no words. Deleting `DriverViolations` drops
+its "+5s → Pn" penalty-position hint; `lib/calculatePosition.ts` is now unused and can go in
+the final pass.
 
 ## PR 9 · Strategy tab (SPEC §8)
 

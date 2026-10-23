@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment } from "react";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -8,12 +8,16 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { sortPos } from "@/lib/sorting";
 import { parseTimeMs } from "@/lib/timeUtils";
 import { sessionPartPrefix } from "@/lib/sessionPart";
+import { knockedOutCount, knockoutCutoff } from "@/lib/knockout";
 import { useLoadingGrace } from "@/hooks/useLoadingGrace";
 
-import QualiDriver, { QUALI_GRID_COLS, QUALI_GRID_GAP } from "@/components/driver/QualiDriver";
-import QualiHelpModal from "@/components/dashboard/QualiHelpModal";
+import QualiDriver from "@/components/driver/QualiDriver";
 import NoSession from "@/components/dashboard/NoSession";
+import Panel from "@/components/ui/Panel";
 
+import { QUALI_GRID_COLS, QUALI_SECTOR_GAP, RACE_GRID_GAP, SECTOR_GRID } from "./raceGrid";
+
+// The qualifying classification panel (SPEC §4, Quali.png).
 export default function QualiLeaderBoard() {
 	const drivers = useDataStore(({ state }) => state?.DriverList);
 	const driversTiming = useDataStore(({ state }) => state?.TimingData);
@@ -22,22 +26,6 @@ export default function QualiLeaderBoard() {
 	const noData = !drivers || !driversTiming;
 	const graceOver = useLoadingGrace();
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
-	const [helpOpen, setHelpOpen] = useState(false);
-
-	// Find fastest sector time per sector across all drivers
-	const fastestSectors: (number | null)[] = [null, null, null];
-	if (timingStats) {
-		Object.values(timingStats.Lines).forEach((statsDriver) => {
-			statsDriver.BestSectors?.forEach((sector, i) => {
-				if (sector.Value) {
-					const ms = parseTimeMs(sector.Value);
-					if (ms < Infinity && (fastestSectors[i] === null || ms < fastestSectors[i]!)) {
-						fastestSectors[i] = ms;
-					}
-				}
-			});
-		});
-	}
 
 	// Pole time = fastest complete lap in the field. Drives the gap-to-pole column
 	// (the quali feed has no reliable GapToLeader).
@@ -50,84 +38,101 @@ export default function QualiLeaderBoard() {
 	}
 
 	const sessionPart = driversTiming?.SessionPart;
+	const part = sessionPart ? `${sessionPartPrefix(sessionName) || "Q"}${sessionPart}` : null;
+	const cutoff = knockoutCutoff(driversTiming?.NoEntries, sessionPart);
+	const outCount = knockedOutCount(driversTiming?.NoEntries, sessionPart);
 
 	return (
-		<>
-			{helpOpen && <QualiHelpModal onClose={() => setHelpOpen(false)} />}
+		<Panel
+			title={part ? `${part} classification` : "Qualifying classification"}
+			className="px-1.5 pb-2"
+			header={
+				<span className="text-xs text-fg-2">
+					{outCount != null && `Bottom ${outCount} are knocked out · `}
+					sector cells show <span className="text-fg-1">current</span> /{" "}
+					<span className="text-fg-3">personal best</span>
+				</span>
+			}
+		>
+			<div className="overflow-x-auto">
+				<div className="min-w-[860px]">
+					{showTableHeader && <QualiHeaders />}
 
-			<div className="w-full overflow-x-auto font-mono text-base">
-				<div className="flex items-center justify-between border-b border-zinc-800 px-2 py-0.5">
-					<span className="text-[11px] tracking-widest text-zinc-600 uppercase">
-						{sessionPart ? `${sessionPartPrefix(sessionName) || "Q"}${sessionPart}` : "QUALIFYING"}
-					</span>
-					<button
-						onClick={() => setHelpOpen(true)}
-						className="text-[11px] tracking-widest text-zinc-700 uppercase transition-colors hover:text-zinc-400"
-						aria-label="Qualifying mode help"
-					>
-						? help
-					</button>
+					<div className="pt-1">
+						{noData &&
+							!graceOver &&
+							new Array(22).fill("").map((_, i) => <SkeletonDriver key={`quali.skeleton.${i}`} />)}
+
+						{noData && graceOver && <NoSession />}
+
+						<LayoutGroup key="quali-drivers">
+							{drivers && driversTiming && (
+								<AnimatePresence>
+									{Object.values(driversTiming.Lines)
+										.sort(sortPos)
+										.map((timingDriver, index) => {
+											const position = index + 1;
+											return (
+												<Fragment key={`quali.driver.${timingDriver.RacingNumber}`}>
+													{cutoff != null && position === cutoff + 1 && <KnockoutDivider part={part} />}
+													<QualiDriver
+														position={position}
+														driver={drivers[timingDriver.RacingNumber]}
+														timingDriver={timingDriver}
+														timingStats={timingStats?.Lines[timingDriver.RacingNumber]}
+														poleMs={poleMs}
+														knockout={cutoff != null && position > cutoff}
+													/>
+												</Fragment>
+											);
+										})}
+								</AnimatePresence>
+							)}
+						</LayoutGroup>
+					</div>
 				</div>
-
-				{showTableHeader && <QualiHeaders fastestSectors={fastestSectors} />}
-
-				{noData && !graceOver && new Array(20).fill("").map((_, i) => <SkeletonDriver key={`quali.skeleton.${i}`} />)}
-
-				{noData && graceOver && <NoSession />}
-
-				<LayoutGroup key="quali-drivers">
-					{drivers && driversTiming && (
-						<AnimatePresence>
-							{Object.values(driversTiming.Lines)
-								.sort(sortPos)
-								.map((timingDriver, index) => (
-									<QualiDriver
-										key={`quali.driver.${timingDriver.RacingNumber}`}
-										position={index + 1}
-										driver={drivers[timingDriver.RacingNumber]}
-										timingDriver={timingDriver}
-										timingStats={timingStats?.Lines[timingDriver.RacingNumber]}
-										fastestSectors={fastestSectors}
-										poleMs={poleMs}
-									/>
-								))}
-						</AnimatePresence>
-					)}
-				</LayoutGroup>
 			</div>
-		</>
+		</Panel>
 	);
 }
 
-function QualiHeaders({ fastestSectors }: { fastestSectors: (number | null)[] }) {
+// Between P[cut-off] and P[cut-off + 1] (SPEC §4).
+function KnockoutDivider({ part }: { part: string | null }) {
+	return (
+		<div role="separator" className="flex items-center gap-2.5 px-2.5 pt-1.5 pb-1">
+			<span className="h-px flex-1 bg-loss/50" />
+			<span className="text-[11px] font-semibold tracking-[0.05em] text-loss">
+				KNOCKOUT ZONE{part ? ` — OUT AFTER ${part}` : ""}
+			</span>
+			<span className="h-px flex-1 bg-loss/50" />
+		</div>
+	);
+}
+
+function QualiHeaders() {
 	return (
 		<div
-			className="grid items-end border-b-2 border-zinc-600 py-0.5 pr-1 pl-2 font-mono text-base leading-none"
-			style={{ columnGap: QUALI_GRID_GAP, gridTemplateColumns: QUALI_GRID_COLS }}
+			className="grid h-[26px] items-center border-b border-border px-2.5 text-[11px] font-medium tracking-[0.04em] text-fg-3"
+			style={{ columnGap: RACE_GRID_GAP, gridTemplateColumns: QUALI_GRID_COLS }}
 		>
-			<span className="text-[11px] tracking-widest text-zinc-400 uppercase">POS</span>
-			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">GAP</span>
-			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">BEST</span>
-			<span className="text-right text-[11px] tracking-widest text-zinc-400 uppercase">LAST</span>
-
-			{[0, 1, 2].map((i) => (
-				<span key={`hdr-s${i}`} className="flex items-baseline justify-end gap-[0.5ch] overflow-hidden">
-					<span className="text-[11px] tracking-widest text-zinc-400 uppercase">S{i + 1}</span>
-					<span className="text-[9px] text-zinc-600">cur/bl</span>
-					{/* fastest sector across the field (tiny reference) */}
-					{fastestSectors[i] !== null && (
-						<span className="text-[9px] text-zinc-600 tabular-nums">·{(fastestSectors[i]! / 1000).toFixed(3)}</span>
-					)}
-				</span>
-			))}
-
-			<span className="text-[11px] tracking-widest text-zinc-400 uppercase">TYRE</span>
+			<span className="text-right">P</span>
+			<span>DRIVER</span>
+			<span className="text-right">GAP</span>
+			<span className="text-right">BEST</span>
+			<span className="text-right">LAST</span>
+			<span className="grid" style={{ gridTemplateColumns: SECTOR_GRID, columnGap: QUALI_SECTOR_GAP }}>
+				<span>S1</span>
+				<span>S2</span>
+				<span>S3</span>
+			</span>
+			<span>TYRE</span>
+			<span>STATUS</span>
 		</div>
 	);
 }
 
 const SkeletonDriver = () => (
-	<div className="border-b border-zinc-900 py-0.5 pr-1 pl-2 font-mono text-base leading-none text-zinc-800">
-		▌ -- ??? -------- -------- ------ ------ ------ ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ --- ▒▒▒▒▒▒▒▒ ---
+	<div className="flex h-row items-center px-2.5">
+		<span className="h-3 w-full animate-pulse rounded-sm bg-surface-2" />
 	</div>
 );

@@ -43,19 +43,21 @@ function Dashboard() {
 				{activeTab === "live" && (
 					// Table on the left; Track over Messages on the right, Messages filling the rest.
 					// Below 1280px the right column wraps under the table (SPEC §0).
-					<div className={clsx("flex w-full flex-wrap items-stretch gap-3 p-3", !isQuali && "xl:h-full")}>
-						{isQuali ? (
-							// The old quali table is wider than 840px; it gets the full width until PR 5
-							// moves it onto the new grid.
-							<div className="min-w-0 flex-[1_1_100%]">
-								<QualiLeaderBoard />
-							</div>
-						) : (
-							<div className="min-w-0 flex-[999_1_840px] xl:h-full xl:overflow-y-auto">
-								<LeaderBoard />
-							</div>
-						)}
-						<div className={clsx("flex min-w-0 flex-[1_1_500px] flex-col gap-3", !isQuali && "xl:h-full")}>
+					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 xl:h-full">
+						<div
+							className={clsx(
+								"min-w-0 xl:h-full xl:overflow-y-auto",
+								isQuali ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
+							)}
+						>
+							{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
+						</div>
+						<div
+							className={clsx(
+								"flex min-w-0 flex-col gap-3 xl:h-full",
+								isQuali ? "flex-[1_1_480px]" : "flex-[1_1_500px]",
+							)}
+						>
 							<TrackPanel className="shrink-0" />
 							<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 xl:max-h-none" />
 						</div>

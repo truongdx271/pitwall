@@ -57,8 +57,9 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 	return (
 		<span
 			className={clsx(
-				"flex min-w-0 items-center overflow-hidden font-mono whitespace-nowrap tabular-nums",
-				showPace ? "gap-3" : "gap-1",
+				"flex min-w-0 items-center font-mono whitespace-nowrap tabular-nums",
+				// Three stints with their pace can be wider than the column; clip rather than spill.
+				showPace ? "gap-3 overflow-hidden" : "gap-1",
 			)}
 		>
 			{recent

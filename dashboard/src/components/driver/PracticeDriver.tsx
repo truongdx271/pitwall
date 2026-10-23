@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -43,9 +44,16 @@ export default function PracticeDriver({ position, driver, timingDriver, timingS
 	const bestMs = parseTimeMs(timingDriver.BestLapTime.Value ?? "");
 
 	// Long run: the current stint has 5+ consecutive valid laps (SPEC §13.2).
-	const boundaries = getStintBoundaries(appTimingDriver?.Stints ?? []);
-	const current = boundaries.find((b) => b.isActive);
-	const run = longRun(laps, current, boundaries, bestMs);
+	const stints = appTimingDriver?.Stints;
+	const run = useMemo(() => {
+		const boundaries = getStintBoundaries(stints ?? []);
+		return longRun(
+			laps,
+			boundaries.find((b) => b.isActive),
+			boundaries,
+			bestMs,
+		);
+	}, [stints, laps, bestMs]);
 	const status = driverStatus(timingDriver, { longRun: run != null });
 
 	const hasBest = isFinite(bestMs) && isFinite(fastestMs);

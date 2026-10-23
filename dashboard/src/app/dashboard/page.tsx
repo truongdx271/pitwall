@@ -15,6 +15,7 @@ import TrackViolations from "@/components/dashboard/TrackViolations";
 import TrackPanel from "@/components/dashboard/TrackPanel";
 import MessagesPanel from "@/components/dashboard/MessagesPanel";
 import { parseTab } from "@/components/shell/tabs";
+import { sessionKind } from "@/lib/sessionKind";
 
 import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
 import LapTimesPage from "@/app/dashboard/lap-times/page";
@@ -34,12 +35,9 @@ export default function Page() {
 
 function Dashboard() {
 	const activeTab = parseTab(useSearchParams().get("tab"));
-	const sessionName = useDataStore((state) => state.state?.SessionInfo?.Name ?? "");
-	const sessionType = useDataStore((state) => state.state?.SessionInfo?.Type ?? "");
-	// Route by session type (SPEC §5): Practice, then Qualifying (or a name containing it,
-	// which covers Sprint Qualifying), then everything else, Sprint included, as a race.
-	const isPractice = sessionType === "Practice";
-	const isQuali = !isPractice && (sessionType === "Qualifying" || sessionName.toLowerCase().includes("qualifying"));
+	const kind = useDataStore((state) => sessionKind(state.state?.SessionInfo));
+	const isPractice = kind === "practice";
+	const isQuali = kind === "qualifying";
 	// Practice and quali share the 860px table width.
 	const wideTable = isPractice || isQuali;
 

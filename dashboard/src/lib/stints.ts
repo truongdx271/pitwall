@@ -49,17 +49,6 @@ export function stintAvgMs(entries: LapTimeEntry[], b: StintBoundary, allBoundar
 	return push.reduce((sum, e) => sum + e.ms, 0) / push.length;
 }
 
-// Returns ms/lap degradation (positive = getting slower)
-export function stintDegradation(
-	entries: LapTimeEntry[],
-	b: StintBoundary,
-	allBoundaries: StintBoundary[],
-): number | null {
-	const push = stintPushLaps(entries, b, allBoundaries).sort((a, z) => a.lap - z.lap);
-	if (push.length < 3) return null;
-	return (push[push.length - 1].ms - push[0].ms) / (push.length - 1);
-}
-
 export function formatMs(ms: number): string {
 	const totalSec = ms / 1000;
 	const min = Math.floor(totalSec / 60);

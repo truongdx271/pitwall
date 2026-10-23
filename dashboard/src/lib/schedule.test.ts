@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { firstUpcoming, loadSchedule } from "@/lib/schedule";
+import { firstUpcoming, loadSchedule, nextSession } from "@/lib/schedule";
 import type { Round } from "@/types/schedule.type";
 
 const round = (name: string, over: boolean): Round =>
@@ -33,5 +33,32 @@ describe("loadSchedule", () => {
 			throw new TypeError("network");
 		};
 		expect(await loadSchedule("https://api.example.dev", fetcher)).toBeNull();
+	});
+});
+
+describe("nextSession", () => {
+	const withSessions = (name: string, sessions: { kind: string; start: string }[]): Round =>
+		({ ...round(name, false), sessions: sessions.map((s) => ({ ...s, end: s.start })) }) as Round;
+
+	const rounds = [
+		withSessions("Canada", [
+			{ kind: "Practice 1", start: "2026-06-12T17:30:00Z" },
+			{ kind: "Qualifying", start: "2026-06-13T20:00:00Z" },
+			{ kind: "Race", start: "2026-06-14T18:00:00Z" },
+		]),
+		withSessions("Spain", [{ kind: "Practice 1", start: "2026-06-26T11:30:00Z" }]),
+	];
+
+	it("picks the earliest session that hasn't started", () => {
+		expect(nextSession(rounds, Date.parse("2026-06-13T12:00:00Z"))).toEqual({
+			round: "Canada",
+			kind: "Qualifying",
+			start: "2026-06-13T20:00:00Z",
+		});
+		expect(nextSession(rounds, Date.parse("2026-06-15T00:00:00Z"))?.round).toBe("Spain");
+	});
+
+	it("returns null after the last session", () => {
+		expect(nextSession(rounds, Date.parse("2026-07-01T00:00:00Z"))).toBeNull();
 	});
 });

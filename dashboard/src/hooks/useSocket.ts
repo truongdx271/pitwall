@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { MessageInitial, MessageUpdate } from "@/types/message.type";
 
@@ -18,6 +18,12 @@ type Options = {
 
 export const useSocket = ({ handleInitial, handleUpdate }: Props, { enabled = true }: Options = {}) => {
 	const [connected, setConnected] = useState<boolean>(false);
+	// Bumped by retry() to tear the EventSource down and open a fresh one.
+	const [attempt, setAttempt] = useState(0);
+	// True once this connection has delivered data; the Reconnecting card needs stale data to show.
+	const [hasData, setHasData] = useState(false);
+	// When the last message arrived (ms epoch); read by the Reconnecting card's timer.
+	const lastMessageAt = useRef<number | null>(null);
 
 	const handlersRef = useRef({ handleInitial, handleUpdate });
 	useEffect(() => {
@@ -32,16 +38,38 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props, { enabled = tr
 		sse.onerror = () => setConnected(false);
 		sse.onopen = () => setConnected(true);
 
+		const received = () => {
+			if (lastMessageAt.current == null) setHasData(true);
+			lastMessageAt.current = Date.now();
+		};
+
 		sse.addEventListener("initial", (message) => {
+			received();
 			handlersRef.current.handleInitial(parseMessage(message.data));
 		});
 
 		sse.addEventListener("update", (message) => {
+			received();
 			handlersRef.current.handleUpdate(parseMessage(message.data));
 		});
 
-		return () => sse.close();
+		return () => {
+			sse.close();
+			setConnected(false);
+		};
+	}, [enabled, attempt]);
+
+	// Switching the source (live <-> replay) clears the screen, so forget the old data.
+	// A retry keeps it: the stale data is still showing.
+	useEffect(() => {
+		if (!enabled) return;
+		return () => {
+			lastMessageAt.current = null;
+			setHasData(false);
+		};
 	}, [enabled]);
 
-	return { connected: enabled ? connected : false };
+	const retry = useCallback(() => setAttempt((n) => n + 1), []);
+
+	return { connected: enabled ? connected : false, hasData: enabled && hasData, lastMessageAt, retry };
 };

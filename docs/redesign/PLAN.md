@@ -59,17 +59,28 @@ column until PR 4 rebuilds the grid. The switch's off track is `#2A3039` from
 
 ## PR 3 · App shell (SPEC §2)
 
-- [ ] `TopBar` with the 6 icon tabs, the Live chip and delay popover, Schedule, Help and
+- [x] `TopBar` with the 6 icon tabs, the Live chip and delay popover, Schedule, Help and
       Settings.
-- [ ] Tab state in `?tab=` (inside `<Suspense>`). Merge the 10 tabs into 6. Until their PRs
+- [x] Tab state in `?tab=` (inside `<Suspense>`). Merge the 10 tabs into 6. Until their PRs
       land, Messages and Strategy can render the old components stacked.
-- [ ] `SessionStrip` with lap or clock and inline weather, plus the track status pill and the
+- [x] `SessionStrip` with lap or clock and inline weather, plus the track status pill and the
       `TrackStatusBanner`.
-- [ ] Delete `Sidebar.tsx` and `SidenavButton.tsx`, and move their contents.
-- [ ] Syncing, Reconnecting and No session states (`States.png`).
+- [x] Delete `Sidebar.tsx` and `SidenavButton.tsx`, and move their contents.
+- [x] Syncing, Reconnecting and No session states (`States.png`).
 
 **Done when** it matches the top two bands of `Main.png`, and the banner shows for each
 track status during the race replay.
+
+Notes, agreed with Truong:
+
+- No Q1/Q2/Q3 length chips in the No session card: the feed and the schedule don't carry them.
+- Yellow flags show no sector: TrackStatus has none (only race control messages do).
+- Chequered shows once the session is over. The recordings keep `SessionStatus.Status` at
+  "Started", so the end comes from the latest `SessionData.StatusSeries` entry.
+
+Deferred: the "no team radio yet" and "no track-limit violations" empty states go with their
+panels (PR 4 and PR 8). In dev replay the time-left clock reads 00:00, because the replay
+clock is relative and has no absolute session time; live is unaffected.
 
 ## PR 4 · Live: race table and shared side panels (SPEC §3)
 

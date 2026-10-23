@@ -1,12 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 import HelpContent from "./HelpContent";
 
 // The legend behind the top bar's Help button: the same content as /help.
 export default function HelpModal({ onClose }: { onClose: () => void }) {
+	const closeRef = useRef<HTMLButtonElement>(null);
+
+	// Move focus into the dialog, and back to whatever opened it on close.
+	useEffect(() => {
+		const opener = document.activeElement as HTMLElement | null;
+		closeRef.current?.focus();
+		return () => opener?.focus();
+	}, []);
+
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
 		document.addEventListener("keydown", onKey);
@@ -31,6 +40,7 @@ export default function HelpModal({ onClose }: { onClose: () => void }) {
 						Open the full page
 					</Link>
 					<button
+						ref={closeRef}
 						type="button"
 						onClick={onClose}
 						aria-label="Close help"

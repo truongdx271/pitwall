@@ -21,15 +21,18 @@ export default function FavoriteDrivers() {
 		if (sessionDrivers) return;
 		let cancelled = false;
 		fetch(`${env.NEXT_PUBLIC_LIVE_URL}/api/drivers`)
-			.then((res) => res.json())
-			.then((data: Driver[]) => !cancelled && setFetched(data))
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data: unknown) => !cancelled && Array.isArray(data) && setFetched(data as Driver[]))
 			.catch(() => {});
 		return () => {
 			cancelled = true;
 		};
 	}, [sessionDrivers]);
 
-	const drivers = sessionDrivers ? Object.values(sessionDrivers) : (fetched ?? []);
+	// Partly merged entries can lack a code or number; skip them.
+	const drivers = (sessionDrivers ? Object.values(sessionDrivers) : (fetched ?? [])).filter(
+		(d) => d?.Tla && d.RacingNumber,
+	);
 	const sorted = [...drivers].sort((a, b) => a.Line - b.Line);
 
 	const toggle = (nr: string) =>

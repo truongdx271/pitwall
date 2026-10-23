@@ -7,6 +7,8 @@ import SegmentedControls from "@/components/ui/SegmentedControls";
 import Slider from "@/components/ui/Slider";
 import Toggle from "@/components/ui/Toggle";
 import FavoriteDrivers from "@/components/settings/FavoriteDrivers";
+import DelayInput from "@/components/DelayInput";
+import DelayTimer from "@/components/DelayTimer";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
@@ -64,6 +66,8 @@ export default function SettingsPage() {
 
 			<Card title="Broadcast delay" hint="Show data later than live so it matches your TV or stream.">
 				<div className="flex flex-wrap items-center gap-2.5">
+					{/* The stopwatch: start it when the TV shows a lap tick over, stop it when Pitwall does. */}
+					<DelayTimer />
 					<StepButton
 						label="Decrease delay by 1 second"
 						disabled={paused}
@@ -72,7 +76,7 @@ export default function SettingsPage() {
 						−
 					</StepButton>
 					<div className="flex h-11 w-40 items-center justify-center gap-1.5 rounded-[10px] border border-border-subtle bg-bg">
-						<span className="font-mono text-[22px] font-semibold tabular-nums">{settings.delay}</span>
+						<DelayInput saveDelay={500} className="h-9 w-16 border-none bg-transparent text-[22px] font-semibold" />
 						<span className="text-[13px] text-fg-2">seconds</span>
 					</div>
 					<StepButton
@@ -85,8 +89,7 @@ export default function SettingsPage() {
 					<button
 						type="button"
 						onClick={() => settings.setDelay(0)}
-						disabled={paused}
-						className="h-11 cursor-pointer rounded-[10px] border border-border-subtle px-3.5 text-[13px] text-fg-2 hover:text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1 disabled:opacity-50"
+						className="h-11 cursor-pointer rounded-[10px] border border-border-subtle px-3.5 text-[13px] text-fg-2 hover:text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1"
 					>
 						Back to live
 					</button>

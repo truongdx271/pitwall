@@ -52,7 +52,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	return (
 		<input
 			className={clsx(
-				"w-12 [appearance:textfield] rounded-lg bg-zinc-800 p-1 text-center text-sm disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+				"w-12 [appearance:textfield] rounded-control border border-border-subtle bg-bg p-1 text-center font-mono text-fg-1 tabular-nums focus:border-border-strong focus:outline-none disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 				className,
 			)}
 			type="number"

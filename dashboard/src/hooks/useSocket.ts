@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { MessageInitial, MessageUpdate } from "@/types/message.type";
 
@@ -18,6 +18,10 @@ type Options = {
 
 export const useSocket = ({ handleInitial, handleUpdate }: Props, { enabled = true }: Options = {}) => {
 	const [connected, setConnected] = useState<boolean>(false);
+	// Bumped by retry() to tear the EventSource down and open a fresh one.
+	const [attempt, setAttempt] = useState(0);
+	// When the last message arrived (ms epoch); read by the Reconnecting card.
+	const lastMessageAt = useRef<number | null>(null);
 
 	const handlersRef = useRef({ handleInitial, handleUpdate });
 	useEffect(() => {
@@ -33,15 +37,19 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props, { enabled = tr
 		sse.onopen = () => setConnected(true);
 
 		sse.addEventListener("initial", (message) => {
+			lastMessageAt.current = Date.now();
 			handlersRef.current.handleInitial(parseMessage(message.data));
 		});
 
 		sse.addEventListener("update", (message) => {
+			lastMessageAt.current = Date.now();
 			handlersRef.current.handleUpdate(parseMessage(message.data));
 		});
 
 		return () => sse.close();
-	}, [enabled]);
+	}, [enabled, attempt]);
 
-	return { connected: enabled ? connected : false };
+	const retry = useCallback(() => setAttempt((n) => n + 1), []);
+
+	return { connected: enabled ? connected : false, lastMessageAt, retry };
 };

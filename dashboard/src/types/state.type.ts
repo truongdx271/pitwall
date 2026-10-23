@@ -172,7 +172,7 @@ export type SessionData = {
 export type StatusSeries = {
 	Utc: string;
 	TrackStatus?: string;
-	SesionStatus?: "Started" | "Finished" | "Finalised" | "Ends";
+	SessionStatus?: "Started" | "Finished" | "Finalised" | "Ends";
 };
 
 export type Series = {

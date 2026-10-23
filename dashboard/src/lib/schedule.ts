@@ -16,3 +16,19 @@ export async function loadSchedule(apiBase: string, fetcher: Fetcher = fetch): P
 
 // Same rule as the API's /api/schedule/next.
 export const firstUpcoming = (rounds: Round[]): Round | null => rounds.find((round) => !round.over) ?? null;
+
+export type NextSession = { round: string; kind: string; start: string };
+
+/** The earliest session across the schedule that hasn't started yet. */
+export const nextSession = (rounds: Round[], nowMs: number): NextSession | null => {
+	let best: NextSession | null = null;
+	for (const round of rounds) {
+		for (const session of round.sessions) {
+			const start = Date.parse(session.start);
+			if (start > nowMs && (!best || start < Date.parse(best.start))) {
+				best = { round: round.name, kind: session.kind, start: session.start };
+			}
+		}
+	}
+	return best;
+};

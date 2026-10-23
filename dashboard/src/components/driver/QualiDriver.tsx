@@ -8,6 +8,7 @@ import type { Driver, Sector, TimingDataDriver, TimingStatsDriver, PersonalBestL
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 import { parseTimeMs } from "@/lib/timeUtils";
+import { inKnockoutZone } from "@/lib/knockout";
 
 import DriverTag from "./DriverTag";
 import DriverTireStack from "./DriverTireStack";
@@ -31,9 +32,12 @@ type Props = {
 export default function QualiDriver({ position, driver, timingDriver, timingStats, poleMs }: Props) {
 	const appTimingDriver = useDataStore((state) => state.state?.TimingAppData?.Lines[driver.RacingNumber]);
 	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
+	const sessionPart = useDataStore((state) => state.state?.TimingData?.SessionPart);
+	const noEntries = useDataStore((state) => state.state?.TimingData?.NoEntries);
 
 	const isOut = timingDriver.KnockedOut || timingDriver.Retired || timingDriver.Stopped;
 	const hasFastestLap = timingStats?.PersonalBestLapTime.Position === 1;
+	const danger = inKnockoutZone(position, noEntries, sessionPart);
 
 	// Gap to pole, computed from best laps — the quali feed has no reliable GapToLeader.
 	const bestMs = parseTimeMs(timingDriver.BestLapTime.Value ?? "");
@@ -49,8 +53,9 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 				{
 					"opacity-25": isOut,
 					"bg-violet-950/60": hasFastestLap,
+					"bg-red-950/60": danger,
 					// Zebra stripes by position (stable while rows reorder); highlights win.
-					"bg-zinc-900": !hasFastestLap && position % 2 === 0,
+					"bg-zinc-900": !hasFastestLap && !danger && position % 2 === 0,
 				},
 			)}
 		>

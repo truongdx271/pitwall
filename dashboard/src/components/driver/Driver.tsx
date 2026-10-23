@@ -8,6 +8,7 @@ import type { Driver, TimingDataDriver } from "@/types/state.type";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
+import { inKnockoutZone } from "@/lib/knockout";
 
 import DriverTag from "./DriverTag";
 import DriverGap from "./DriverGap";
@@ -32,19 +33,9 @@ export const driverGridCols = (showPace: boolean) =>
 // keep alias so any other import doesn't break
 export const DRIVER_GRID_COLS = driverGridCols(true);
 
-const inDangerZone = (position: number, sessionPart: number) => {
-	switch (sessionPart) {
-		case 1:
-			return position > 15;
-		case 2:
-			return position > 10;
-		default:
-			return false;
-	}
-};
-
 export default function Driver({ driver, timingDriver, position, showPace }: Props) {
 	const sessionPart = useDataStore((state) => state.state?.TimingData?.SessionPart);
+	const noEntries = useDataStore((state) => state.state?.TimingData?.NoEntries);
 	const timingStatsDriver = useDataStore((state) => state.state?.TimingStats?.Lines[driver.RacingNumber]);
 	const appTimingDriver = useDataStore((state) => state.state?.TimingAppData?.Lines[driver.RacingNumber]);
 	const carData = useDataStore((state) => state.carsData?.[driver.RacingNumber]?.Channels);
@@ -53,7 +44,7 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 	const carMetrics = useSettingsStore((state) => state.carMetrics);
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.RacingNumber));
 
-	const danger = sessionPart != undefined && inDangerZone(position, sessionPart);
+	const danger = inKnockoutZone(position, noEntries, sessionPart);
 
 	return (
 		<motion.div

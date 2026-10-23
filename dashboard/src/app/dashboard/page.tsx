@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
@@ -9,10 +10,9 @@ import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
 import RaceControl from "@/components/dashboard/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
-import RadioTranscripts from "@/components/dashboard/RadioTranscripts";
 import TrackViolations from "@/components/dashboard/TrackViolations";
-import Map from "@/components/dashboard/Map";
-import Footer from "@/components/Footer";
+import TrackPanel from "@/components/dashboard/TrackPanel";
+import MessagesPanel from "@/components/dashboard/MessagesPanel";
 import { parseTab } from "@/components/shell/tabs";
 
 import TyreStrategyPage from "@/app/dashboard/tyre-strategy/page";
@@ -37,29 +37,27 @@ function Dashboard() {
 	const isQuali = sessionName.toLowerCase().includes("qualifying");
 
 	return (
-		<div className="flex w-full flex-col">
+		<div className="flex h-full w-full flex-col">
 			{/* Tab content */}
-			<div className="flex-1">
+			<div className="min-h-0 flex-1">
 				{activeTab === "live" && (
-					<div className="flex w-full flex-col">
-						{isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
-						<div className="grid border-t border-border md:h-[40vh] md:min-h-64 md:grid-cols-2">
-							<div className="h-[40vh] min-h-64 overflow-hidden py-2 md:h-auto md:min-h-0">
-								<Map />
+					// Table on the left; Track over Messages on the right, Messages filling the rest.
+					// Below 1280px the right column wraps under the table (SPEC §0).
+					<div className={clsx("flex w-full flex-wrap items-stretch gap-3 p-3", !isQuali && "xl:h-full")}>
+						{isQuali ? (
+							// The old quali table is wider than 840px; it gets the full width until PR 5
+							// moves it onto the new grid.
+							<div className="min-w-0 flex-[1_1_100%]">
+								<QualiLeaderBoard />
 							</div>
-							<div className="flex h-[40vh] min-h-64 flex-col overflow-hidden border-t border-border md:h-auto md:min-h-0 md:border-t-0 md:border-l">
-								<div className="min-h-0 flex-1 pt-2">
-									<RadioTranscripts />
-								</div>
-								<div className="flex min-h-0 flex-1 flex-col border-t border-border pt-1">
-									<span className="border-b border-border px-2 pb-1 font-mono text-[11px] tracking-widest text-fg-2 uppercase">
-										Race control
-									</span>
-									<div className="min-h-0 flex-1 overflow-y-auto">
-										<RaceControl />
-									</div>
-								</div>
+						) : (
+							<div className="min-w-0 flex-[999_1_840px] xl:h-full xl:overflow-y-auto">
+								<LeaderBoard />
 							</div>
+						)}
+						<div className={clsx("flex min-w-0 flex-[1_1_500px] flex-col gap-3", !isQuali && "xl:h-full")}>
+							<TrackPanel className="shrink-0" />
+							<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 xl:max-h-none" />
 						</div>
 					</div>
 				)}
@@ -99,8 +97,6 @@ function Dashboard() {
 					</div>
 				)}
 			</div>
-
-			<Footer />
 		</div>
 	);
 }

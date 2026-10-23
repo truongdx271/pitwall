@@ -46,17 +46,21 @@ type Corner = {
 
 type Props = {
 	filter?: string[];
+	/** The Live tab's Track panel: no corner numbers, no minimum height. */
+	compact?: boolean;
 };
 
-export default function Map({ filter }: Props) {
+export default function Map({ filter, compact }: Props) {
 	const session = useDataStore((state) => state.state?.SessionInfo);
 	const circuitKey = session?.Meeting.Circuit.Key;
 	const year = session?.StartDate ? new Date(session.StartDate).getFullYear() : new Date().getFullYear();
-	return <CircuitMap key={`${circuitKey}-${year}`} filter={filter} circuitKey={circuitKey} year={year} />;
+	return (
+		<CircuitMap key={`${circuitKey}-${year}`} filter={filter} compact={compact} circuitKey={circuitKey} year={year} />
+	);
 }
 
-function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number; year: number }) {
-	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
+function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?: number; year: number }) {
+	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers) && !compact;
 	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
 	const positions = useDataStore((state) => state.positions);
@@ -192,15 +196,15 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 		return (
 			<div
 				role="status"
-				className="flex h-full min-h-64 flex-col items-center justify-center gap-3 p-4 font-mono text-sm text-zinc-400"
+				className="flex h-full min-h-40 flex-col items-center justify-center gap-3 p-4 text-sm text-fg-2"
 			>
 				<p>{!circuitKey ? "Waiting for circuit information…" : "Track map unavailable for this session."}</p>
 				{circuitKey && (
 					<>
-						<p className="text-xs text-zinc-500">The map provider has not supplied a usable circuit layout.</p>
+						<p className="text-xs text-fg-3">The map provider has not supplied a usable circuit layout.</p>
 						<button
 							type="button"
-							className="border border-zinc-700 px-3 py-1 hover:text-white"
+							className="h-[30px] rounded-md border border-border-subtle px-2.5 text-xs text-fg-2 hover:text-fg-1"
 							onClick={() => {
 								setUnavailable(false);
 								setAttempt((value) => value + 1);
@@ -216,8 +220,8 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 
 	if (!points || minX === null || minY === null || !widthX || !widthY) {
 		return (
-			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
-				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
+			<div className="h-full w-full p-2" style={{ minHeight: compact ? "12rem" : "35rem" }}>
+				<div className="h-full w-full animate-pulse rounded-lg bg-surface-2" />
 			</div>
 		);
 	}
@@ -225,7 +229,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 	return (
 		<div className="relative h-full w-full">
 			{outlineOnly && (
-				<p className="absolute top-1 left-2 text-[10px] text-zinc-500">
+				<p className="absolute top-1 left-2 text-[10px] text-fg-3">
 					Approximate track outline · sector flags unavailable{!positions && " · positions estimated"}
 				</p>
 			)}
@@ -236,7 +240,7 @@ function CircuitMap({ filter, circuitKey, year }: Props & { circuitKey?: number;
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<path
-					className="stroke-gray-800"
+					className="stroke-border-strong"
 					strokeWidth={300}
 					strokeLinejoin="round"
 					fill="transparent"
@@ -368,8 +372,8 @@ type CornerNumberProps = {
 const CornerNumber = ({ number, x, y }: CornerNumberProps) => {
 	return (
 		<g transform={`translate(${x}, ${y})`}>
-			<circle r={CORNER_RADIUS} className="fill-zinc-900 stroke-zinc-600" strokeWidth={25} />
-			<text className="fill-zinc-300" fontSize={230} fontWeight="bold" textAnchor="middle" dominantBaseline="central">
+			<circle r={CORNER_RADIUS} className="fill-surface-1 stroke-border-strong" strokeWidth={25} />
+			<text className="fill-fg-1" fontSize={230} fontWeight="bold" textAnchor="middle" dominantBaseline="central">
 				{number}
 			</text>
 		</g>
@@ -419,9 +423,10 @@ const CarDot = ({
 				...(transform && { transition: "all 1s linear", transform }),
 			}}
 		>
-			{favoriteDriver && <circle className="stroke-sky-400" r={CAR_RADIUS + 90} fill="transparent" strokeWidth={65} />}
+			{/* Followed drivers: a ring just outside the circle (SPEC §3.3). */}
+			{favoriteDriver && <circle className="stroke-fg-1" r={CAR_RADIUS + 90} fill="transparent" strokeWidth={65} />}
 
-			<circle r={CAR_RADIUS} fill={color ? `#${color}` : "#3f3f46"} stroke="#000" strokeWidth={50} />
+			<circle r={CAR_RADIUS} fill={color ? `#${color}` : "var(--color-surface-3)"} stroke="#000" strokeWidth={50} />
 
 			<text fill={textOn(color)} fontSize={235} fontWeight="bold" textAnchor="middle" dominantBaseline="central">
 				{name}

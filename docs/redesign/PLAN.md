@@ -84,17 +84,22 @@ clock is relative and has no absolute session time; live is unaffected.
 
 ## PR 4 · Live: race table and shared side panels (SPEC §3)
 
-- [ ] The classification table with the exact grid strings. The header and rows share one
+- [x] The classification table with the exact grid strings. The header and rows share one
       constant.
-- [ ] Mini-sector bars use the real segment count.
-- [ ] Pace view toggle (TYRE · AVG).
-- [ ] `TrackPanel` (compact map, pit-lane footer, followed ring) and `MessagesPanel`
+- [x] Mini-sector bars use the real segment count.
+- [x] Pace view toggle (TYRE · AVG).
+- [x] `TrackPanel` (compact map, pit-lane footer, followed ring) and `MessagesPanel`
       (filter, RC items, radio items). Both are shared components.
-- [ ] Layout: table on the left, Track and Messages on the right. Messages fills the
+- [x] Layout: table on the left, Track and Messages on the right. Messages fills the
       remaining height.
 
 **Done when** the race replay at 1440 × 900 shows all 22 rows with no scroll and matches
 `Main.png`.
+
+Notes: followed drivers get a 2 px inset bar on the left of their row (SPEC §3.1 asks to raise
+it here). The old quali table keeps the full width, with Track and Messages under it, until
+PR 5 moves it onto the new grid. The Radio count includes clips that turn out to have no words
+and are hidden.
 
 ## PR 5 · Live: qualifying (SPEC §4)
 

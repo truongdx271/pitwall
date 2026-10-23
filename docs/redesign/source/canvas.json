@@ -1,0 +1,289 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Help.dc.html": {
+      "expand": "fill",
+      "h": 1400,
+      "is_interactive": true,
+      "title": "Help /help",
+      "w": 1440,
+      "x": 3040,
+      "y": 3060
+    },
+    "Home.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Home /",
+      "w": 1440,
+      "x": 0,
+      "y": 3060
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Live · Timing (race)",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Map.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Map (race)",
+      "w": 1440,
+      "x": 0,
+      "y": 1020
+    },
+    "MapCallouts.dc.html": {
+      "h": 680,
+      "title": "Map concept — grouped callouts (parked)",
+      "w": 1100,
+      "x": 0,
+      "y": 7424
+    },
+    "MapMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Map",
+      "w": 390,
+      "x": 1410,
+      "y": 4580
+    },
+    "MapPractice.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Map (practice) · long runs",
+      "w": 1440,
+      "x": 3040,
+      "y": 1020
+    },
+    "MapQuali.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Map (qualifying) · push laps",
+      "w": 1440,
+      "x": 1520,
+      "y": 1020
+    },
+    "Messages.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Messages (radio · race control · track limits)",
+      "w": 1440,
+      "x": 0,
+      "y": 2040
+    },
+    "MessagesMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Messages",
+      "w": 390,
+      "x": 1880,
+      "y": 4580
+    },
+    "Mobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Live (race)",
+      "w": 390,
+      "x": 0,
+      "y": 4580
+    },
+    "MoreMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · More sheet",
+      "w": 390,
+      "x": 3290,
+      "y": 4580
+    },
+    "Practice.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Live · Timing (practice)",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "PracticeMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Live (practice)",
+      "w": 390,
+      "x": 940,
+      "y": 4580
+    },
+    "Quali.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Live · Timing (qualifying)",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "QualiMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Live (qualifying)",
+      "w": 390,
+      "x": 470,
+      "y": 4580
+    },
+    "Schedule.dc.html": {
+      "expand": "fill",
+      "h": 1400,
+      "is_interactive": true,
+      "title": "Schedule /schedule",
+      "w": 1440,
+      "x": 1520,
+      "y": 3060
+    },
+    "Settings.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "Settings",
+      "w": 1440,
+      "x": 4560,
+      "y": 3089
+    },
+    "Standings.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Standings",
+      "w": 1440,
+      "x": 4560,
+      "y": 2040
+    },
+    "StandingsMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Standings",
+      "w": 390,
+      "x": 2820,
+      "y": 4580
+    },
+    "States.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "States: sync, flags, empty",
+      "w": 1440,
+      "x": 0,
+      "y": 5544
+    },
+    "Strategy.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "Strategy (tyres · lap times · speed traps)",
+      "w": 1440,
+      "x": 1520,
+      "y": 2040
+    },
+    "StrategyMobile.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "Mobile · Strategy",
+      "w": 390,
+      "x": 2350,
+      "y": 4580
+    },
+    "Tokens.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "title": "Tokens (globals.css)",
+      "w": 1200,
+      "x": 1520,
+      "y": 5544
+    },
+    "Weather.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Weather",
+      "w": 1440,
+      "x": 3040,
+      "y": 2040
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-22T10:05:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "calloutNotes": {
+      "fill": "blue",
+      "maxH": 520,
+      "text": "Grouped callouts — what it takes to ship\n\n1. Cluster by lap fraction from trackProgress (e.g. < 1.5% of a lap), not pixel distance. Recompute 1–2×/s, not per frame.\n2. Hysteresis: join < 1.2%, split > 2%, hold a layout ≥ 2 s, or boxes flicker with estimated positions.\n3. Placement: outward normal at the cluster centre (like corner.angle), try a few distances out then in, reject boxes hitting the track polyline, other boxes or corner numbers.\n4. Leader line end follows the dots in the existing rAF loop; the box stays put.\n5. Pit cars excluded; lapped cars marked; mobile falls back to plain circles.\n\nQuick v1: fixed-normal placement, accept occasional overlap.",
+      "w": 380,
+      "x": 1180,
+      "y": 7424
+    },
+    "mobileNote": {
+      "fill": "teal",
+      "maxH": 560,
+      "text": "Mobile rules (< 768 px)\n\n• Top bar becomes one row: logo, session, Live chip. A second row keeps lap/clock, weather and track status always visible.\n• The 6 tabs move to a bottom bar: Live, Map, Messages, Strategy, More. More opens Weather, Standings, Schedule, Settings, Help.\n• Tables drop to the columns that fit 390 px; tap a row for the full detail (sectors, stints).\n• Side panels (push laps, long runs, incidents) become a strip or a segment under the main content.\n• Fluid pages (Weather, Standings, Settings, Home, Schedule, Help) reflow without a separate layout.",
+      "w": 400,
+      "x": 3760,
+      "y": 4580
+    },
+    "parked": {
+      "kind": "title1",
+      "maxW": 1600,
+      "text": "Parked ideas",
+      "w": 240,
+      "x": 0,
+      "y": 7164
+    },
+    "title": {
+      "kind": "title1",
+      "maxW": 6000,
+      "text": "Pitwall — live timing redesign v1",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Quali.dc.html",
+    "Practice.dc.html",
+    "Map.dc.html",
+    "MapQuali.dc.html",
+    "MapPractice.dc.html",
+    "Messages.dc.html",
+    "Strategy.dc.html",
+    "Weather.dc.html",
+    "Standings.dc.html",
+    "Home.dc.html",
+    "Schedule.dc.html",
+    "Help.dc.html",
+    "Settings.dc.html",
+    "Mobile.dc.html",
+    "QualiMobile.dc.html",
+    "PracticeMobile.dc.html",
+    "MapMobile.dc.html",
+    "MessagesMobile.dc.html",
+    "StrategyMobile.dc.html",
+    "StandingsMobile.dc.html",
+    "MoreMobile.dc.html",
+    "States.dc.html",
+    "Tokens.dc.html",
+    "MapCallouts.dc.html"
+  ],
+  "pages": [],
+  "title": "Pitwall redesign"
+}

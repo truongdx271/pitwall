@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Map (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; flex: none">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; min-width: 0">
+      <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">Canadian GP</span>
+      <span style="font-size: 11px; color: #A4AAB4">Race · <span style="font-family: 'Geist Mono', monospace">13:46:25</span></span>
+    </div>
+    <button type="button" aria-label="Live, delay 0 seconds. Change delay" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span>
+    </button>
+  </header>
+
+  <section aria-label="Session status" style="display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-top: 1px solid #1C2128; border-bottom: 1px solid #1C2128; flex: none">
+    <div style="display: flex; align-items: baseline; gap: 5px">
+      <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #7C838F">LAP</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 600; line-height: 1">3</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">/68</span>
+    </div>
+    <span style="font-size: 12px; color: #A4AAB4"><span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">17°</span> track · Dry</span>
+    <div role="status" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 12px; font-weight: 600">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>Track clear
+    </div>
+  </section>
+
+  <section aria-label="Track map" style="margin: 8px 8px 0; padding: 6px 4px 4px; border-radius: 12px; background: #111419; border: 1px solid #1C2128; flex: none">
+    <svg viewBox="-45 -45 1015 460" style="display: block; width: 100%; height: auto" role="img" aria-label="Estimated car positions, Circuit Gilles Villeneuve">
+      <path d="M 25 40 L 100 45 L 180 52 L 270 62 L 340 82 L 410 100 L 460 112 L 580 145 Q 600 172 630 180 L 790 218 Q 840 245 890 270 Q 920 255 940 268 Q 950 290 920 320 L 870 345 L 810 370 Q 780 368 730 360 Q 690 375 630 370 Q 590 355 575 345 Q 555 365 530 380 Q 510 382 410 340 L 340 300 L 270 240 Q 260 220 270 180 L 250 160 L 220 140 L 150 90 L 100 70 L 50 55 Q 20 50 25 40 Z" fill="none" stroke="#1E2633" stroke-width="30" stroke-linejoin="round"></path>
+      <path d="M 25 40 L 100 45 L 180 52 L 270 62 L 340 82 L 410 100 L 460 112 L 580 145 Q 600 172 630 180 L 790 218 Q 840 245 890 270 Q 920 255 940 268 Q 950 290 920 320 L 870 345 L 810 370 Q 780 368 730 360 Q 690 375 630 370 Q 590 355 575 345 Q 555 365 530 380 Q 510 382 410 340 L 340 300 L 270 240 Q 260 220 270 180 L 250 160 L 220 140 L 150 90 L 100 70 L 50 55 Q 20 50 25 40 Z" fill="none" stroke="#C9CDD3" stroke-width="6" stroke-linejoin="round"></path>
+      <g font-family="Geist, sans-serif" font-size="24" font-weight="700" text-anchor="middle">
+        <g transform="translate(562 350)"><circle r="34" fill="#E6B800" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">PER</text></g>
+        <g transform="translate(553 362)"><circle r="34" fill="#8A1538" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">BOR</text></g>
+        <g transform="translate(500 382)"><circle r="34" fill="#1868DB" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">SAI</text></g>
+        <g transform="translate(412 338)"><circle r="34" fill="#8A1538" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">HUL</text></g>
+        <g transform="translate(262 172)"><circle r="34" fill="#FF8000" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">PIA</text></g>
+        <g transform="translate(245 160)"><circle r="34" fill="#E6B800" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">BOT</text></g>
+        <g transform="translate(223 146)"><circle r="34" fill="#229971" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">STR</text></g>
+        <g transform="translate(125 83)"><circle r="34" fill="#FF8000" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">NOR</text></g>
+        <g transform="translate(106 73)"><circle r="34" fill="#1868DB" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">ALB</text></g>
+        <g transform="translate(40 57)"><circle r="34" fill="#B6BABD" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">OCO</text></g>
+        <g transform="translate(22 44)"><circle r="34" fill="#E0418F" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">GAS</text></g>
+        <g transform="translate(30 34)"><circle r="34" fill="#229971" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">ALO</text></g>
+        <g transform="translate(48 40)"><circle r="34" fill="#B6BABD" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">BEA</text></g>
+        <g transform="translate(98 46)"><circle r="34" fill="#6C98FF" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">LAW</text></g>
+        <g transform="translate(135 50)"><circle r="34" fill="#E0418F" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">COL</text></g>
+        <g transform="translate(285 66)"><circle r="34" fill="#4781D7" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">HAD</text></g>
+        <g transform="translate(340 82)"><circle r="34" fill="#E8002D" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">LEC</text></g>
+        <g transform="translate(359 87)"><circle r="34" fill="#4781D7" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">VER</text></g>
+        <g transform="translate(402 99)"><circle r="44" fill="none" stroke="#ECEEF1" stroke-width="5"></circle><circle r="34" fill="#E8002D" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#FFFFFF">HAM</text></g>
+        <g transform="translate(425 105)"><circle r="34" fill="#27F4D2" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">RUS</text></g>
+        <g transform="translate(452 112)"><circle r="34" fill="#27F4D2" stroke="#0A0C0F" stroke-width="5"></circle><text y="8" fill="#0A0C0F">ANT</text></g>
+      </g>
+    </svg>
+    <div style="display: flex; align-items: center; gap: 8px; padding: 4px 6px 2px; font-size: 11px; color: #7C838F">
+      <span>Estimated from mini-sectors</span>
+      <span style="margin-left: auto; display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 50%; box-sizing: border-box; border: 2px solid #ECEEF1"></span>Followed</span>
+    </div>
+  </section>
+
+  <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; flex: none">
+    <div role="group" aria-label="List" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+      <button type="button" aria-pressed="true" style="height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: #1F242C; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">Running order</button>
+      <button type="button" aria-pressed="false" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">Pit lane<span style="font-family: 'Geist Mono', monospace; color: #7C838F">1</span></button>
+    </div>
+    <span style="margin-left: auto; font-size: 11px; color: #7C838F">Tap to follow</span>
+  </div>
+
+  <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 6px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="22">
+      <div style="display: grid; grid-template-columns: 20px 40px 34px minmax(0, 1fr) 70px; column-gap: 8px; align-items: center; height: 30px; padding: 0 6px; border-radius: 5px; background: {{r.rowBg}}; box-shadow: {{r.ring}}; opacity: {{r.opacity}}; font-family: 'Geist Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums">
+        <span style="text-align: right; font-size: 12px; color: #A4AAB4">{{r.pos}}</span>
+        <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-family: Geist, sans-serif; font-size: 11px; font-weight: 700; background: {{r.team}}; color: {{r.ink}}">{{r.tla}}</span>
+        <span style="font-size: 11px; color: {{r.deltaColor}}">{{r.delta}}</span>
+        <span style="text-align: right; color: {{r.gapColor}}">{{r.gap}}</span>
+        <span style="text-align: right; font-size: 12px; color: {{r.lastColor}}">{{r.last}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <nav aria-label="Dashboard" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); height: 60px; margin-top: 6px; border-top: 1px solid #1C2128; background: #0D1014; flex: none">
+    <a href="Mobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="MapMobile.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #ECEEF1; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="MessagesMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="StrategyMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="MoreMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>More</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = { purple: '#B08CFF', green: '#3DDC97', t1: '#ECEEF1', t3: '#7C838F', loss: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const raw = [
+      ['ANT', 1, 'Leader', '1:21.447', 1], ['RUS', -1, '+0.658', '1:20.925', 1], ['HAM', 2, '+1.403', '1:20.670', 1], ['VER', 'FL', '+2.345', '1:20.276', 2],
+      ['LEC', 3, '+2.891', '1:20.351', 1], ['HAD', 1, '+4.106', '1:20.676', 1], ['COL', 3, '+7.916', '1:22.225', 1], ['LAW', 4, '+9.138', '1:22.682', 1],
+      ['BEA', 7, '+12.664', '1:23.857', 1], ['ALO', 9, '+13.235', '1:23.708', 1], ['GAS', 3, '+14.476', '1:26.222', 1], ['OCO', 5, '+15.893', '1:25.696', 1],
+      ['ALB', 5, '+18.750', '1:25.514', 1], ['NOR', -11, '+19.329', '1:37.774', 0], ['STR', 7, '+22.599', '1:25.078', 1], ['BOT', 5, '+23.128', '1:27.677', 1],
+      ['PIA', -13, '+23.362', '1:24.619', 0], ['HUL', -7, '+32.695', '1:43.067', 0], ['SAI', -4, '+36.220', '1:42.459', 0], ['BOR', -7, '+39.227', '1:47.354', 0],
+      ['PER', -1, '+39.404', '1:45.019', 0], ['LIN', null, 'RET', '—', 0]
+    ];
+    const rows = raw.map((r, idx) => {
+      const team = TEAM[DT[r[0]]];
+      const ret = r[2] === 'RET';
+      const follow = r[0] === 'HAM';
+      let delta = '—'; let deltaColor = C.t3;
+      if (r[1] === 'FL') { delta = 'FL'; deltaColor = C.purple; }
+      else if (typeof r[1] === 'number' && r[1] > 0) { delta = '▲' + r[1]; deltaColor = C.green; }
+      else if (typeof r[1] === 'number' && r[1] < 0) { delta = '▼' + Math.abs(r[1]); deltaColor = C.loss; }
+      return {
+        pos: idx + 1, tla: r[0], team: team, ink: ink(team), delta: delta, deltaColor: deltaColor,
+        gap: r[2], gapColor: ret || r[2] === 'Leader' ? C.t3 : C.t1,
+        last: r[3], lastColor: ret ? C.t3 : r[4] === 2 ? C.purple : r[4] === 1 ? C.green : C.t1,
+        rowBg: follow ? '#232832' : idx % 2 === 1 ? '#13171C' : 'transparent', ring: follow ? 'inset 0 0 0 1px #ECEEF1' : 'none', opacity: ret ? '0.5' : '1'
+      };
+    });
+    return { rows: rows };
+  }
+}
+</script>
+</body>
+</html>

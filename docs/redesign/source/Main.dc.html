@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Live timing (race)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Dashboard" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; background: #1F242C; color: #ECEEF1; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="Map.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; color: #A4AAB4; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Messages.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; color: #A4AAB4; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="Strategy.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; color: #A4AAB4; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="Weather.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; color: #A4AAB4; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"></path></svg>Weather</a>
+    <a href="Standings.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; color: #A4AAB4; font-size: 13px; font-weight: 500; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8"></path></svg>Standings</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+    <button type="button" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 13px; cursor: pointer">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #3DDC97"></span>
+      <span style="font-weight: 600">Live</span>
+      <span style="color: #7C838F">·</span>
+      <span style="color: #A4AAB4">Delay <span style="font-family: 'Geist Mono', monospace">{{delay}}s</span></span>
+    </button>
+    <a href="Schedule.dc.html" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; text-decoration: none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Schedule</a>
+    <button type="button" aria-label="Help and legend" style="width: 36px; height: 36px; border-radius: 8px; border: 0; background: transparent; color: #A4AAB4; display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"></path></svg>
+    </button>
+    <button type="button" aria-label="Settings" style="width: 36px; height: 36px; border-radius: 8px; border: 0; background: transparent; color: #A4AAB4; display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+    </button>
+  </div>
+</header>
+
+<section aria-label="Session" style="display: flex; align-items: center; gap: 28px; padding: 10px 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <div style="display: flex; align-items: center; gap: 12px; min-width: 0">
+    <span style="font-family: 'Geist Mono', monospace; font-size: 12px; font-weight: 600; padding: 4px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">CAN</span>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 16px; font-weight: 600; letter-spacing: -0.01em">Canadian Grand Prix</span>
+      <span style="font-size: 12px; color: #A4AAB4">Race · Circuit Gilles Villeneuve · <span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">13:46:28</span> local</span>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; align-items: baseline; gap: 6px">
+      <span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; color: #7C838F">LAP</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 24px; font-weight: 600; line-height: 1">3</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 14px; color: #7C838F">/ 68</span>
+    </div>
+    <div style="width: 140px; height: 4px; border-radius: 2px; background: #1F242C"><div style="width: 4.4%; height: 4px; border-radius: 2px; background: #ECEEF1"></div></div>
+  </div>
+  <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; font-size: 12px; color: #7C838F">
+    <div style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"></path></svg>Track <span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">17°</span></div>
+    <div style="display: flex; align-items: center; gap: 6px">Air <span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">12°</span></div>
+    <div style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>Humidity <span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">77%</span></div>
+    <div style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2"></path></svg>Wind <span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">2.0 m/s</span></div>
+    <div style="display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 6px; background: #171B21; color: #A4AAB4">Dry</div>
+  </div>
+  <div style="margin-left: auto">
+    <div role="status" style="display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 8px; background: {{st.bg}}; color: {{st.fg}}; font-size: 14px; font-weight: 600">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+      <span>{{st.label}}</span>
+    </div>
+  </div>
+</section>
+
+<sc-if value="{{st.banner}}" hint-placeholder-val="{{false}}">
+  <div role="alert" style="display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: {{st.bg}}; color: {{st.fg}}; font-size: 14px; font-weight: 600">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3zM12 10v4M12 17h.01"></path></svg>
+    <span>{{st.bannerText}}</span>
+    <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-weight: 500">Lap 3</span>
+  </div>
+</sc-if>
+
+<main style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; align-items: stretch; width: 100%; max-width: 1800px; box-sizing: border-box; margin: 0 auto; flex: 1">
+
+  <section aria-label="Classification" style="flex: 999 1 840px; min-width: 0; background: #111419; border: 1px solid #1C2128; border-radius: 12px; padding: 4px 6px 8px; box-sizing: border-box">
+    <div style="display: flex; align-items: center; gap: 16px; padding: 8px 8px 10px; flex-wrap: wrap">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 600">Classification</h2>
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #A4AAB4; flex-wrap: wrap">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #B08CFF"></span>Session best</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #3DDC97"></span>Personal best</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #F5C451"></span>Slower</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #4DA3FF"></span>Pit lane</span>
+      </div>
+      <button type="button" onClick="{{togglePace}}" aria-pressed="{{pace}}" style="margin-left: auto; height: 30px; padding: 0 10px; border-radius: 6px; border: 1px solid #252A33; background: {{paceBg}}; color: {{paceFg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500; cursor: pointer">Pace view</button>
+    </div>
+    <div style="overflow-x: auto">
+      <div style="min-width: 840px">
+        <div style="display: grid; grid-template-columns: {{gridCols}}; column-gap: 6px; align-items: center; height: 26px; padding: 0 10px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F; border-bottom: 1px solid #1C2128">
+          <span style="text-align: right">P</span>
+          <span>DRIVER</span>
+          <span>+/−</span>
+          <span>&lt;1S</span>
+          <span style="text-align: right">GAP</span>
+          <span style="text-align: right">INT</span>
+          <span style="text-align: right">LAST</span>
+          <span style="text-align: right">BEST</span>
+          <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 8px"><span>S1</span><span>S2</span><span>S3</span></span>
+          <span>{{tyreHead}}</span>
+        </div>
+        <div style="padding-top: 4px">
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="22">
+            <div style="display: grid; grid-template-columns: {{gridCols}}; column-gap: 6px; align-items: center; height: 30px; padding: 0 10px; border-radius: 6px; background: {{r.rowBg}}; opacity: {{r.opacity}}; font-family: 'Geist Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums">
+              <span style="text-align: right; color: #A4AAB4">{{r.pos}}</span>
+              <span><span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-family: Geist, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; background: {{r.team}}; color: {{r.ink}}">{{r.tla}}</span></span>
+              <span style="font-size: 12px; font-weight: 500; color: {{r.deltaColor}}">{{r.delta}}</span>
+              <span style="display: block; width: 26px; height: 12px; background: {{r.drs}}"></span>
+              <span style="text-align: right; color: {{r.gapColor}}">{{r.gap}}</span>
+              <span style="text-align: right; color: #A4AAB4">{{r.int}}</span>
+              <span style="text-align: right; color: {{r.lastColor}}">{{r.last}}</span>
+              <span style="text-align: right; color: {{r.bestColor}}">{{r.best}}</span>
+              <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 8px">
+                <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; line-height: 14px; color: {{r.s1.c}}">{{r.s1.t}}</span><span style="display: block; height: 3px; background: {{r.s1.bar}}"></span></span>
+                <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; line-height: 14px; color: {{r.s2.c}}">{{r.s2.t}}</span><span style="display: block; height: 3px; background: {{r.s2.bar}}"></span></span>
+                <span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; line-height: 14px; color: {{r.s3.c}}">{{r.s3.t}}</span><span style="display: block; height: 3px; background: {{r.s3.bar}}"></span></span>
+              </span>
+              <span style="display: flex; align-items: center; gap: {{r.tyreGap}}; white-space: nowrap">
+                <sc-if value="{{r.t0.on}}" hint-placeholder-val="{{true}}">
+                  <span style="display: flex; align-items: baseline; gap: 6px; opacity: {{r.t0.op}}">
+                    <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: {{r.t0.bg}}; color: #0A0C0F">{{r.t0.label}}</span>
+                    <sc-if value="{{r.pace}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: {{r.t0.paceColor}}">{{r.t0.avg}}</span></sc-if>
+                  </span>
+                </sc-if>
+                <sc-if value="{{r.t1.on}}" hint-placeholder-val="{{false}}">
+                  <span style="display: flex; align-items: baseline; gap: 6px; opacity: {{r.t1.op}}">
+                    <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: {{r.t1.bg}}; color: #0A0C0F">{{r.t1.label}}</span>
+                    <sc-if value="{{r.pace}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: {{r.t1.paceColor}}">{{r.t1.avg}}</span></sc-if>
+                  </span>
+                </sc-if>
+                <sc-if value="{{r.t2.on}}" hint-placeholder-val="{{false}}">
+                  <span style="display: flex; align-items: baseline; gap: 6px; opacity: {{r.t2.op}}">
+                    <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: {{r.t2.bg}}; color: #0A0C0F">{{r.t2.label}}</span>
+                    <sc-if value="{{r.pace}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: {{r.t2.paceColor}}">{{r.t2.avg}}</span></sc-if>
+                  </span>
+                </sc-if>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="flex: 1 1 500px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+    <section aria-label="Track map" style="background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px 4px">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Track</h2>
+        <span style="font-size: 12px; color: #7C838F">Positions estimated from mini-sectors</span>
+        <a href="Map.dc.html" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 8px; border-radius: 6px; font-size: 12px; text-decoration: none">Open map
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></a>
+      </div>
+      <div style="padding: 0 12px 6px">
+        <svg viewBox="-40 -40 1010 460" style="display: block; width: 100%; height: auto" role="img" aria-label="Estimated car positions, Circuit Gilles Villeneuve">
+          <path d="M 25 40 L 100 45 L 180 52 L 270 62 L 340 82 L 410 100 L 460 112 L 580 145 Q 600 172 630 180 L 790 218 Q 840 245 890 270 Q 920 255 940 268 Q 950 290 920 320 L 870 345 L 810 370 Q 780 368 730 360 Q 690 375 630 370 Q 590 355 575 345 Q 555 365 530 380 Q 510 382 410 340 L 340 300 L 270 240 Q 260 220 270 180 L 250 160 L 220 140 L 150 90 L 100 70 L 50 55 Q 20 50 25 40 Z" fill="none" stroke="#1E2633" stroke-width="26" stroke-linejoin="round"></path>
+          <path d="M 25 40 L 100 45 L 180 52 L 270 62 L 340 82 L 410 100 L 460 112 L 580 145 Q 600 172 630 180 L 790 218 Q 840 245 890 270 Q 920 255 940 268 Q 950 290 920 320 L 870 345 L 810 370 Q 780 368 730 360 Q 690 375 630 370 Q 590 355 575 345 Q 555 365 530 380 Q 510 382 410 340 L 340 300 L 270 240 Q 260 220 270 180 L 250 160 L 220 140 L 150 90 L 100 70 L 50 55 Q 20 50 25 40 Z" fill="none" stroke="#C9CDD3" stroke-width="5" stroke-linejoin="round"></path>
+          <g font-family="Geist, sans-serif" font-size="19" font-weight="700" text-anchor="middle">
+            <g transform="translate(562 350)"><circle r="26" fill="#E6B800" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">PER</text></g>
+            <g transform="translate(553 362)"><circle r="26" fill="#8A1538" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">BOR</text></g>
+            <g transform="translate(518 379)"><circle r="26" fill="#1868DB" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">SAI</text></g>
+            <g transform="translate(412 338)"><circle r="26" fill="#8A1538" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">HUL</text></g>
+            <g transform="translate(262 172)"><circle r="26" fill="#FF8000" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">PIA</text></g>
+            <g transform="translate(245 160)"><circle r="26" fill="#E6B800" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">BOT</text></g>
+            <g transform="translate(223 146)"><circle r="26" fill="#229971" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">STR</text></g>
+            <g transform="translate(125 83)"><circle r="26" fill="#FF8000" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">NOR</text></g>
+            <g transform="translate(106 73)"><circle r="26" fill="#1868DB" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">ALB</text></g>
+            <g transform="translate(40 57)"><circle r="26" fill="#B6BABD" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">OCO</text></g>
+            <g transform="translate(22 44)"><circle r="26" fill="#E0418F" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">GAS</text></g>
+            <g transform="translate(30 34)"><circle r="26" fill="#229971" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">ALO</text></g>
+            <g transform="translate(48 40)"><circle r="26" fill="#B6BABD" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">BEA</text></g>
+            <g transform="translate(98 46)"><circle r="26" fill="#6C98FF" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">LAW</text></g>
+            <g transform="translate(135 50)"><circle r="26" fill="#E0418F" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">COL</text></g>
+            <g transform="translate(285 66)"><circle r="26" fill="#4781D7" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">HAD</text></g>
+            <g transform="translate(340 82)"><circle r="26" fill="#E8002D" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">LEC</text></g>
+            <g transform="translate(359 87)"><circle r="26" fill="#4781D7" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">VER</text></g>
+            <g transform="translate(402 99)"><circle r="34" fill="none" stroke="#ECEEF1" stroke-width="4"></circle><circle r="26" fill="#E8002D" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#FFFFFF">HAM</text></g>
+            <g transform="translate(425 105)"><circle r="26" fill="#27F4D2" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">RUS</text></g>
+            <g transform="translate(452 112)"><circle r="26" fill="#27F4D2" stroke="#0A0C0F" stroke-width="4"></circle><text y="7" fill="#0A0C0F">ANT</text></g>
+          </g>
+        </svg>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 1px solid #1C2128; font-size: 12px; color: #7C838F">
+        <span>Pit lane</span>
+        <span style="display: inline-block; width: 36px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #6C98FF; color: #0A0C0F; opacity: 0.6">LIN</span>
+        <span>Retired</span>
+        <span style="margin-left: auto; display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; border: 2px solid #ECEEF1"></span>Followed driver</span>
+      </div>
+    </section>
+
+    <section aria-label="Messages" style="flex: 1 1 260px; min-height: 260px; display: flex; flex-direction: column; background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; border-bottom: 1px solid #1C2128">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Messages</h2>
+        <div style="margin-left: auto; display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #0A0C0F">
+          <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+            <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: 6px; background: {{f.bg}}; color: {{f.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500; cursor: pointer">{{f.label}}<span style="font-family: 'Geist Mono', monospace; color: #7C838F">{{f.count}}</span></button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto">
+        <sc-for list="{{msgs}}" as="m" hint-placeholder-count="4">
+          <article style="display: flex; gap: 12px; padding: 12px; border-bottom: 1px solid #191D24">
+            <sc-if value="{{m.isRadio}}" hint-placeholder-val="{{true}}">
+              <button type="button" aria-label="Play team radio" style="flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #323843; background: #171B21; color: #ECEEF1; display: flex; align-items: center; justify-content: center; cursor: pointer">
+                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" fill="currentColor"></path></svg>
+              </button>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: {{m.team}}; color: {{m.ink}}">{{m.tla}}</span>
+                  <span style="font-size: 12px; font-weight: 500">Team radio</span>
+                  <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">{{m.time}}</span>
+                  <span style="margin-left: auto; font-size: 11px; color: #7C838F">Auto-transcribed</span>
+                </div>
+                <svg viewBox="0 0 240 16" style="display: block; width: 100%; max-width: 240px; height: 16px" aria-hidden="true"><path d="M2 8v0M6 6v4M10 4v8M14 6v4M18 3v10M22 5v6M26 7v2M30 4v8M34 2v12M38 5v6M42 6v4M46 3v10M50 7v2M54 5v6M58 4v8M62 6v4M66 2v12M70 5v6M74 7v2M78 4v8M82 3v10M86 6v4M90 5v6M94 7v2M98 4v8M102 6v4M106 3v10M110 5v6M114 7v2M118 4v8M122 6v4M126 7v2M130 5v6M134 6v4M138 7v2M142 8v0" stroke="#4A525E" stroke-width="2" stroke-linecap="round"></path></svg>
+                <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #C9CDD3">{{m.text}}</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{m.isRc}}" hint-placeholder-val="{{false}}">
+              <div style="flex: none; width: 36px; height: 36px; border-radius: 8px; background: rgba(245, 196, 81, 0.12); color: #F5C451; display: flex; align-items: center; justify-content: center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+              </div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="font-size: 12px; font-weight: 500">Race control</span>
+                  <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">{{m.time}}</span>
+                  <span style="font-family: 'Geist Mono', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">L{{m.lap}}</span>
+                </div>
+                <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #C9CDD3">{{m.text}}</p>
+              </div>
+            </sc-if>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;trackStatus&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;clear&quot;,&quot;yellow&quot;,&quot;vsc&quot;,&quot;sc&quot;,&quot;red&quot;],&quot;default&quot;:&quot;clear&quot;,&quot;section&quot;:&quot;Live state&quot;},&quot;delay&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:0,&quot;min&quot;:0,&quot;max&quot;:120,&quot;unit&quot;:&quot;s&quot;,&quot;section&quot;:&quot;Live state&quot;},&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all', pace: false };
+  }
+  renderVals() {
+    const C = { purple: '#B08CFF', green: '#3DDC97', yellow: '#F5C451', pit: '#4DA3FF', t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F', loss: '#FF7A6B', empty: '#262B33', drs: '#F5C451', drsHot: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const TYRE = { S: '#E8002D', M: '#FFF200', H: '#F0F0F0', I: '#39B54A', W: '#0085FF' };
+    const lum = (hex) => {
+      const n = parseInt(hex.slice(1), 16);
+      const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+      return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+    };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const teamOf = (tla) => TEAM[DT[tla]];
+
+    const raw = [
+      [1, 'ANT', 1, 'Leader', '—', '1:21.447', '1:21.447', 22.886, 24.922, 32.393, 'S', 2, null],
+      [2, 'RUS', -1, '+0.789', '+0.789', '1:20.925', '1:20.925', 23.408, 25.005, 31.876, 'S', 2, null],
+      [3, 'HAM', 2, '+1.403', '+0.614', '1:20.670', '1:20.670', 23.770, 25.036, 31.551, 'S', 2, null],
+      [4, 'VER', 'FL', '+2.345', '+0.942', '1:20.276', '1:20.276', 23.159, 25.506, 31.245, 'S', 2, null],
+      [5, 'LEC', 3, '+2.946', '+0.585', '1:20.351', '1:20.351', 23.229, 25.361, 31.224, 'S', 2, null],
+      [6, 'HAD', 1, '+4.144', '+1.198', '1:20.676', '1:20.676', 22.960, 25.381, 31.194, 'S', 2, null],
+      [7, 'COL', 3, '+7.824', '+3.646', '1:22.225', '1:22.225', 23.190, 25.815, 32.429, 'M', 2, null],
+      [8, 'LAW', 4, '+9.138', '+1.314', '1:22.682', '1:22.682', 23.518, 25.919, 32.228, 'M', 2, null],
+      [9, 'BEA', 7, '+12.524', '+3.778', '1:23.857', '1:23.857', 23.820, 26.156, 32.441, 'S', 2, null],
+      [10, 'ALO', 9, '+13.235', '+0.711', '1:23.708', '1:23.708', 23.899, 26.104, 32.356, 'S', 2, null],
+      [11, 'GAS', 3, '+14.476', '+1.241', '1:26.222', '1:26.222', 23.482, 25.916, 32.365, 'M', 2, null],
+      [12, 'OCO', 5, '+15.893', '+1.417', '1:25.696', '1:25.696', 23.929, 26.089, 32.709, 'S', 2, null],
+      [13, 'ALB', 5, '+18.729', '+2.778', '1:25.514', '1:25.514', 24.572, 27.841, 32.238, 'S', 2, null],
+      [14, 'NOR', -11, '+19.387', '+0.658', '1:37.774', '—', 26.055, 26.304, 47.905, 'M', 0, ['I', 2]],
+      [15, 'STR', 7, '+22.372', '+3.113', '1:25.078', '1:25.078', 25.059, 27.472, 32.870, 'S', 2, null],
+      [16, 'BOT', 5, '+23.128', '+0.756', '1:27.677', '1:27.677', 25.338, 28.413, 33.628, 'I', 2, null],
+      [17, 'PIA', -13, '+23.362', '+0.234', '1:24.619', '—', 23.446, 26.273, 32.261, 'M', 1, ['I', 1]],
+      [18, 'HUL', -7, '+32.695', '+10.276', '1:43.067', '—', 26.408, 27.491, 50.538, 'S', 0, ['I', 2]],
+      [19, 'SAI', -4, '+36.220', '+4.083', '1:42.459', '—', 26.944, 27.774, 49.308, 'M', 0, ['I', 2]],
+      [20, 'BOR', -7, '+38.663', '+2.837', '1:47.354', '—', 27.435, 27.267, 54.243, 'S', 0, ['I', 2]],
+      [21, 'PER', -1, '+39.404', '+0.741', '1:45.019', '—', 27.703, 28.039, 51.473, 'S', 0, ['I', 2]],
+      [22, 'LIN', null, 'RET', '', '—', '—', null, null, null, 'M', 0, null]
+    ];
+    const pitters = ['NOR', 'HUL', 'SAI', 'BOR', 'PER'];
+    const pace = !!this.state.pace;
+    const mins = [0, 1, 2].map((i) => Math.min.apply(null, raw.filter((r) => r[7 + i] != null).map((r) => r[7 + i])));
+    const hash = (s) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; };
+    const secColor = (v, i) => (v == null ? C.t3 : v === mins[i] ? C.purple : v <= mins[i] * 1.05 ? C.green : C.yellow);
+    const bar = (cols) => 'linear-gradient(90deg, ' + cols.map((c, k) => { const a = k * 12.5; const b = a + 11; return c + ' ' + a + '% ' + b + '%, transparent ' + b + '% ' + (a + 12.5) + '%'; }).join(', ') + ')';
+    const segs = (tla, i, col, ret) => {
+      const out = [];
+      for (let k = 0; k < 8; k++) {
+        if (ret) { out.push(C.empty); continue; }
+        if (i === 0 && pitters.indexOf(tla) >= 0 && k < 3) { out.push(C.pit); continue; }
+        const h = hash(tla + i + k) % 10;
+        if (col === C.yellow) out.push(h < 5 ? C.yellow : C.green);
+        else if (col === C.purple) out.push(h < 3 ? C.purple : C.green);
+        else out.push(h === 0 ? C.purple : h < 3 ? C.yellow : C.green);
+      }
+      return bar(out);
+    };
+    const drsBar = (intStr) => {
+      const v = parseFloat(intStr);
+      const n = !isNaN(v) && v < 1 ? Math.ceil((1 - v) * 4) : 0;
+      const cols = [0, 1, 2, 3].map((k) => (k < n ? (n === 4 ? C.drsHot : C.drs) : C.empty));
+      return 'linear-gradient(90deg, ' + cols.map((c, k) => { const a = k * 25; const b = a + 19; return c + ' ' + a + '% ' + b + '%, transparent ' + b + '% ' + (a + 25) + '%'; }).join(', ') + ')';
+    };
+    const rows = raw.map((r, idx) => {
+      const tla = r[1];
+      const ret = r[3] === 'RET';
+      const fl = r[2] === 'FL';
+      const team = teamOf(tla);
+      const sec = (i) => { const v = r[7 + i]; const c = secColor(v, i); return { t: v == null ? '—' : v.toFixed(3), c: ret ? C.t3 : c, bar: segs(tla, i, c, ret) }; };
+      let delta = '—';
+      let deltaColor = C.t3;
+      if (fl) { delta = 'FL'; deltaColor = C.purple; }
+      else if (typeof r[2] === 'number' && r[2] > 0) { delta = '▲' + r[2]; deltaColor = C.green; }
+      else if (typeof r[2] === 'number' && r[2] < 0) { delta = '▼' + Math.abs(r[2]); deltaColor = C.loss; }
+      const lastColor = ret ? C.t3 : fl ? C.purple : r[6] === '—' ? C.t1 : r[5] === r[6] ? C.green : C.yellow;
+      // Stints newest first, max 3 (DriverTireStack). Pace = push-lap average per stint, in/out laps excluded.
+      const stints = [[r[10], r[11], true]].concat(r[12] ? [[r[12][0], r[12][1], false]] : []).slice(0, 3);
+      const slot = (k) => {
+        const s = stints[k];
+        if (!s) return { on: false };
+        const avg = s[2] && !ret && r[6] !== '—' ? r[6] : '—';
+        return { on: true, label: s[0] + ' ' + s[1], bg: TYRE[s[0]], op: s[2] ? '1' : '0.4', avg: avg, paceColor: avg === '—' ? C.t3 : C.t1 };
+      };
+      return {
+        pos: r[0], tla: tla, team: team, ink: ink(team),
+        delta: delta, deltaColor: deltaColor,
+        drs: drsBar(r[4]),
+        gap: r[3], gapColor: r[3] === 'Leader' || ret ? C.t3 : C.t1,
+        int: r[4],
+        last: r[5], lastColor: lastColor,
+        best: r[6], bestColor: fl ? C.purple : C.t2,
+        s1: sec(0), s2: sec(1), s3: sec(2),
+        t0: slot(0), t1: slot(1), t2: slot(2), pace: pace, tyreGap: pace ? '14px' : '4px',
+        rowBg: fl ? 'rgba(176, 140, 255, 0.13)' : idx % 2 === 1 ? '#151920' : 'transparent',
+        opacity: ret ? '0.5' : '1'
+      };
+    });
+
+    const allMsgs = [
+      { kind: 'rc', time: '20:13:25', lap: 3, text: 'Incident involving cars 30 (LAW) and 27 (HUL) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'rc', time: '20:12:54', lap: 3, text: 'Incident involving cars 77 (BOT) and 18 (STR) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'radio', tla: 'PIA', time: '20:08:48', text: "So Oscar, our tyres have dropped quite a lot, everyone must have very cold tyres by this time. — Yeah, but if we fit now we will have warm tyres. So I don't know, I mean it's… These engines are a mistake now." },
+      { kind: 'radio', tla: 'PIA', time: '20:05:14', text: "It feels like the rain stopped quite a lot now, what are we all thinking to do? — Oscar, the rain should ease from here, everyone's going to have very cold tyres. — Yeah, but I think now it is time for slicks, if we just box." },
+      { kind: 'radio', tla: 'LIN', time: '20:03:42', text: "It's not going again." }
+    ];
+    const f = this.state.filter;
+    const msgs = allMsgs
+      .filter((m) => f === 'all' || (f === 'radio' && m.kind === 'radio') || (f === 'rc' && m.kind === 'rc'))
+      .map((m) => { const t = m.tla ? teamOf(m.tla) : '#1F242C'; return Object.assign({}, m, { isRadio: m.kind === 'radio', isRc: m.kind === 'rc', team: t, ink: ink(t) }); });
+    const defs = [['all', 'All', allMsgs.length], ['radio', 'Radio', allMsgs.filter((m) => m.kind === 'radio').length], ['rc', 'Race control', allMsgs.filter((m) => m.kind === 'rc').length]];
+    const filters = defs.map((d) => ({ label: d[1], count: d[2], on: f === d[0], bg: f === d[0] ? '#1F242C' : 'transparent', fg: f === d[0] ? C.t1 : C.t2, pick: () => this.setState({ filter: d[0] }) }));
+
+    const ST = {
+      clear: { label: 'Track clear', bg: 'rgba(61, 220, 151, 0.14)', fg: '#3DDC97', banner: false, bannerText: '' },
+      yellow: { label: 'Yellow flag', bg: '#FFD60A', fg: '#0A0C0F', banner: true, bannerText: 'Yellow flag — hazard on track, no overtaking in the affected sector' },
+      vsc: { label: 'Virtual safety car', bg: '#FFB020', fg: '#0A0C0F', banner: true, bannerText: 'Virtual safety car deployed — drivers must stay above the minimum lap time' },
+      sc: { label: 'Safety car', bg: '#FFB020', fg: '#0A0C0F', banner: true, bannerText: 'Safety car deployed — the field is neutralised behind the safety car' },
+      red: { label: 'Red flag', bg: '#FF3B3B', fg: '#0A0C0F', banner: true, bannerText: 'Red flag — session suspended, cars return to the pit lane' }
+    };
+    const st = ST[this.props.trackStatus ?? 'clear'] || ST.clear;
+
+    return {
+      rows: rows, msgs: msgs, filters: filters, st: st, delay: this.props.delay ?? 0,
+      pace: pace,
+      togglePace: () => this.setState({ pace: !this.state.pace }),
+      paceBg: pace ? '#ECEEF1' : 'transparent',
+      paceFg: pace ? '#0A0C0F' : '#A4AAB4',
+      tyreHead: pace ? 'TYRE · AVG' : 'TYRE',
+      gridCols: pace ? '24px 48px 40px 30px 72px 64px 76px 76px minmax(150px, 1fr) 280px' : '24px 48px 40px 30px 72px 64px 76px 76px minmax(0, 1fr) 120px'
+    };
+  }
+}
+</script>
+</body>
+</html>

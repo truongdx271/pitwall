@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Messages (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; flex: none">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; min-width: 0">
+      <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">Canadian GP</span>
+      <span style="font-size: 11px; color: #A4AAB4">Race · <span style="font-family: 'Geist Mono', monospace">13:46:20</span></span>
+    </div>
+    <button type="button" aria-label="Live, delay 0 seconds. Change delay" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span>
+    </button>
+  </header>
+
+  <section aria-label="Session status" style="display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-top: 1px solid #1C2128; border-bottom: 1px solid #1C2128; flex: none">
+    <div style="display: flex; align-items: baseline; gap: 5px">
+      <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #7C838F">LAP</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 600; line-height: 1">3</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">/68</span>
+    </div>
+    <span style="font-size: 12px; color: #A4AAB4"><span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">17°</span> track · Dry</span>
+    <div role="status" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 12px; font-weight: 600">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>Track clear
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 8px 8px 0; flex: none">
+    <a href="#" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 10px; background: #111419; border: 1px solid #1C2128; text-decoration: none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+      <span style="font-size: 12px; color: #ECEEF1; font-weight: 500">Incidents</span>
+      <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">2</span>
+    </a>
+    <a href="#" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 10px; background: #111419; border: 1px solid #1C2128; text-decoration: none">
+      <span style="display: block; width: 18px; height: 8px; background: linear-gradient(90deg, #FF7A6B 0 28%, transparent 28% 36%, #FF7A6B 36% 64%, transparent 64% 72%, #FF7A6B 72% 100%)"></span>
+      <span style="font-size: 12px; color: #ECEEF1; font-weight: 500">Track limits</span>
+      <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 13px; color: #ECEEF1">7</span>
+    </a>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px; flex: none">
+    <div style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+      <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+        <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="display: flex; align-items: center; gap: 5px; height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: {{f.bg}}; color: {{f.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">{{f.label}}<span style="font-family: 'Geist Mono', monospace; color: #7C838F">{{f.count}}</span></button>
+      </sc-for>
+    </div>
+    <button type="button" aria-label="Filter by driver" style="margin-left: auto; width: 36px; height: 36px; border-radius: 8px; border: 1px solid #252A33; background: transparent; color: #A4AAB4; display: flex; align-items: center; justify-content: center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
+    </button>
+  </div>
+
+  <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 8px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{msgs}}" as="m" hint-placeholder-count="6">
+      <article style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: {{m.bg}}; border: 1px solid #1C2128">
+        <sc-if value="{{m.isRadio}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: {{m.team}}; color: {{m.ink}}">{{m.tla}}</span>
+            <span style="font-size: 13px; font-weight: 500">Team radio</span>
+            <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">{{m.time}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <button type="button" aria-label="{{m.playLabel}}" style="flex: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid {{m.btnBorder}}; background: {{m.btnBg}}; color: {{m.btnFg}}; display: flex; align-items: center; justify-content: center">
+              <sc-if value="{{m.playing}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h4v16H7zM13 4h4v16h-4z" fill="currentColor"></path></svg></sc-if>
+              <sc-if value="{{m.paused}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" fill="currentColor"></path></svg></sc-if>
+            </button>
+            <span style="flex: 1; display: block; height: 18px; background: {{m.wave}}"></span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">{{m.dur}}</span>
+          </div>
+          <sc-if value="{{m.hasText}}" hint-placeholder-val="{{true}}">
+            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C9CDD3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden">{{m.text}}</p>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{m.isRc}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+            <span style="font-size: 13px; font-weight: 500">Race control</span>
+            <span style="font-family: 'Geist Mono', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">L{{m.lap}}</span>
+            <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">{{m.time}}</span>
+          </div>
+          <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #C9CDD3">{{m.text}}</p>
+        </sc-if>
+      </article>
+    </sc-for>
+  </div>
+
+  <nav aria-label="Dashboard" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); height: 60px; margin-top: 6px; border-top: 1px solid #1C2128; background: #0D1014; flex: none">
+    <a href="Mobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="MapMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="MessagesMobile.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #ECEEF1; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="StrategyMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="MoreMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>More</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all' };
+  }
+  renderVals() {
+    const C = { t1: '#ECEEF1', t2: '#A4AAB4' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const hash = (s) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; };
+    const wave = (seed, played) => {
+      const n = 32; const parts = [];
+      for (let k = 0; k < n; k++) {
+        const h = 20 + (hash(seed + k) % 80); const a = (k / n) * 100; const w = (100 / n) * 0.6;
+        const c = k / n < played ? '#ECEEF1' : '#4A525E';
+        parts.push('linear-gradient(' + c + ', ' + c + ') ' + a.toFixed(2) + '% 50% / ' + w.toFixed(2) + '% ' + h + '% no-repeat');
+      }
+      return parts.join(', ');
+    };
+    const all = [
+      { kind: 'rc', time: '20:13:25', lap: 3, text: 'Incident involving cars 30 (LAW) and 27 (HUL) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'rc', time: '20:12:54', lap: 3, text: 'Incident involving cars 77 (BOT) and 18 (STR) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'radio', tla: 'PIA', time: '20:08:48', dur: '0:23', text: "So Oscar, our tyres have dropped quite a lot, everyone must have very cold tyres by this time. — Yeah, but if we fit now we will have warm tyres. So I don't know, I mean it's… These engines are a mistake now.", playing: 0.42 },
+      { kind: 'radio', tla: 'PIA', time: '20:05:14', dur: '0:19', text: "It feels like the rain stopped quite a lot now, what are we all thinking to do? — Oscar, the rain should ease from here, everyone's going to have very cold tyres. — Yeah, but I think now it is time for slicks, if we just box." },
+      { kind: 'radio', tla: 'LIN', time: '20:03:42', dur: '0:05', text: "It's not going again." },
+      { kind: 'radio', tla: 'GAS', time: '20:03:12', dur: '0:05' },
+      { kind: 'radio', tla: 'NOR', time: '20:03:12', dur: '0:05' },
+      { kind: 'radio', tla: 'PIA', time: '19:27:39', dur: '0:14' },
+      { kind: 'radio', tla: 'VER', time: '19:22:05', dur: '0:11' },
+      { kind: 'radio', tla: 'LEC', time: '19:11:53', dur: '0:15' },
+      { kind: 'radio', tla: 'NOR', time: '19:11:23', dur: '0:15' },
+      { kind: 'radio', tla: 'RUS', time: '19:11:23', dur: '0:10' },
+      { kind: 'radio', tla: 'BOR', time: '19:11:23', dur: '0:06' },
+      { kind: 'radio', tla: 'BOR', time: '19:11:23', dur: '0:17' },
+      { kind: 'radio', tla: 'HAD', time: '19:11:23', dur: '0:18' },
+      { kind: 'radio', tla: 'NOR', time: '19:11:21', dur: '0:07' }
+    ];
+    const f = this.state.filter;
+    const msgs = all.filter((m) => f === 'all' || m.kind === f).map((m) => {
+      const t = m.tla ? TEAM[DT[m.tla]] : '#1F242C';
+      const playing = m.playing != null;
+      return Object.assign({}, m, {
+        isRadio: m.kind === 'radio', isRc: m.kind === 'rc', team: t, ink: ink(t), hasText: !!m.text,
+        playing: playing, paused: !playing, playLabel: playing ? 'Pause team radio' : 'Play team radio',
+        btnBg: playing ? '#ECEEF1' : '#171B21', btnFg: playing ? '#0A0C0F' : '#ECEEF1', btnBorder: playing ? '#ECEEF1' : '#323843',
+        wave: wave(m.time + (m.tla || ''), playing ? m.playing : 0), bg: playing ? '#151920' : '#111419'
+      });
+    });
+    const filters = [['all', 'All'], ['radio', 'Radio'], ['rc', 'Race control']].map((d) => ({
+      label: d[1], count: all.filter((m) => d[0] === 'all' || m.kind === d[0]).length, on: f === d[0],
+      bg: f === d[0] ? '#1F242C' : 'transparent', fg: f === d[0] ? C.t1 : C.t2, pick: () => this.setState({ filter: d[0] })
+    }));
+    return { msgs: msgs, filters: filters };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { utc } from "moment";
 import clsx from "clsx";
 
@@ -10,10 +10,9 @@ import { useDataStore } from "@/stores/useDataStore";
 import { useRadioTranscript } from "@/hooks/useRadioTranscript";
 import { useRaceControlChime } from "@/hooks/useRaceControlChime";
 import { hasWords } from "@/lib/radioTranscript";
-import { waveformBars } from "@/lib/waveform";
 
 import Panel from "@/components/ui/Panel";
-import DriverChip from "@/components/driver/DriverChip";
+import RadioClip from "@/components/messages/RadioClip";
 
 type Filter = "all" | "radio" | "rc";
 
@@ -159,125 +158,7 @@ function RadioItem({ capture, driver, sessionPath }: RadioItemProps) {
 			capture={capture}
 			driver={driver}
 			src={`https://livetiming.formula1.com/static/${sessionPath}${capture.Path}`}
-			text={transcript.status === "done" ? transcript.text : null}
+			transcript={transcript}
 		/>
-	);
-}
-
-type RadioClipProps = {
-	capture: RadioCapture;
-	driver: Driver;
-	src: string;
-	/** Transcript, or null while it's still being made. */
-	text: string | null;
-};
-
-function RadioClip({ capture, driver, src, text }: RadioClipProps) {
-	const audioRef = useRef<HTMLAudioElement | null>(null);
-	const rafRef = useRef<number | null>(null);
-	const [playing, setPlaying] = useState(false);
-	const [progress, setProgress] = useState(0);
-	const [duration, setDuration] = useState(0);
-	const [failed, setFailed] = useState(false);
-
-	// Stop the progress loop on unmount so we don't setState on a dead component.
-	useEffect(() => {
-		return () => {
-			if (rafRef.current) cancelAnimationFrame(rafRef.current);
-		};
-	}, []);
-
-	const tick = () => {
-		const el = audioRef.current;
-		if (!el) return;
-		setProgress(el.currentTime);
-		rafRef.current = requestAnimationFrame(tick);
-	};
-
-	const stopTick = () => {
-		if (rafRef.current) cancelAnimationFrame(rafRef.current);
-		rafRef.current = null;
-	};
-
-	const togglePlayback = async () => {
-		const el = audioRef.current;
-		if (!el || failed) return;
-		if (playing) {
-			el.pause();
-			stopTick();
-			setPlaying(false);
-			return;
-		}
-		try {
-			await el.play();
-			setPlaying(true);
-			tick();
-		} catch {
-			setFailed(true);
-			setPlaying(false);
-			stopTick();
-		}
-	};
-
-	const bars = waveformBars(capture.Path);
-	const played = duration > 0 ? Math.floor((progress / duration) * bars.length) : 0;
-
-	return (
-		<article className={clsx("flex gap-3 border-b border-border p-3", failed && "opacity-60")}>
-			<button
-				type="button"
-				onClick={togglePlayback}
-				disabled={failed}
-				aria-label={failed ? "Radio unavailable" : playing ? "Pause team radio" : "Play team radio"}
-				className="flex size-9 flex-none cursor-pointer items-center justify-center rounded-full border border-border-strong bg-surface-2 text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1 disabled:cursor-not-allowed"
-			>
-				<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-					{playing ? <path d="M6 4h4v16H6zM14 4h4v16h-4z" /> : <path d="M7 4v16l13-8z" />}
-				</svg>
-			</button>
-
-			<div className="flex min-w-0 flex-1 flex-col gap-1.5">
-				<div className="flex items-center gap-2">
-					<DriverChip short={driver.Tla} teamColor={driver.TeamColour} size="sm" />
-					<span className="text-xs font-medium">Team radio</span>
-					<time className="font-mono text-xs text-fg-3 tabular-nums">{clock(capture.Utc)}</time>
-					<span className="ml-auto text-[11px] text-fg-3">Auto-transcribed</span>
-				</div>
-
-				{/* Decorative: the feed carries no amplitude data. */}
-				<svg viewBox="0 0 240 16" className="block h-4 w-full max-w-60" aria-hidden="true">
-					{bars.map((h, i) => (
-						<rect
-							key={i}
-							x={i * 5}
-							y={8 - h * 7}
-							width={2}
-							height={h * 14}
-							rx={1}
-							className={i < played ? "fill-fg-1" : "fill-fg-3"}
-						/>
-					))}
-				</svg>
-
-				{text == null ? (
-					<p className="text-xs text-fg-3">Transcribing…</p>
-				) : (
-					<p className="text-[13px] leading-normal text-fg-body">{text}</p>
-				)}
-			</div>
-
-			<audio
-				ref={audioRef}
-				preload="metadata"
-				src={src}
-				onEnded={() => {
-					setPlaying(false);
-					setProgress(0);
-					stopTick();
-				}}
-				onError={() => setFailed(true)}
-				onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-			/>
-		</article>
 	);
 }

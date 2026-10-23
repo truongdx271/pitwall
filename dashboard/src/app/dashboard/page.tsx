@@ -9,11 +9,9 @@ import { useDataStore } from "@/stores/useDataStore";
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import QualiLeaderBoard from "@/components/dashboard/QualiLeaderBoard";
 import PracticeLeaderBoard from "@/components/dashboard/PracticeLeaderBoard";
-import RaceControl from "@/components/dashboard/RaceControl";
-import TeamRadios from "@/components/dashboard/TeamRadios";
-import TrackViolations from "@/components/dashboard/TrackViolations";
 import TrackPanel from "@/components/dashboard/TrackPanel";
 import MessagesPanel from "@/components/dashboard/MessagesPanel";
+import MessagesTab from "@/components/messages/MessagesTab";
 import { parseTab } from "@/components/shell/tabs";
 import { sessionKind } from "@/lib/sessionKind";
 
@@ -71,15 +69,9 @@ function Dashboard() {
 
 				{activeTab === "map" && <TrackMapPage />}
 
-				{/* Messages and Strategy stack the old views until PR 8 and PR 9 redesign them. */}
-				{activeTab === "messages" && (
-					<div className="flex flex-col divide-y divide-border">
-						<RaceControl />
-						<TeamRadios />
-						<TrackViolations />
-					</div>
-				)}
+				{activeTab === "messages" && <MessagesTab />}
 
+				{/* Strategy stacks the old views until PR 9 redesigns it. */}
 				{activeTab === "strategy" && (
 					<div className="flex flex-col divide-y divide-border">
 						<TyreStrategyPage />

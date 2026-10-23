@@ -39,28 +39,24 @@ export default function Countdown({ next, type }: Props) {
 	const fmt = (n: number | null) => (n !== null ? String(n).padStart(2, "0") : "--");
 
 	return (
-		<div className="font-mono">
-			<p className="mb-2 text-[11px] tracking-widest text-zinc-500 uppercase">
-				next {type === "race" ? "race" : "session"} in
-			</p>
-
-			<div className="flex items-end gap-[2ch]">
-				<div>
-					<p className="text-3xl text-white tabular-nums">{fmt(days)}</p>
-					<p className="text-[11px] tracking-widest text-zinc-600 uppercase">days</p>
-				</div>
-				<div>
-					<p className="text-3xl text-white tabular-nums">{fmt(hours)}</p>
-					<p className="text-[11px] tracking-widest text-zinc-600 uppercase">hours</p>
-				</div>
-				<div>
-					<p className="text-3xl text-white tabular-nums">{fmt(minutes)}</p>
-					<p className="text-[11px] tracking-widest text-zinc-600 uppercase">min</p>
-				</div>
-				<div>
-					<p className="text-3xl text-white tabular-nums">{fmt(seconds)}</p>
-					<p className="text-[11px] tracking-widest text-zinc-600 uppercase">sec</p>
-				</div>
+		<div className="flex flex-col gap-2">
+			<p className="text-xs text-fg-2">{type === "race" ? "Race" : next.kind} starts in</p>
+			<div className="flex items-end gap-4 font-mono tabular-nums">
+				{(
+					[
+						[days, "days"],
+						[hours, "hours"],
+						[minutes, "min"],
+						[seconds, "sec"],
+					] as const
+				).map(([n, unit]) => (
+					<div key={unit} className="flex flex-col">
+						<span className={`text-[34px] leading-none font-semibold ${unit === "sec" ? "text-fg-3" : "text-fg-1"}`}>
+							{fmt(n)}
+						</span>
+						<span className="font-sans text-[11px] text-fg-3">{unit}</span>
+					</div>
+				))}
 			</div>
 		</div>
 	);

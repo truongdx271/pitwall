@@ -6,10 +6,8 @@ import Link from "next/link";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
-import { sessionKind } from "@/lib/sessionKind";
 
-import RaceHelpModal from "@/components/dashboard/RaceHelpModal";
-import QualiHelpModal from "@/components/dashboard/QualiHelpModal";
+import HelpModal from "@/components/help/HelpModal";
 
 import Icon, { LogoMark } from "./icons";
 import LiveChip from "./LiveChip";
@@ -23,16 +21,10 @@ type Props = {
 export default function TopBar({ connected }: Props) {
 	const hasSession = useDataStore((s) => !!s.state?.SessionInfo);
 	const [helpOpen, setHelpOpen] = useState(false);
-	const isQuali = useDataStore((s) => sessionKind(s.state?.SessionInfo)) === "qualifying";
 
 	return (
 		<header className="flex min-h-[52px] flex-wrap items-center gap-x-5 gap-y-1 border-b border-border px-4 py-1">
-			{helpOpen &&
-				(isQuali ? (
-					<QualiHelpModal onClose={() => setHelpOpen(false)} />
-				) : (
-					<RaceHelpModal onClose={() => setHelpOpen(false)} />
-				))}
+			{helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
 
 			<Link href="/" className="flex items-center gap-2 text-fg-1">
 				<LogoMark />

@@ -52,6 +52,7 @@ describe("nextSession", () => {
 	it("picks the earliest session that hasn't started", () => {
 		expect(nextSession(rounds, Date.parse("2026-06-13T12:00:00Z"))).toEqual({
 			round: "Canada",
+			country: "Canada",
 			kind: "Qualifying",
 			start: "2026-06-13T20:00:00Z",
 		});

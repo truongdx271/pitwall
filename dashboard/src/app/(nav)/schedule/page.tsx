@@ -10,10 +10,12 @@ const isStaticExport = process.env.NEXT_EXPORT === "1";
 
 export default async function SchedulePage() {
 	return (
-		<div className="font-mono">
-			<div className="my-4 border-b border-zinc-800 pb-1">
-				<p className="text-[11px] tracking-widest text-zinc-500 uppercase">up next</p>
-				<p className="text-[10px] text-zinc-700">all times local</p>
+		<div className="flex flex-col gap-8 py-10">
+			<div className="flex flex-wrap items-end gap-3">
+				<div className="flex flex-col gap-1">
+					<h1 className="text-3xl font-semibold tracking-[-0.02em]">{new Date().getFullYear()} schedule</h1>
+					<p className="text-sm text-fg-2">All times in your local time</p>
+				</div>
 			</div>
 
 			{isStaticExport ? (
@@ -23,11 +25,6 @@ export default async function SchedulePage() {
 					<NextRound />
 				</Suspense>
 			)}
-
-			<div className="my-4 border-b border-zinc-800 pb-1">
-				<p className="text-[11px] tracking-widest text-zinc-500 uppercase">schedule</p>
-				<p className="text-[10px] text-zinc-700">all times local</p>
-			</div>
 
 			{isStaticExport ? (
 				<ScheduleClient section="all" />

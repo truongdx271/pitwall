@@ -203,11 +203,11 @@ complications, tyre icons) are now unused and can go in the final pass.
 
 ## PR 12 · Mobile (SPEC §11)
 
-- [ ] Mobile header, status row and bottom bar. The More sheet.
-- [ ] Mobile tables for race, quali, practice and standings. Tapping a row opens the driver
+- [x] Mobile header, status row and bottom bar. The More sheet.
+- [x] Mobile tables for race, quali, practice and standings. Tapping a row opens the driver
       detail.
-- [ ] Mobile Map, Messages and Strategy (with sub-tabs).
-- [ ] Touch targets of at least 44 px.
+- [x] Mobile Map, Messages and Strategy (with sub-tabs).
+- [x] Touch targets of at least 44 px.
 
 **Done when** it matches the eight `*Mobile.png` screens at 390 × 844.
 

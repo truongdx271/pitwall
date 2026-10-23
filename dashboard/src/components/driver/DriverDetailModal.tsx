@@ -44,7 +44,7 @@ export default function DriverDetailModal({ driver, timingDriver, position, onCl
 				</div>
 				<button
 					onClick={onClose}
-					className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-300 active:bg-zinc-700"
+					className="flex size-11 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-300 active:bg-zinc-700"
 					aria-label="Close"
 				>
 					✕

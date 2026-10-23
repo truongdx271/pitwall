@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
@@ -36,7 +36,7 @@ export function MobileHeader({ connected }: { connected: boolean }) {
 
 	return (
 		<header className="flex h-12 items-center gap-3 border-b border-border px-3">
-			<Link href="/" aria-label="pitwall home">
+			<Link href="/" aria-label="pitwall home" className="-ml-2.5 flex size-11 shrink-0 items-center justify-center">
 				<LogoMark />
 			</Link>
 			<div className="flex min-w-0 flex-1 flex-col leading-tight">
@@ -131,11 +131,16 @@ function BottomBarFromUrl() {
 
 function BottomBar({ active }: { active: TabId | null }) {
 	const [more, setMore] = useState(false);
+	const moreButton = useRef<HTMLButtonElement>(null);
+	const closeMore = useCallback(() => {
+		setMore(false);
+		moreButton.current?.focus();
+	}, []);
 	const inMore = active === "weather" || active === "standings";
 
 	return (
 		<>
-			{more && <MoreSheet onClose={() => setMore(false)} />}
+			{more && <MoreSheet onClose={closeMore} />}
 			<nav
 				aria-label="Dashboard"
 				className="fixed inset-x-0 bottom-0 z-40 grid h-[60px] grid-cols-5 border-t border-border bg-nav pb-[env(safe-area-inset-bottom)]"
@@ -155,6 +160,7 @@ function BottomBar({ active }: { active: TabId | null }) {
 					</Link>
 				))}
 				<button
+					ref={moreButton}
 					type="button"
 					aria-expanded={more}
 					onClick={() => setMore(true)}
@@ -176,6 +182,28 @@ function BottomBar({ active }: { active: TabId | null }) {
 // The More sheet (MoreMobile.png): the tabs and pages that don't fit the bottom bar, and the delay.
 function MoreSheet({ onClose }: { onClose: () => void }) {
 	const weather = useDataStore((s) => s.state?.WeatherData);
+	const dialog = useRef<HTMLDivElement>(null);
+
+	// Focus moves into the sheet and Tab stays inside it until it closes.
+	useEffect(() => {
+		dialog.current?.focus();
+		const onTab = (e: KeyboardEvent) => {
+			if (e.key !== "Tab" || !dialog.current) return;
+			const focusable = dialog.current.querySelectorAll<HTMLElement>("a[href], button, input");
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			if (!first || !last) return;
+			if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog.current)) {
+				e.preventDefault();
+				last.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
+		};
+		document.addEventListener("keydown", onTab);
+		return () => document.removeEventListener("keydown", onTab);
+	}, []);
 
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -200,10 +228,12 @@ function MoreSheet({ onClose }: { onClose: () => void }) {
 	return (
 		<div className="fixed inset-0 z-50 bg-bg/70" onClick={onClose}>
 			<div
+				ref={dialog}
 				role="dialog"
 				aria-modal="true"
 				aria-label="More"
-				className="absolute inset-x-0 bottom-[60px] flex flex-col gap-2.5 rounded-t-[18px] border-t border-border-subtle bg-surface-1 px-3 pt-2 pb-3.5"
+				tabIndex={-1}
+				className="absolute inset-x-0 bottom-[60px] flex flex-col gap-2.5 rounded-t-[18px] border-t border-border-subtle bg-surface-1 px-3 pt-2 pb-3.5 outline-none"
 				onClick={(e) => e.stopPropagation()}
 			>
 				<span aria-hidden className="mx-auto mb-1 h-1 w-10 rounded-full bg-border-strong" />

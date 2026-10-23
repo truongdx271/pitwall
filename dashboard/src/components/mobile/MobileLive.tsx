@@ -29,7 +29,14 @@ import LongRunsPanel from "@/components/map/LongRunsPanel";
 const GRID: Record<SessionKind, string> = {
 	race: "20px 40px 30px minmax(0, 1fr) 70px 62px",
 	qualifying: "20px 40px minmax(0, 1fr) 70px 54px",
-	practice: "20px 40px minmax(0, 1fr) 28px 44px 62px",
+	practice: "20px 40px minmax(0, 1fr) 34px 44px 62px",
+};
+
+// Header columns that sit over right-aligned cells.
+const RIGHT: Record<SessionKind, number[]> = {
+	race: [0, 3, 4],
+	qualifying: [0, 2, 3],
+	practice: [0, 2, 3],
 };
 
 const NO_LAPS: LapTimeEntry[] = [];
@@ -119,13 +126,7 @@ function MobileTable({ kind, lines, drivers, showInterval, onOpen }: TableProps)
 				style={{ gridTemplateColumns: GRID[kind] }}
 			>
 				{headers[kind].map((h, i) => (
-					<span
-						key={h}
-						className={clsx(
-							i === 0 || (i >= 3 && kind === "race" && i < 5) ? "text-right" : "",
-							kind !== "race" && i === 2 && "text-right",
-						)}
-					>
+					<span key={h} className={clsx(RIGHT[kind].includes(i) && "text-right")}>
 						{h}
 					</span>
 				))}

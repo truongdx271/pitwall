@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
@@ -13,6 +14,11 @@ import {
 	type BaseStandings,
 	type PredictedDriver,
 } from "@/lib/standings";
+import { fillBackground, standingsRows, type StandingsMode, type StandingsRow } from "@/lib/standingsRows";
+
+import Panel from "@/components/ui/Panel";
+import SegmentedControls from "@/components/ui/SegmentedControls";
+import DriverChip from "@/components/driver/DriverChip";
 
 export default function Standings() {
 	const feedPrediction = useDataStore((state) => state.state?.ChampionshipPrediction);
@@ -23,6 +29,7 @@ export default function Standings() {
 	const startDate = useDataStore((state) => state.state?.SessionInfo?.StartDate);
 
 	const hasFeed = !!feedPrediction?.Drivers;
+	const [mode, setMode] = useState<StandingsMode>("live");
 
 	// Outside a race: plain standings after the previous round, no live points.
 	// Keyed by session so a stale result is never shown for another race.
@@ -66,122 +73,175 @@ export default function Standings() {
 
 	if (!(hasFeed && isRace) && base === null) {
 		return (
-			<div className="px-2 py-3 font-mono text-sm text-zinc-700">
-				couldn&apos;t load the championship standings (jolpica unavailable)
-			</div>
+			<p className="p-6 text-sm text-fg-2">Couldn&apos;t load the championship standings (jolpica is unavailable).</p>
 		);
 	}
 
 	if (base && base.drivers.length === 0 && base.teams.length === 0 && !isRace) {
-		return <div className="px-2 py-3 font-mono text-sm text-zinc-700">no standings yet this season</div>;
+		return <p className="p-6 text-sm text-fg-2">No standings yet this season.</p>;
 	}
 
-	return (
-		<div className="max-w-5xl font-mono">
-			<div className="px-2 py-1 text-[11px] text-zinc-600">
-				{isRace
-					? "live · projected from the current running order"
-					: base?.after
-						? `after round ${base.after.round} · ${base.after.raceName}`
-						: "current standings"}
-			</div>
-			<div className="grid grid-cols-1 lg:grid-cols-2 lg:divide-x lg:divide-zinc-800">
-				{/* Drivers */}
-				<div>
-					<div className="border-b-2 border-zinc-700 px-2 py-0.5 text-[11px] tracking-widest text-zinc-500 uppercase">
-						drivers
-					</div>
-					{!driverStandings && new Array(20).fill("").map((_, i) => <SkeletonRow key={i} />)}
-					{driverStandings &&
-						Object.values(driverStandings)
-							.sort((a, b) => a.PredictedPosition - b.PredictedPosition)
-							.map((driver) => {
-								const info = drivers?.[driver.RacingNumber];
-								const label = "Tla" in driver ? (driver as PredictedDriver) : null;
-								if (!info && !label?.Tla) return null;
-								const delta = driver.PredictedPosition - driver.CurrentPosition;
-								return (
-									<div
-										key={driver.RacingNumber}
-										className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5 text-sm"
-									>
-										<span className="w-[2ch] shrink-0 text-zinc-600 tabular-nums">{driver.PredictedPosition}</span>
-										{isRace && (
-											<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
-												{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
-											</span>
-										)}
-										<span
-											className={info ? "font-bold" : "font-bold text-zinc-600"}
-											style={info ? { color: `#${info.TeamColour}` } : undefined}
-										>
-											{info?.Tla ?? label?.Tla}
-										</span>
-										<span className={info ? "text-zinc-400" : "text-zinc-600"}>
-											{info?.LastName ?? label?.FamilyName}
-										</span>
-										<span className="ml-auto text-zinc-300 tabular-nums">{driver.PredictedPoints}</span>
-										{isRace && (
-											<span
-												className={`w-[4ch] text-right text-[11px] tabular-nums ${driver.PredictedPoints > driver.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
-											>
-												{driver.PredictedPoints > driver.CurrentPoints
-													? `+${driver.PredictedPoints - driver.CurrentPoints}`
-													: ""}
-											</span>
-										)}
-									</div>
-								);
-							})}
-				</div>
+	// Outside a race there are no live points, so there is only one view.
+	const view: StandingsMode = isRace ? mode : "before";
+	const teamColour = (name: string) => Object.values(drivers ?? {}).find((d) => d.TeamName === name)?.TeamColour;
 
-				{/* Teams */}
-				<div>
-					<div className="border-b-2 border-zinc-700 px-2 py-0.5 text-[11px] tracking-widest text-zinc-500 uppercase">
-						constructors
-					</div>
-					{!teamStandings && new Array(10).fill("").map((_, i) => <SkeletonRow key={i} />)}
-					{teamStandings &&
-						Object.values(teamStandings)
-							.sort((a, b) => a.PredictedPosition - b.PredictedPosition)
-							.map((team) => {
-								const delta = team.PredictedPosition - team.CurrentPosition;
+	return (
+		<div className="flex flex-col gap-3 p-3">
+			<div className="flex flex-wrap items-center gap-3">
+				{isRace && (
+					<SegmentedControls
+						selected={mode}
+						onSelect={setMode}
+						options={[
+							{ label: "Live projection", value: "live" },
+							{ label: "Before this race", value: "before" },
+						]}
+					/>
+				)}
+				<span className="text-xs text-fg-2">
+					{isRace
+						? view === "live"
+							? "If the race finished in the current order. Row shading = points relative to the leader; brighter part = points from this race."
+							: "Standings before this race."
+						: base?.after
+							? `After round ${base.after.round} · ${base.after.raceName}`
+							: "Current standings"}
+				</span>
+			</div>
+
+			<div className="flex flex-wrap items-start gap-3">
+				<Panel title="Drivers" className="min-w-0 flex-[1_1_560px] px-1.5 pb-2">
+					<StandingsHeader first="DRIVER" race={view === "live"} />
+					{!driverStandings && new Array(22).fill("").map((_, i) => <SkeletonRow key={i} />)}
+					{driverStandings &&
+						standingsRows(Object.values(driverStandings), view)
+							// Skip drivers we can't label before striping, so the zebra stays even.
+							.filter((row) => drivers?.[row.entry.RacingNumber] || "Tla" in row.entry)
+							.map((row, i) => {
+								const info = drivers?.[row.entry.RacingNumber];
+								const label = "Tla" in row.entry ? (row.entry as PredictedDriver) : null;
 								return (
-									<div
-										key={team.TeamName}
-										className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5 text-sm"
-									>
-										<span className="w-[2ch] shrink-0 text-zinc-600 tabular-nums">{team.PredictedPosition}</span>
-										{isRace && (
-											<span className={delta < 0 ? "text-emerald-400" : delta > 0 ? "text-red-500" : "text-zinc-700"}>
-												{delta < 0 ? "↑" : delta > 0 ? "↓" : "·"}
-											</span>
-										)}
-										<span className="text-zinc-300">{team.TeamName}</span>
-										<span className="ml-auto text-zinc-300 tabular-nums">{team.PredictedPoints}</span>
-										{isRace && (
-											<span
-												className={`w-[4ch] text-right text-[11px] tabular-nums ${team.PredictedPoints > team.CurrentPoints ? "text-emerald-400" : "text-zinc-700"}`}
-											>
-												{team.PredictedPoints > team.CurrentPoints
-													? `+${team.PredictedPoints - team.CurrentPoints}`
-													: ""}
-											</span>
-										)}
-									</div>
+									<StandingsLine
+										key={row.entry.RacingNumber}
+										row={row}
+										zebra={i % 2 === 1}
+										colour={info?.TeamColour}
+										race={view === "live"}
+										name={
+											<>
+												<DriverChip short={info?.Tla ?? label?.Tla ?? "?"} teamColor={info?.TeamColour} />
+												<span className="truncate font-sans text-[13px] text-fg-1">
+													{info?.LastName ?? label?.FamilyName}
+												</span>
+											</>
+										}
+									/>
 								);
 							})}
-				</div>
+				</Panel>
+
+				<Panel title="Constructors" className="min-w-0 flex-[1_1_520px] px-1.5 pb-2">
+					<StandingsHeader first="TEAM" race={view === "live"} />
+					{!teamStandings && new Array(11).fill("").map((_, i) => <SkeletonRow key={i} />)}
+					{teamStandings &&
+						standingsRows(Object.values(teamStandings), view).map((row, i) => {
+							const colour = teamColour(row.entry.TeamName);
+							return (
+								<StandingsLine
+									key={row.entry.TeamName}
+									row={row}
+									zebra={i % 2 === 1}
+									colour={colour}
+									race={view === "live"}
+									tall
+									name={
+										<>
+											<span
+												aria-hidden
+												className="h-[18px] w-1.5 shrink-0 rounded-sm"
+												style={{ backgroundColor: colour ? `#${colour}` : "var(--color-fg-3)" }}
+											/>
+											<span className="truncate font-sans text-[13px] font-medium text-fg-1">{row.entry.TeamName}</span>
+										</>
+									}
+								/>
+							);
+						})}
+				</Panel>
 			</div>
 		</div>
 	);
 }
 
+const STANDINGS_GRID = "24px 14px minmax(0, 1fr) 56px 44px 44px";
+
+function StandingsHeader({ first, race }: { first: string; race: boolean }) {
+	return (
+		<div
+			className="grid h-[26px] items-center gap-x-2 border-b border-border px-2.5 text-[11px] font-medium tracking-[0.04em] text-fg-3"
+			style={{ gridTemplateColumns: STANDINGS_GRID }}
+		>
+			<span className="text-right">P</span>
+			<span />
+			<span>{first}</span>
+			<span className="text-right">GAP</span>
+			<span className="text-right">PTS</span>
+			<span className="text-right">{race ? "+RACE" : ""}</span>
+		</div>
+	);
+}
+
+type LineProps = {
+	row: StandingsRow<{
+		CurrentPosition: number;
+		PredictedPosition: number;
+		CurrentPoints: number;
+		PredictedPoints: number;
+	}>;
+	zebra: boolean;
+	colour: string | undefined;
+	race: boolean;
+	name: ReactNode;
+	tall?: boolean;
+};
+
+// A "fill" row (SPEC §10): the row background is the points bar.
+function StandingsLine({ row, zebra, colour, race, name, tall }: LineProps) {
+	return (
+		<div
+			className={clsx(
+				"grid items-center gap-x-2 rounded-md px-2.5 font-mono text-[13px] tabular-nums",
+				// Constructors get taller, spaced rows; the 22 drivers sit flush so they fit 900px.
+				tall ? "mt-1 h-9" : "h-row",
+			)}
+			style={{
+				gridTemplateColumns: STANDINGS_GRID,
+				background: fillBackground(
+					colour,
+					row.basePct,
+					row.totalPct,
+					zebra ? "var(--color-row-alt)" : "var(--color-surface-1)",
+				),
+			}}
+		>
+			<span className="text-right text-fg-2">{row.position}</span>
+			<span
+				className={clsx("text-[10px]", row.moved > 0 ? "text-gain" : "text-loss")}
+				role={row.moved ? "img" : undefined}
+				aria-label={row.moved ? `${row.moved > 0 ? "up" : "down"} ${Math.abs(row.moved)}` : undefined}
+			>
+				{row.moved > 0 ? "▲" : row.moved < 0 ? "▼" : ""}
+			</span>
+			<span className="flex min-w-0 items-center gap-2">{name}</span>
+			<span className="text-right text-fg-2">{row.gap === 0 ? "Leader" : `−${row.gap}`}</span>
+			<span className="text-right font-semibold text-fg-1">{row.points}</span>
+			<span className="text-right text-xs text-gain">{race && row.race > 0 ? `+${row.race}` : ""}</span>
+		</div>
+	);
+}
+
 const SkeletonRow = () => (
-	<div className="flex items-baseline gap-[1ch] border-b border-zinc-900 px-2 py-0.5">
-		<span className="inline-block h-3 w-4 animate-pulse rounded-sm bg-zinc-800" />
-		<span className="inline-block h-3 w-8 animate-pulse rounded-sm bg-zinc-800" />
-		<span className="inline-block h-3 w-24 animate-pulse rounded-sm bg-zinc-800" />
-		<span className="ml-auto inline-block h-3 w-8 animate-pulse rounded-sm bg-zinc-800" />
+	<div className="mt-1 flex h-row items-center px-2.5">
+		<span className="h-3 w-full animate-pulse rounded-sm bg-surface-2" />
 	</div>
 );

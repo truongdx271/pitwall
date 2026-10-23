@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -10,9 +10,7 @@ import { getRainviewer } from "@/lib/rainviewer";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import PlayControls from "@/components/ui/PlayControls";
-
-import Timeline from "./map-timeline";
+import FrameTimeline, { type RadarFrame } from "./frame-timeline";
 
 export function WeatherMap() {
 	// Primitives only — the Meeting object gets a fresh reference on every state
@@ -23,8 +21,8 @@ export function WeatherMap() {
 
 	if (!circuitKey || !countryName || !location) {
 		return (
-			<div className="flex h-full w-full items-center justify-center font-mono text-sm text-zinc-700">
-				no session — no location for the rain radar
+			<div className="flex h-full w-full items-center justify-center text-sm text-fg-3">
+				No session, so there is no location for the rain radar
 			</div>
 		);
 	}
@@ -34,8 +32,7 @@ export function WeatherMap() {
 
 function RadarMap({ query, city }: { query: string; city: string }) {
 	const [ready, setReady] = useState(false);
-	const [playing, setPlaying] = useState(false);
-	const [frames, setFrames] = useState<{ id: number; time: number }[]>([]);
+	const [frames, setFrames] = useState<RadarFrame[]>([]);
 
 	const mapContainerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<Map | null>(null);
@@ -74,7 +71,8 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 				});
 			});
 
-			setFrames(pathFrames.map((frame, i) => ({ time: frame.time, id: i })));
+			const past = rainviewer.radar.past.length;
+			setFrames(pathFrames.map((frame, i) => ({ time: frame.time, id: i, forecast: i >= past })));
 		};
 
 		(async () => {
@@ -92,7 +90,8 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 				style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
 				center: coords ? [coords.lon, coords.lat] : [10, 40],
 				zoom: coords ? 9 : 2,
-				attributionControl: { compact: true },
+				// The panel footer carries the attribution, so the map control would only cover the timeline.
+				attributionControl: false,
 				canvasContextAttributes: { antialias: true },
 			});
 			mapRef.current = map;
@@ -112,7 +111,8 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 		};
 	}, [query, city]);
 
-	const setFrame = (idx: number) => {
+	// Stable, so the timeline only repaints when the frame changes.
+	const setFrame = useCallback((idx: number) => {
 		const map = mapRef.current;
 		if (!map) return;
 		const prev = `rainviewer-frame-${currentFrameRef.current}`;
@@ -120,20 +120,19 @@ function RadarMap({ query, city }: { query: string; city: string }) {
 		if (map.getLayer(prev)) map.setPaintProperty(prev, "raster-opacity", 0);
 		if (map.getLayer(next)) map.setPaintProperty(next, "raster-opacity", 0.8);
 		currentFrameRef.current = idx;
-	};
+	}, []);
 
 	return (
 		<div className="relative h-full w-full">
 			<div ref={mapContainerRef} className="absolute h-full w-full" />
 
 			{ready && frames.length > 0 && (
-				<div className="absolute right-0 bottom-0 left-0 z-20 m-2 flex gap-4 rounded-lg bg-black/80 p-4 backdrop-blur-xs md:right-auto md:w-lg">
-					<PlayControls playing={playing} onClick={() => setPlaying((v) => !v)} />
-					<Timeline frames={frames} setFrame={setFrame} playing={playing} />
+				<div className="absolute right-3 bottom-3 left-3 z-20">
+					<FrameTimeline key={frames[0].time} frames={frames} setFrame={setFrame} />
 				</div>
 			)}
 
-			{!ready && <div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />}
+			{!ready && <div className="h-full w-full animate-pulse rounded-lg bg-surface-2" />}
 		</div>
 	);
 }

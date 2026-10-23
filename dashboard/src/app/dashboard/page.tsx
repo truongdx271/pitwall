@@ -15,6 +15,8 @@ import MessagesTab from "@/components/messages/MessagesTab";
 import StrategyTab from "@/components/strategy/StrategyTab";
 import { parseTab } from "@/components/shell/tabs";
 import { sessionKind } from "@/lib/sessionKind";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import MobileLive from "@/components/mobile/MobileLive";
 
 import StandingsPage from "@/app/dashboard/standings/page";
 import TrackMapPage from "@/app/dashboard/track-map/page";
@@ -36,12 +38,15 @@ function Dashboard() {
 	const isQuali = kind === "qualifying";
 	// Practice and quali share the 860px table width.
 	const wideTable = isPractice || isQuali;
+	const isMobile = useIsMobile();
 
 	return (
 		<div className="flex h-full w-full flex-col">
 			{/* Tab content */}
 			<div className="min-h-0 flex-1">
-				{activeTab === "live" && (
+				{activeTab === "live" && isMobile && <MobileLive kind={kind} />}
+
+				{activeTab === "live" && !isMobile && (
 					// Table on the left; Track over Messages on the right, Messages filling the rest.
 					// Below 1280px the right column wraps under the table (SPEC §0).
 					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 xl:h-full">

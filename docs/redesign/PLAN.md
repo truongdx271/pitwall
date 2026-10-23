@@ -133,15 +133,20 @@ The race pace view now shows the average only (SPEC §3.2); degradation is pract
 
 ## PR 7 · Map tab (SPEC §6)
 
-- [ ] Three-column layout. Clicking a row toggles `favoriteDrivers`. The corner-numbers
+- [x] Three-column layout. Clicking a row toggles `favoriteDrivers`. The corner-numbers
       checkbox is bound to the setting.
-- [ ] Race order list with +/−.
-- [ ] Quali "On a push lap" panel (Δ OWN PB, Δ cut-off, KO tag, footer note), with vitest
+- [x] Race order list with +/−.
+- [x] Quali "On a push lap" panel (Δ OWN PB, Δ cut-off, KO tag, footer note), with vitest
       for the delta sums.
-- [ ] Practice "Long runs" panel.
+- [x] Practice "Long runs" panel.
 
 **Done when** it matches `Map.png`, `MapQuali.png` and `MapPractice.png` on the three
 replays.
+
+Notes: a sector that just set the driver's PB is already in `TimingStats.BestSectors`, so
+Δ OWN PB reads 0 for it (shown green); the feed doesn't keep the previous PB. The practice
+order list shows BEST and LAPS as SPEC §6.4 says (the PNG shows GAP). The map header shows
+`Circuit.ShortName` ("Montreal"), the only circuit name in the feed.
 
 ## PR 8 · Messages tab (SPEC §7)
 

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Strategy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Dashboard" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="Map.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Messages.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="Strategy.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #1F242C; color: #ECEEF1; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="Weather.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"></path></svg>Weather</a>
+    <a href="Standings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8"></path></svg>Standings</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px">
+    <span style="color: #A4AAB4">Canadian GP · Race</span>
+    <span style="font-family: 'Geist Mono', monospace"><span style="color: #7C838F">LAP</span> 3<span style="color: #7C838F">/68</span></span>
+    <span role="status" style="display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-weight: 600">Track clear</span>
+    <button type="button" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 13px; cursor: pointer"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span></button>
+    <a href="Settings.dc.html" aria-label="Settings" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></a>
+  </div>
+</header>
+
+<main style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; align-items: stretch; width: 100%; max-width: 1800px; box-sizing: border-box; margin: 0 auto; flex: 1">
+
+  <section aria-label="Tyre strategy" style="flex: 999 1 720px; min-width: 0; background: #111419; border: 1px solid #1C2128; border-radius: 12px; padding: 4px 6px 10px; box-sizing: border-box; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 14px; padding: 8px 8px 10px; flex-wrap: wrap">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 600">Tyre strategy</h2>
+      <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: #A4AAB4; flex-wrap: wrap">
+        <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #E8002D"></span>Soft</span>
+        <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #FFF200"></span>Medium</span>
+        <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #F0F0F0"></span>Hard</span>
+        <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #39B54A"></span>Inter</span>
+        <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #0085FF"></span>Wet</span>
+      </div>
+      <div style="margin-left: auto; display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #0A0C0F">
+        <sc-for list="{{zooms}}" as="z" hint-placeholder-count="2">
+          <button type="button" onClick="{{z.pick}}" aria-pressed="{{z.on}}" style="height: 30px; padding: 0 10px; border: 0; border-radius: 6px; background: {{z.bg}}; color: {{z.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500; cursor: pointer">{{z.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 24px 48px minmax(0, 1fr) 132px; column-gap: 10px; align-items: center; height: 24px; padding: 0 10px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F; border-bottom: 1px solid #1C2128">
+      <span style="text-align: right">P</span><span>DRIVER</span><span>STINTS BY LAP</span><span>NOW · STOPS</span>
+    </div>
+    <div style="padding-top: 4px">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="22">
+        <div style="display: grid; grid-template-columns: 24px 48px minmax(0, 1fr) 132px; column-gap: 10px; align-items: center; height: 29px; padding: 0 10px; border-radius: 6px; background: {{r.rowBg}}; opacity: {{r.opacity}}">
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">{{r.pos}}</span>
+          <span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: {{r.team}}; color: {{r.ink}}">{{r.tla}}</span>
+          <span style="display: block; height: 16px; border-radius: 4px; background: {{r.bar}}"></span>
+          <span style="display: flex; align-items: center; gap: 8px; font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">
+            <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: {{r.tc}}; color: #0A0C0F">{{r.now}}</span>{{r.stops}}
+          </span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: 24px 48px minmax(0, 1fr) 132px; column-gap: 10px; padding: 6px 10px 0">
+      <span></span><span style="font-size: 11px; color: #7C838F">Lap</span>
+      <span style="position: relative; display: block; height: 16px; font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">
+        <sc-for list="{{ticks}}" as="t" hint-placeholder-count="8"><span style="position: absolute; left: {{t.left}}; transform: translateX(-50%); color: {{t.color}}">{{t.label}}</span></sc-for>
+      </span>
+      <span></span>
+    </div>
+  </section>
+
+  <div style="flex: 1 1 460px; min-width: 0; max-width: 560px; display: flex; flex-direction: column; gap: 12px">
+    <section aria-label="Lap times" style="background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Lap times</h2>
+        <span style="font-size: 12px; color: #7C838F">Compare up to 5</span>
+        <div style="margin-left: auto; display: flex; gap: 4px; align-items: center">
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #27F4D2; color: #0A0C0F">ANT</span>
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #27F4D2; color: #0A0C0F">RUS</span>
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #E8002D; color: #FFFFFF">HAM</span>
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #4781D7; color: #0A0C0F">VER</span>
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #E8002D; color: #FFFFFF">LEC</span>
+          <button type="button" style="height: 28px; padding: 0 10px; margin-left: 4px; border-radius: 6px; border: 1px solid #252A33; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 12px; cursor: pointer">Edit</button>
+        </div>
+      </div>
+      <div style="overflow-x: auto">
+        <div style="min-width: 440px; padding: 4px 6px 8px">
+          <div style="display: grid; grid-template-columns: 40px repeat(5, minmax(0, 1fr)); column-gap: 6px; height: 24px; align-items: center; padding: 0 6px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F">
+            <span>LAP</span><span style="text-align: right">ANT</span><span style="text-align: right">RUS</span><span style="text-align: right">HAM</span><span style="text-align: right">VER</span><span style="text-align: right">LEC</span>
+          </div>
+          <sc-for list="{{laps}}" as="l" hint-placeholder-count="4">
+            <div style="display: grid; grid-template-columns: 40px repeat(5, minmax(0, 1fr)); column-gap: 6px; height: 28px; align-items: center; padding: 0 6px; border-radius: 6px; background: {{l.bg}}; font-family: 'Geist Mono', monospace; font-size: 13px">
+              <span style="color: #7C838F; font-size: 12px">{{l.lap}}</span>
+              <span style="text-align: right; color: {{l.c0}}">{{l.v0}}</span>
+              <span style="text-align: right; color: {{l.c1}}">{{l.v1}}</span>
+              <span style="text-align: right; color: {{l.c2}}">{{l.v2}}</span>
+              <span style="text-align: right; color: {{l.c3}}">{{l.v3}}</span>
+              <span style="text-align: right; color: {{l.c4}}">{{l.v4}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Speed traps" style="flex: 1; display: flex; flex-direction: column; background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C2128">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Speed traps</h2>
+        <span style="font-size: 12px; color: #7C838F">Top 5 · km/h</span>
+        <a href="#" style="margin-left: auto; font-size: 12px; text-decoration: none">Full table</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #1C2128; flex: 1">
+        <sc-for list="{{traps}}" as="t" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: #111419">
+            <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-size: 12px; font-weight: 600">{{t.name}}</span><span style="font-size: 11px; color: #7C838F">{{t.where}}</span></div>
+            <sc-if value="{{t.has}}" hint-placeholder-val="{{true}}">
+              <sc-for list="{{t.rows}}" as="s" hint-placeholder-count="5">
+                <div style="display: grid; grid-template-columns: 14px 40px minmax(0, 1fr) 36px; column-gap: 8px; align-items: center; height: 22px">
+                  <span style="font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">{{s.rank}}</span>
+                  <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: {{s.team}}; color: {{s.ink}}">{{s.tla}}</span>
+                  <span style="display: block; height: 4px; border-radius: 2px; background: {{s.bar}}"></span>
+                  <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 13px; color: {{s.color}}">{{s.v}}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+            <sc-if value="{{t.none}}" hint-placeholder-val="{{false}}">
+              <span style="padding: 14px 0; font-size: 12px; color: #7C838F">No readings yet this session</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { zoom: 'sofar' };
+  }
+  renderVals() {
+    const C = { purple: '#B08CFF', green: '#3DDC97', t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const TYRE = { S: '#E8002D', M: '#FFF200', H: '#F0F0F0', I: '#39B54A', W: '#0085FF' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+
+    const LAP = 3; const TOTAL = 68;
+    const zoom = this.state.zoom;
+    const scale = zoom === 'sofar' ? 6 : TOTAL;
+    // Canadian GP replay, lap 3: stints oldest → newest as [compound, laps]
+    const order = [
+      ['ANT', [['S', 3]]], ['RUS', [['S', 3]]], ['HAM', [['S', 3]]], ['VER', [['S', 3]]], ['LEC', [['S', 3]]], ['HAD', [['S', 3]]],
+      ['COL', [['M', 3]]], ['LAW', [['M', 3]]], ['BEA', [['S', 3]]], ['ALO', [['S', 3]]], ['GAS', [['M', 3]]], ['OCO', [['S', 3]]],
+      ['ALB', [['S', 3]]], ['NOR', [['I', 2], ['M', 1]]], ['STR', [['S', 3]]], ['BOT', [['I', 3]]], ['PIA', [['I', 1], ['M', 2]]],
+      ['HUL', [['I', 2], ['S', 1]]], ['SAI', [['I', 2], ['M', 1]]], ['BOR', [['I', 2], ['S', 1]]], ['PER', [['I', 2], ['S', 1]]], ['LIN', []]
+    ];
+    const pct = (lap) => ((lap / scale) * 100).toFixed(2);
+    const rows = order.map((r, idx) => {
+      const team = TEAM[DT[r[0]]];
+      let at = 0; const stops = [];
+      r[1].forEach((s, i) => {
+        const a = pct(at); at += s[1]; const b = (parseFloat(pct(at)) - (i < r[1].length - 1 ? 0.6 : 0)).toFixed(2);
+        stops.push(TYRE[s[0]] + ' ' + a + '% ' + b + '%');
+        if (i < r[1].length - 1) stops.push('transparent ' + b + '% ' + pct(at) + '%');
+      });
+      stops.push('transparent ' + pct(at) + '% 100%');
+      const m = parseFloat(pct(LAP));
+      const marker = 'linear-gradient(90deg, transparent ' + m + '%, #ECEEF1 ' + m + '%, #ECEEF1 ' + (m + 0.3) + '%, transparent ' + (m + 0.3) + '%)';
+      const cur = r[1].length ? r[1][r[1].length - 1] : null;
+      return {
+        pos: idx + 1, tla: r[0], team: team, ink: ink(team),
+        bar: marker + ', linear-gradient(90deg, ' + stops.join(', ') + '), #171B21',
+        now: cur ? cur[0] + ' ' + (cur === r[1][0] ? cur[1] - 1 : cur[1] - 1) : '—', tc: cur ? TYRE[cur[0]] : '#262B33',
+        stops: r[1].length ? (r[1].length - 1) + (r[1].length === 2 ? ' stop' : ' stops') : 'Retired',
+        rowBg: idx % 2 === 1 ? '#151920' : 'transparent', opacity: r[1].length ? '1' : '0.5'
+      };
+    });
+    const tickLaps = zoom === 'sofar' ? [0, 1, 2, 3, 4, 5, 6] : [1, 10, 20, 30, 40, 50, 60, 68];
+    const ticks = tickLaps.map((l) => ({ left: pct(l) + '%', label: l === LAP ? l + ' now' : '' + l, color: l === LAP ? C.t1 : C.t3 }));
+    if (zoom !== 'sofar') ticks.push({ left: pct(LAP) + '%', label: '▲', color: C.t1 });
+    const zooms = [['sofar', 'Laps so far'], ['race', 'Full race']].map((z) => ({
+      label: z[1], on: zoom === z[0], bg: zoom === z[0] ? '#1F242C' : 'transparent', fg: zoom === z[0] ? C.t1 : C.t2,
+      pick: () => this.setState({ zoom: z[0] })
+    }));
+
+    // Lap times (replay, lap 4): ANT RUS HAM VER LEC
+    const LT = [
+      [4, null, null, null, null, null],
+      [3, ['1:18.974', 'cur'], ['1:19.420', 'pb'], null, null, null],
+      [2, ['1:21.447', 'pb'], ['1:20.925', 'pb'], ['1:20.670', 'pb'], ['1:20.276', 'sb'], ['1:20.351', 'pb']],
+      [1, null, null, null, null, null]
+    ];
+    const col = { cur: C.t1, pb: C.green, sb: C.purple };
+    const laps = LT.map((r, i) => {
+      const o = { lap: r[0], bg: i % 2 === 1 ? '#151920' : 'transparent' };
+      for (let k = 0; k < 5; k++) { const v = r[k + 1]; o['v' + k] = v ? v[0] : '—'; o['c' + k] = v ? col[v[1]] : C.t3; }
+      return o;
+    });
+
+    // Speed traps (replay): top 5, session best purple
+    const trap = (name, where, list) => {
+      const max = list.length ? list[0][1] : 1; const min = list.length ? list[list.length - 1][1] - 8 : 0;
+      return {
+        name: name, where: where, has: list.length > 0, none: list.length === 0,
+        rows: list.map((s, i) => {
+          const t = TEAM[DT[s[0]]];
+          const w = Math.round(((s[1] - min) / (max - min)) * 100);
+          return { rank: i + 1, tla: s[0], team: t, ink: ink(t), v: s[1], color: s[2] ? C.purple : C.t1, bar: 'linear-gradient(90deg, #4A525E 0 ' + w + '%, transparent ' + w + '% 100%)' };
+        })
+      };
+    };
+    const traps = [
+      trap('I1', 'Intermediate 1', [['COL', 150, true], ['ANT', 150], ['GAS', 150], ['NOR', 149], ['RUS', 148]]),
+      trap('I2', 'Intermediate 2', [['HAM', 182, true], ['LEC', 181], ['PIA', 178], ['RUS', 177], ['GAS', 177]]),
+      trap('FL', 'Finish line', []),
+      trap('ST', 'Speed trap', [])
+    ];
+
+    return { rows: rows, ticks: ticks, zooms: zooms, laps: laps, traps: traps };
+  }
+}
+</script>
+</body>
+</html>

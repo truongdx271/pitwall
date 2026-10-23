@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Live timing (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; flex: none">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; min-width: 0">
+      <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">Canadian GP</span>
+      <span style="font-size: 11px; color: #A4AAB4">Race · <span style="font-family: 'Geist Mono', monospace">13:45:14</span></span>
+    </div>
+    <button type="button" aria-label="Live, delay 0 seconds. Change delay" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span>
+    </button>
+  </header>
+
+  <section aria-label="Session status" style="display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-top: 1px solid #1C2128; border-bottom: 1px solid #1C2128; flex: none">
+    <div style="display: flex; align-items: baseline; gap: 5px">
+      <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #7C838F">LAP</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 600; line-height: 1">3</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">/68</span>
+    </div>
+    <span style="font-size: 12px; color: #A4AAB4"><span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">17°</span> track · Dry</span>
+    <div role="status" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 12px; font-weight: 600">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>Track clear
+    </div>
+  </section>
+
+  <div style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; flex: none">
+    <div role="group" aria-label="Show gap or interval" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+      <button type="button" aria-pressed="true" style="height: 26px; padding: 0 10px; border: 0; border-radius: 6px; background: #1F242C; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">Gap</button>
+      <button type="button" aria-pressed="false" style="height: 26px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">Interval</button>
+    </div>
+    <span style="font-size: 11px; color: #7C838F">Tap a row for sectors</span>
+    <button type="button" aria-label="Colour legend" style="margin-left: auto; width: 32px; height: 32px; border-radius: 8px; border: 0; background: transparent; color: #A4AAB4; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+    </button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 20px 40px 30px minmax(0, 1fr) 70px 62px; column-gap: 6px; align-items: center; height: 22px; padding: 0 12px; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; color: #7C838F; flex: none">
+    <span style="text-align: right">P</span><span>DRIVER</span><span>+/−</span><span style="text-align: right">GAP</span><span style="text-align: right">LAST</span><span>TYRE</span>
+  </div>
+
+  <div style="flex: 1; min-height: 0; padding: 0 6px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="22">
+      <div style="display: grid; grid-template-columns: 20px 40px 30px minmax(0, 1fr) 70px 62px; column-gap: 6px; align-items: center; height: 26px; padding: 0 6px; border-radius: 5px; background: {{r.rowBg}}; opacity: {{r.opacity}}; font-family: 'Geist Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums">
+        <span style="text-align: right; color: #A4AAB4; font-size: 12px">{{r.pos}}</span>
+        <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-family: Geist, sans-serif; font-size: 11px; font-weight: 700; background: {{r.team}}; color: {{r.ink}}">{{r.tla}}</span>
+        <span style="font-size: 11px; color: {{r.deltaColor}}">{{r.delta}}</span>
+        <span style="text-align: right; color: {{r.gapColor}}">{{r.gap}}</span>
+        <span style="text-align: right; font-size: 12px; color: {{r.lastColor}}">{{r.last}}</span>
+        <span style="display: flex; align-items: center; gap: 3px; white-space: nowrap">
+          <span style="display: inline-block; min-width: 32px; box-sizing: border-box; padding: 1px 4px; border-radius: 4px; text-align: center; font-size: 11px; font-weight: 700; line-height: 14px; background: {{r.tc}}; color: #0A0C0F">{{r.tyreLabel}}</span>
+          <sc-if value="{{r.hasPrev}}" hint-placeholder-val="{{false}}"><span style="display: inline-block; min-width: 14px; box-sizing: border-box; padding: 1px 3px; border-radius: 3px; text-align: center; font-size: 10px; font-weight: 700; line-height: 14px; background: {{r.prevC}}; color: #0A0C0F; opacity: 0.4">{{r.prevL}}</span></sc-if>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <a href="MessagesMobile.dc.html" style="display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 12px; margin: 4px 8px 0; border-radius: 8px; background: #111419; border: 1px solid #1C2128; text-decoration: none; flex: none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5C451" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+    <span style="flex: 1; min-width: 0; font-size: 12px; color: #C9CDD3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">LAW &amp; HUL incident noted — starting procedure</span>
+    <span style="font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">L3</span>
+  </a>
+
+  <nav aria-label="Dashboard" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); height: 60px; margin-top: 6px; border-top: 1px solid #1C2128; background: #0D1014; flex: none">
+    <a href="Mobile.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #ECEEF1; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="MapMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="MessagesMobile.dc.html" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages
+      <span style="position: absolute; top: 8px; left: 50%; margin-left: 6px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: #F5C451; color: #0A0C0F; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">5</span></a>
+    <a href="StrategyMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="MoreMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>More</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = { purple: '#B08CFF', green: '#3DDC97', yellow: '#F5C451', t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F', loss: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const TYRE = { S: '#E8002D', M: '#FFF200', H: '#F0F0F0', I: '#39B54A', W: '#0085FF' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const raw = [
+      ['ANT', 1, 'Leader', '1:21.447', '1:21.447', 'S', 2], ['RUS', -1, '+0.789', '1:20.925', '1:20.925', 'S', 2], ['HAM', 2, '+1.403', '1:20.670', '1:20.670', 'S', 2],
+      ['VER', 'FL', '+2.345', '1:20.276', '1:20.276', 'S', 2], ['LEC', 3, '+2.891', '1:20.351', '1:20.351', 'S', 2], ['HAD', 1, '+4.106', '1:20.676', '1:20.676', 'S', 2],
+      ['COL', 3, '+7.824', '1:22.225', '1:22.225', 'M', 2], ['LAW', 4, '+9.138', '1:22.682', '1:22.682', 'M', 2], ['BEA', 7, '+12.524', '1:23.857', '1:23.857', 'S', 2],
+      ['ALO', 9, '+13.235', '1:23.708', '1:23.708', 'S', 2], ['GAS', 3, '+14.476', '1:26.222', '1:26.222', 'M', 2], ['OCO', 5, '+15.893', '1:25.696', '1:25.696', 'S', 2],
+      ['ALB', 5, '+18.750', '1:25.514', '1:25.514', 'S', 2], ['NOR', -11, '+19.329', '1:37.774', '—', 'M', 0], ['STR', 7, '+22.372', '1:25.078', '1:25.078', 'S', 2],
+      ['BOT', 5, '+23.128', '1:27.677', '1:27.677', 'I', 2], ['PIA', -13, '+23.362', '1:24.619', '—', 'M', 1], ['HUL', -7, '+32.695', '1:43.067', '—', 'S', 0],
+      ['SAI', -4, '+36.220', '1:42.459', '—', 'M', 0], ['BOR', -7, '+38.663', '1:47.354', '—', 'S', 0], ['PER', -1, '+39.404', '1:45.019', '—', 'S', 0],
+      ['LIN', null, 'RET', '—', '—', 'M', 0]
+    ];
+    // Previous stint compound (mobile shows the current block + older stints as dimmed letter-only blocks).
+    const PREV = { NOR: 'I', PIA: 'I', HUL: 'I', SAI: 'I', BOR: 'I', PER: 'I' };
+    const rows = raw.map((r, idx) => {
+      const team = TEAM[DT[r[0]]];
+      const fl = r[1] === 'FL';
+      const ret = r[2] === 'RET';
+      let delta = '—'; let deltaColor = C.t3;
+      if (fl) { delta = 'FL'; deltaColor = C.purple; }
+      else if (typeof r[1] === 'number' && r[1] > 0) { delta = '▲' + r[1]; deltaColor = C.green; }
+      else if (typeof r[1] === 'number' && r[1] < 0) { delta = '▼' + Math.abs(r[1]); deltaColor = C.loss; }
+      return {
+        pos: idx + 1, tla: r[0], team: team, ink: ink(team), delta: delta, deltaColor: deltaColor,
+        gap: r[2], gapColor: ret || r[2] === 'Leader' ? C.t3 : C.t1,
+        last: r[3], lastColor: ret ? C.t3 : fl ? C.purple : r[4] === '—' ? C.t1 : r[3] === r[4] ? C.green : C.yellow,
+        tyreLabel: r[5] + ' ' + r[6], tc: TYRE[r[5]],
+        hasPrev: !!PREV[r[0]], prevC: PREV[r[0]] ? TYRE[PREV[r[0]]] : '', prevL: PREV[r[0]] || '',
+        rowBg: fl ? 'rgba(176, 140, 255, 0.13)' : idx % 2 === 1 ? '#13171C' : 'transparent',
+        opacity: ret ? '0.5' : '1'
+      };
+    });
+    return { rows: rows };
+  }
+}
+</script>
+</body>
+</html>

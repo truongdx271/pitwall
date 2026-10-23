@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Practice (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; flex: none">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; min-width: 0">
+      <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">Canadian GP</span>
+      <span style="font-size: 11px; color: #A4AAB4">Practice 2 · <span style="font-family: 'Geist Mono', monospace">[17:25:48]</span></span>
+    </div>
+    <button type="button" aria-label="Live, delay 0 seconds. Change delay" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span>
+    </button>
+  </header>
+
+  <section aria-label="Session status" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px; border-top: 1px solid #1C2128; border-bottom: 1px solid #1C2128; flex: none">
+    <span style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 600; line-height: 1">34:12</span>
+    <span style="font-size: 11px; color: #7C838F">left</span>
+    <span style="display: block; width: 60px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #ECEEF1 0 43%, #262B33 43% 100%)"></span>
+    <div role="status" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 12px; font-weight: 600">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>Track clear
+    </div>
+  </section>
+
+  <div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; flex: none">
+    <div role="group" aria-label="View" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+      <sc-for list="{{views}}" as="v" hint-placeholder-count="2">
+        <button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 0; border-radius: 6px; background: {{v.bg}}; color: {{v.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">{{v.label}}<span style="font-family: 'Geist Mono', monospace; color: #7C838F">{{v.count}}</span></button>
+      </sc-for>
+    </div>
+    <span style="margin-left: auto; font-size: 11px; color: #7C838F">{{hint}}</span>
+  </div>
+
+  <sc-if value="{{isTiming}}" hint-placeholder-val="{{true}}">
+    <div style="display: grid; grid-template-columns: 20px 40px minmax(0, 1fr) 28px 44px 62px; column-gap: 6px; align-items: center; height: 22px; padding: 0 12px; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; color: #7C838F; flex: none">
+      <span style="text-align: right">P</span><span>DRIVER</span><span style="text-align: right">GAP</span><span style="text-align: right">LAPS</span><span>TYRE</span><span>STATUS</span>
+    </div>
+    <div style="flex: 1; min-height: 0; padding: 0 6px">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="22">
+        <div style="display: grid; grid-template-columns: 20px 40px minmax(0, 1fr) 28px 44px 62px; column-gap: 6px; align-items: center; height: 26px; padding: 0 6px; border-radius: 5px; background: {{r.rowBg}}; font-family: 'Geist Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums">
+          <span style="text-align: right; font-size: 12px; color: #A4AAB4">{{r.pos}}</span>
+          <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-family: Geist, sans-serif; font-size: 11px; font-weight: 700; background: {{r.team}}; color: {{r.ink}}">{{r.tla}}</span>
+          <span style="text-align: right; color: {{r.gapColor}}">{{r.gap}}</span>
+          <span style="text-align: right; font-size: 12px; color: #A4AAB4">{{r.laps}}</span>
+          <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 1px 4px; border-radius: 4px; text-align: center; font-size: 11px; font-weight: 700; line-height: 14px; background: {{r.tc}}; color: #0A0C0F">{{r.tyre}}</span>
+          <span style="display: flex; align-items: center; gap: 4px; font-family: Geist, sans-serif; font-size: 11px; font-weight: 500; color: {{r.stColor}}"><span style="width: 5px; height: 5px; border-radius: 50%; background: {{r.stColor}}"></span>{{r.status}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isRuns}}" hint-placeholder-val="{{false}}">
+    <div style="flex: 1; min-height: 0; padding: 0 8px; display: flex; flex-direction: column; gap: 6px">
+      <sc-for list="{{runs}}" as="g" hint-placeholder-count="7">
+        <div style="display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 10px; background: #111419; border: 1px solid #1C2128">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: {{g.team}}; color: {{g.ink}}">{{g.tla}}</span>
+            <span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 1px 4px; border-radius: 4px; text-align: center; font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 700; line-height: 14px; background: {{g.tc}}; color: #0A0C0F">{{g.tyre}}</span>
+            <span style="margin-left: auto; font-family: 'Geist Mono', monospace; font-size: 15px; font-weight: 600">{{g.avg}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; font-family: 'Geist Mono', monospace; font-size: 12px">
+            <span style="flex: 1; display: block; height: 4px; border-radius: 2px; background: {{g.bar}}"></span>
+            <span style="color: {{g.dColor}}">{{g.delta}}</span>
+            <span style="color: {{g.degColor}}">{{g.deg}}/lap</span>
+          </div>
+        </div>
+      </sc-for>
+      <p style="margin: 4px 4px 0; font-size: 11px; line-height: 1.5; color: #7C838F">Current stint, 5+ clean laps. Out/in laps and laps over 107% of the stint best are excluded. Fuel loads are unknown.</p>
+    </div>
+  </sc-if>
+
+  <nav aria-label="Dashboard" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); height: 60px; margin-top: 6px; border-top: 1px solid #1C2128; background: #0D1014; flex: none">
+    <a href="PracticeMobile.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #ECEEF1; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="MapMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="MessagesMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="StrategyMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="MoreMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>More</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'timing' };
+  }
+  renderVals() {
+    const C = { green: '#3DDC97', pit: '#4DA3FF', t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F', loss: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const TYRE = { S: '#E8002D', M: '#FFF200', H: '#F0F0F0', I: '#39B54A', W: '#0085FF' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const fmt = (s) => { const m = Math.floor(s / 60); const r = (s - m * 60).toFixed(3); return m + ':' + (r < 10 ? '0' : '') + r; };
+    // Same SAMPLE FP2 state as the desktop practice artboards: tla, best, status, laps, current tyre, long run
+    const q = [
+      ['LEC', 73.412, 'run', 21, ['M', 12], [77.010, 0.048]], ['VER', 73.505, 'run', 19, ['H', 10], [77.085, 0.021]], ['NOR', 73.540, 'pit', 18, ['S', 4], null],
+      ['PIA', 73.611, 'run', 20, ['M', 7], [77.240, 0.072]], ['RUS', 73.655, 'push', 16, ['S', 3], null], ['HAM', 73.702, 'run', 17, ['H', 8], [77.198, 0.019]],
+      ['ANT', 73.778, 'pit', 15, ['S', 4], null], ['ALO', 73.850, 'out', 14, ['S', 0], null], ['HAD', 73.902, 'track', 18, ['S', 5], null],
+      ['GAS', 73.988, 'push', 16, ['S', 2], null], ['SAI', 74.020, 'pit', 19, ['M', 10], null], ['ALB', 74.090, 'run', 20, ['M', 11], [77.520, 0.085]],
+      ['LAW', 74.150, 'pit', 16, ['S', 4], null], ['BEA', 74.210, 'track', 17, ['S', 4], null], ['OCO', 74.260, 'pit', 15, ['S', 4], null],
+      ['STR', 74.330, 'run', 18, ['H', 9], [77.930, 0.041]], ['HUL', 74.380, 'pit', 14, ['S', 3], null], ['LIN', 74.420, 'push', 13, ['S', 2], null],
+      ['COL', 74.560, 'pit', 12, ['S', 3], null], ['BOR', 74.610, 'run', 16, ['M', 8], [78.050, 0.090]], ['BOT', 74.890, 'pit', 11, ['S', 3], null],
+      ['PER', 75.120, 'pit', 6, ['M', 3], null]
+    ];
+    const ST = { run: ['Long run', C.t1], push: ['Push', C.green], out: ['Out lap', C.t2], pit: ['Pit', C.pit], track: ['—', C.t3] };
+    const leader = q[0][1];
+    const rows = q.map((r, idx) => {
+      const team = TEAM[DT[r[0]]];
+      return {
+        pos: idx + 1, tla: r[0], team: team, ink: ink(team), laps: r[3],
+        gap: idx === 0 ? 'Fastest' : '+' + (r[1] - leader).toFixed(3), gapColor: idx === 0 ? C.t3 : C.t1,
+        tyre: r[4][0] + ' ' + r[4][1], tc: TYRE[r[4][0]],
+        status: ST[r[2]][0], stColor: ST[r[2]][1], rowBg: idx % 2 === 1 ? '#13171C' : 'transparent'
+      };
+    });
+    const runRows = q.filter((r) => r[5]).sort((a, b) => a[5][0] - b[5][0]);
+    const best = runRows[0][5][0];
+    const spread = runRows[runRows.length - 1][5][0] - best;
+    const runs = runRows.map((r, i) => {
+      const team = TEAM[DT[r[0]]];
+      const d = r[5][0] - best;
+      const pct = Math.max(8, Math.round(100 - (d / spread) * 70));
+      return {
+        tla: r[0], team: team, ink: ink(team), tyre: r[4][0] + ' ' + r[4][1], tc: TYRE[r[4][0]], avg: fmt(r[5][0]),
+        delta: i === 0 ? 'Best' : '+' + d.toFixed(3), dColor: i === 0 ? C.green : C.t2,
+        deg: '+' + r[5][1].toFixed(3), degColor: r[5][1] > 0.08 ? C.loss : r[5][1] < 0.03 ? C.green : C.t2,
+        bar: 'linear-gradient(90deg, #A4AAB4 0 ' + pct + '%, #262B33 ' + pct + '% 100%)'
+      };
+    });
+    const v = this.state.view;
+    const views = [['timing', 'Timing', ''], ['runs', 'Long runs', runs.length]].map((x) => ({
+      label: x[1], count: x[2], on: v === x[0], bg: v === x[0] ? '#1F242C' : 'transparent', fg: v === x[0] ? C.t1 : C.t2, pick: () => this.setState({ view: x[0] })
+    }));
+    return { rows: rows, runs: runs, views: views, isTiming: v === 'timing', isRuns: v === 'runs', hint: v === 'timing' ? 'Tap a row for sectors' : 'Sorted by average' };
+  }
+}
+</script>
+</body>
+</html>

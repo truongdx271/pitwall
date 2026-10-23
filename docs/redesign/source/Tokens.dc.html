@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Design tokens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 1500px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 32px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.02em">Pitwall tokens</h1>
+    <p style="margin: 0; font-size: 14px; color: #A4AAB4; max-width: 640px; line-height: 1.5">Dark only. Colour carries data meaning; chrome stays neutral. Geist for interface text, Geist Mono with tabular figures for every number.</p>
+  </div>
+
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #7C838F">{{g.title}}</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px">
+        <sc-for list="{{g.items}}" as="s" hint-placeholder-count="6">
+          <div style="display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; border: 1px solid #1C2128; background: #111419">
+            <div style="height: 56px; background: {{s.hex}}; border-bottom: 1px solid #1C2128"></div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 10px">
+              <span style="font-size: 13px; font-weight: 500">{{s.name}}</span>
+              <span style="font-family: 'Geist Mono', monospace; font-size: 11px; color: #A4AAB4">{{s.v}}</span>
+              <span style="font-family: 'Geist Mono', monospace; font-size: 11px; color: #7C838F">{{s.hex}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+
+  <section style="display: flex; flex-direction: column; gap: 12px">
+    <h2 style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #7C838F">TYPE SCALE</h2>
+    <div style="display: flex; flex-direction: column; border: 1px solid #1C2128; border-radius: 12px; background: #111419">
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">display · mono 24/600</span><span style="font-family: 'Geist Mono', monospace; font-size: 24px; font-weight: 600">Lap 3 / 68</span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">title · sans 16/600</span><span style="font-size: 16px; font-weight: 600">Canadian Grand Prix</span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">panel · sans 14/600</span><span style="font-size: 14px; font-weight: 600">Classification</span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">body · sans 13/400</span><span style="font-size: 13px; color: #C9CDD3">Oscar, the rain should ease from here.</span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">data · mono 13 tabular</span><span style="font-family: 'Geist Mono', monospace; font-size: 13px; font-variant-numeric: tabular-nums"><span style="color: #B08CFF">1:20.276</span>   <span style="color: #3DDC97">1:20.351</span>   <span style="color: #F5C451">1:37.774</span></span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">tag · sans 12/700</span><span><span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: #27F4D2; color: #0A0C0F">ANT</span> <span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: #8A1538; color: #FFFFFF">HUL</span></span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 16px; border-bottom: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">tyre stack · mono 12/700</span><span style="display: flex; align-items: center; gap: 4px; font-family: 'Geist Mono', monospace"><span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: #FFF200; color: #0A0C0F">M 1</span><span style="display: inline-block; min-width: 36px; box-sizing: border-box; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; line-height: 14px; background: #39B54A; color: #0A0C0F; opacity: 0.4">I 1</span><span style="margin-left: 12px; font-family: Geist, sans-serif; font-size: 12px; color: #A4AAB4">Max 3 stints, current first, older at 40% opacity. Mono so I never reads as |.</span></span></div>
+      <div style="display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 16px"><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">label · sans 11/500 +4%</span><span style="font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F">GAP · INT · LAST · BEST</span></div>
+    </div>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 12px">
+    <h2 style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: #7C838F">GLOBALS.CSS (TAILWIND 4 @THEME)</h2>
+    <pre style="margin: 0; padding: 20px; border-radius: 12px; background: #111419; border: 1px solid #1C2128; font-family: 'Geist Mono', monospace; font-size: 12px; line-height: 1.6; color: #C9CDD3; overflow-x: auto; white-space: pre">@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* surfaces */
+  --color-bg: #0A0C0F;          --color-surface-1: #111419;
+  --color-surface-2: #171B21;   --color-surface-3: #1F242C;
+  --color-row-alt: #151920;     --color-border: #1C2128;
+  --color-border-strong: #323843;
+
+  /* text */
+  --color-fg-1: #ECEEF1;  --color-fg-2: #A4AAB4;  --color-fg-3: #7C838F;
+
+  /* timing semantics (F1 convention) */
+  --color-session-best: #B08CFF;  --color-personal-best: #3DDC97;
+  --color-slower: #F5C451;        --color-pit: #4DA3FF;
+  --color-gain: #3DDC97;          --color-loss: #FF7A6B;
+  --color-fl-row: rgb(176 140 255 / 0.13);
+
+  /* track status */
+  --color-flag-clear: #3DDC97;  --color-flag-yellow: #FFD60A;
+  --color-flag-sc: #FFB020;     --color-flag-red: #FF3B3B;
+
+  /* Pirelli */
+  --color-tyre-soft: #E8002D;   --color-tyre-medium: #FFF200;
+  --color-tyre-hard: #F0F0F0;   --color-tyre-inter: #39B54A;
+  --color-tyre-wet: #0085FF;
+
+  /* shape */
+  --radius-tag: 4px;  --radius-control: 8px;  --radius-panel: 12px;
+  --row-h: 30px;      --row-h-mobile: 26px;
+}</pre>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const g = (title, items) => ({ title: title, items: items.map((i) => ({ name: i[0], v: i[1], hex: i[2] })) });
+    return {
+      groups: [
+        g('SURFACES', [['Background', '--color-bg', '#0A0C0F'], ['Panel', '--color-surface-1', '#111419'], ['Raised', '--color-surface-2', '#171B21'], ['Control / active tab', '--color-surface-3', '#1F242C'], ['Row alt', '--color-row-alt', '#151920'], ['Border', '--color-border', '#1C2128'], ['Border strong', '--color-border-strong', '#323843']]),
+        g('TEXT', [['Primary', '--color-fg-1', '#ECEEF1'], ['Secondary', '--color-fg-2', '#A4AAB4'], ['Tertiary (4.8:1 on panel)', '--color-fg-3', '#7C838F']]),
+        g('TIMING — KEEP F1 CONVENTION', [['Session best', '--color-session-best', '#B08CFF'], ['Personal best', '--color-personal-best', '#3DDC97'], ['Slower', '--color-slower', '#F5C451'], ['Pit lane', '--color-pit', '#4DA3FF'], ['Places gained ▲', '--color-gain', '#3DDC97'], ['Places lost ▼', '--color-loss', '#FF7A6B']]),
+        g('TRACK STATUS', [['Clear', '--color-flag-clear', '#3DDC97'], ['Yellow', '--color-flag-yellow', '#FFD60A'], ['SC / VSC', '--color-flag-sc', '#FFB020'], ['Red', '--color-flag-red', '#FF3B3B']]),
+        g('TYRES — PIRELLI', [['Soft', '--color-tyre-soft', '#E8002D'], ['Medium', '--color-tyre-medium', '#FFF200'], ['Hard', '--color-tyre-hard', '#F0F0F0'], ['Intermediate', '--color-tyre-inter', '#39B54A'], ['Wet', '--color-tyre-wet', '#0085FF']]),
+        g('TEAMS — FEED + OVERRIDES', [['Mercedes', 'feed', '#27F4D2'], ['Ferrari', 'feed', '#E8002D'], ['Red Bull', 'feed', '#4781D7'], ['McLaren', 'feed', '#FF8000'], ['Aston Martin', 'feed', '#229971'], ['Alpine', 'override', '#E0418F'], ['Williams', 'feed', '#1868DB'], ['Racing Bulls', 'feed', '#6C98FF'], ['Haas', 'feed', '#B6BABD'], ['Audi', 'override', '#8A1538'], ['Cadillac', 'override', '#E6B800']])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

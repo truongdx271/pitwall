@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Standings (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 12px; flex: none">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; min-width: 0">
+      <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">Canadian GP</span>
+      <span style="font-size: 11px; color: #A4AAB4">Race · <span style="font-family: 'Geist Mono', monospace">13:45:58</span></span>
+    </div>
+    <button type="button" aria-label="Live, delay 0 seconds. Change delay" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span>
+    </button>
+  </header>
+
+  <section aria-label="Session status" style="display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-top: 1px solid #1C2128; border-bottom: 1px solid #1C2128; flex: none">
+    <div style="display: flex; align-items: baseline; gap: 5px">
+      <span style="font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: #7C838F">LAP</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 20px; font-weight: 600; line-height: 1">4</span>
+      <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">/68</span>
+    </div>
+    <span style="font-size: 12px; color: #A4AAB4"><span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">17°</span> track · Dry</span>
+    <div role="status" style="margin-left: auto; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 12px; font-weight: 600">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>Track clear
+    </div>
+  </section>
+
+  <div style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px; flex: none">
+    <div role="tablist" aria-label="Championship" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">
+        <button type="button" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}" style="height: 32px; padding: 0 12px; border: 0; border-radius: 6px; background: {{t.bg}}; color: {{t.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500">{{t.label}}</button>
+      </sc-for>
+    </div>
+    <button type="button" role="switch" aria-checked="{{live}}" onClick="{{toggleLive}}" style="margin-left: auto; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 4px 0 10px; border-radius: 8px; border: 1px solid #252A33; background: transparent; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 12px">Live projection
+      <span style="width: 36px; height: 22px; padding: 3px; box-sizing: border-box; border-radius: 11px; background: {{swTrack}}; display: flex; justify-content: {{swAlign}}"><span style="display: block; width: 16px; height: 16px; border-radius: 50%; background: {{swKnob}}"></span></span>
+    </button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 20px 12px minmax(0, 1fr) 44px 36px 34px; column-gap: 6px; align-items: center; height: 22px; padding: 0 14px; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; color: #7C838F; flex: none">
+    <span style="text-align: right">P</span><span></span><span>{{nameHead}}</span><span style="text-align: right">GAP</span><span style="text-align: right">PTS</span><span style="text-align: right">{{gainHead}}</span>
+  </div>
+
+  <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 6px">
+    <sc-for list="{{rows}}" as="d" hint-placeholder-count="22">
+      <div style="display: grid; grid-template-columns: 20px 12px minmax(0, 1fr) 44px 36px 34px; column-gap: 6px; align-items: center; height: {{d.h}}; margin-bottom: 2px; padding: 0 8px; border-radius: 6px; background: {{d.bg}}">
+        <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">{{d.pos}}</span>
+        <span style="font-size: 9px; color: {{d.mvColor}}">{{d.mv}}</span>
+        <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+          <span style="flex: none; display: inline-block; min-width: 4px; width: {{d.chipW}}; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: {{d.color}}; color: {{d.ink}}">{{d.tla}}</span>
+          <span style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+        </span>
+        <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 11px; color: #A4AAB4; white-space: nowrap">{{d.gap}}</span>
+        <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 13px; font-weight: 600">{{d.pts}}</span>
+        <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 11px; color: #3DDC97">{{d.gain}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <nav aria-label="Dashboard" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); height: 60px; margin-top: 6px; border-top: 1px solid #1C2128; background: #0D1014; flex: none">
+    <a href="Mobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="MapMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="MessagesMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="StrategyMobile.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="MoreMobile.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #ECEEF1; font-size: 11px; font-weight: 500; text-decoration: none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="19" cy="12" r="1.5"></circle></svg>More</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'drivers', live: true };
+  }
+  renderVals() {
+    const C = { t1: '#ECEEF1', t2: '#A4AAB4', green: '#3DDC97', loss: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const live = this.state.live;
+    const isDrivers = this.state.tab === 'drivers';
+    // Same replay data as the desktop Standings artboard.
+    const D = [
+      ['ANT', 'Antonelli', 131, 25], ['RUS', 'Russell', 106, 18], ['LEC', 'Leclerc', 73, 10], ['HAM', 'Hamilton', 69, 15],
+      ['NOR', 'Norris', 58, 0], ['PIA', 'Piastri', 48, 0], ['VER', 'Verstappen', 40, 12], ['BEA', 'Bearman', 19, 2],
+      ['GAS', 'Gasly', 16, 0], ['LAW', 'Lawson', 14, 4], ['COL', 'Colapinto', 13, 6], ['HAD', 'Hadjar', 12, 8],
+      ['LIN', 'Lindblad', 5, 0], ['SAI', 'Sainz', 4, 0], ['BOR', 'Bortoleto', 2, 0], ['OCO', 'Ocon', 1, 0],
+      ['ALB', 'Albon', 1, 0], ['ALO', 'Alonso', 1, 1], ['HUL', 'Hulkenberg', 0, 0], ['BOT', 'Bottas', 0, 0],
+      ['PER', 'Perez', 0, 0], ['STR', 'Stroll', 0, 0]
+    ];
+    const T = [
+      ['', 'Mercedes', 237, 43, 'mer'], ['', 'Ferrari', 142, 25, 'fer'], ['', 'McLaren', 106, 0, 'mcl'], ['', 'Red Bull Racing', 52, 20, 'rbr'],
+      ['', 'Alpine', 29, 6, 'alp'], ['', 'Haas F1 Team', 20, 2, 'haa'], ['', 'Racing Bulls', 19, 4, 'rb'], ['', 'Williams', 5, 0, 'wil'],
+      ['', 'Audi', 2, 0, 'aud'], ['', 'Aston Martin', 1, 1, 'ast'], ['', 'Cadillac', 0, 0, 'cad']
+    ];
+    const list = isDrivers ? D : T;
+    const rank = (ptsOf) => {
+      const s = list.map((r, i) => ({ r: r, i: i })).sort((a, b) => ptsOf(b.r) - ptsOf(a.r) || a.i - b.i);
+      const pos = {}; s.forEach((o, k) => { pos[o.i] = k + 1; }); return { s: s, pos: pos };
+    };
+    const before = rank((r) => r[2] - r[3]);
+    const now = rank((r) => r[2]);
+    const view = live ? now : before;
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255) + ', ' + a + ')'; };
+    const ptsOf = (r) => (live ? r[2] : r[2] - r[3]);
+    const max = ptsOf(view.s[0].r) || 1;
+    const rows = view.s.map((o, k) => {
+      const r = o.r;
+      const color = isDrivers ? TEAM[DT[r[0]]] : TEAM[r[4]];
+      const ch = before.pos[o.i] - now.pos[o.i];
+      const w = Math.round((ptsOf(r) / max) * 100);
+      const baseW = live && r[3] > 0 ? Math.round(((r[2] - r[3]) / max) * 100) : w;
+      const fill = 'linear-gradient(90deg, ' + rgba(color, 0.16) + ' 0 ' + baseW + '%, ' + rgba(color, 0.38) + ' ' + baseW + '% ' + w + '%, transparent ' + w + '% 100%), #0E1115';
+      return {
+        pos: k + 1, tla: r[0], name: r[1], color: color, ink: ink(color), chipW: isDrivers ? '40px' : '6px',
+        pts: live ? r[2] : r[2] - r[3], gain: live && r[3] > 0 ? '+' + r[3] : '',
+        mv: live && ch > 0 ? '▲' : live && ch < 0 ? '▼' : '', mvColor: ch > 0 ? C.green : C.loss,
+        gap: k === 0 ? 'Leader' : '−' + (max - ptsOf(r)),
+        h: isDrivers ? '24px' : '40px', bg: fill
+      };
+    });
+    const tabs = [['drivers', 'Drivers'], ['teams', 'Constructors']].map((t) => ({
+      label: t[1], on: this.state.tab === t[0], bg: this.state.tab === t[0] ? '#1F242C' : 'transparent', fg: this.state.tab === t[0] ? C.t1 : C.t2,
+      pick: () => this.setState({ tab: t[0] })
+    }));
+    return {
+      rows: rows, tabs: tabs, live: live, toggleLive: () => this.setState({ live: !live }),
+      swTrack: live ? '#3DDC97' : '#2A3039', swKnob: live ? '#0A0C0F' : '#A4AAB4', swAlign: live ? 'flex-end' : 'flex-start',
+      nameHead: isDrivers ? 'DRIVER' : 'TEAM', gainHead: live ? '+RACE' : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

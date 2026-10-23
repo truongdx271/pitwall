@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Help</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 1400px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Site" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none">Dashboard</a>
+    <a href="Schedule.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none">Schedule</a>
+    <a href="Help.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #1F242C; color: #ECEEF1; font-size: 13px; font-weight: 500; text-decoration: none">Help</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 8px">
+    <a href="https://github.com/truongdx271/pitwall" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; text-decoration: none">GitHub</a>
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 8px; background: #ECEEF1; color: #0A0C0F; font-size: 13px; font-weight: 600; text-decoration: none">Open dashboard</a>
+  </div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 48px; width: 100%; max-width: 1200px; box-sizing: border-box; margin: 0 auto; padding: 32px 24px 64px">
+
+  <nav aria-label="On this page" style="flex: 1 1 200px; max-width: 220px; display: flex; flex-direction: column; gap: 2px">
+    <span style="padding: 0 10px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: #7C838F">ON THIS PAGE</span>
+    <a href="#table" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; background: #171B21; color: #ECEEF1; font-size: 13px; text-decoration: none">Timing table</a>
+    <a href="#colours" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; text-decoration: none">Colours</a>
+    <a href="#tyres" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; text-decoration: none">Tyres</a>
+    <a href="#status" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; text-decoration: none">Track status</a>
+    <a href="#sync" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; text-decoration: none">Syncing with TV</a>
+    <a href="#limits" style="display: flex; align-items: center; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; text-decoration: none">What the data can't do</a>
+  </nav>
+
+  <main style="flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 44px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <h1 style="margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.02em">How to read Pitwall</h1>
+      <p style="margin: 0; max-width: 620px; font-size: 15px; line-height: 1.55; color: #A4AAB4">A reference for every column, colour and badge on the dashboard. The same legend opens from the help button in the top bar.</p>
+    </div>
+
+    <section id="table" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Timing table</h2>
+      <div style="display: flex; flex-direction: column; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+        <sc-for list="{{columns}}" as="c" hint-placeholder-count="10">
+          <div style="display: grid; grid-template-columns: 120px minmax(0, 1fr); column-gap: 16px; padding: 12px 16px; border-bottom: 1px solid #191D24; background: {{c.bg}}">
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: #ECEEF1">{{c.label}}</span>
+            <span style="font-size: 13px; line-height: 1.5; color: #A4AAB4">{{c.desc}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="colours" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Colours</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 15px; color: #B08CFF">1:20.276</span><span style="font-size: 13px; color: #A4AAB4">Fastest of the session</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 15px; color: #3DDC97">1:20.351</span><span style="font-size: 13px; color: #A4AAB4">Driver's personal best</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 15px; color: #F5C451">1:37.774</span><span style="font-size: 13px; color: #A4AAB4">Slower than their best</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="display: block; width: 72px; height: 4px; background: linear-gradient(90deg, #4DA3FF 0 30%, transparent 30% 34%, #4DA3FF 34% 64%, transparent 64% 68%, #4DA3FF 68% 100%)"></span><span style="font-size: 13px; color: #A4AAB4">Mini-sector in the pit lane</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: rgba(176, 140, 255, 0.13); border: 1px solid #1C2128"><span style="font-size: 12px; font-weight: 600; color: #B08CFF">FL</span><span style="font-size: 13px; color: #A4AAB4">Purple row = holds the fastest lap</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: rgba(255, 122, 107, 0.07); border: 1px solid #1C2128"><span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #FF7A6B">17</span><span style="font-size: 13px; color: #A4AAB4">Red rows = qualifying knockout zone</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128; opacity: 0.55"><span style="font-family: 'Geist Mono', monospace; font-size: 13px">RET</span><span style="font-size: 13px; color: #A4AAB4">Dimmed = retired or stopped</span></div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="font-size: 12px; color: #3DDC97">▲3</span><span style="font-size: 12px; color: #FF7A6B">▼2</span><span style="font-size: 13px; color: #A4AAB4">Places gained or lost since the start</span></div>
+      </div>
+    </section>
+
+    <section id="tyres" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Tyres</h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; font-family: 'Geist Mono', monospace">
+        <span style="padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: 700; background: #E8002D; color: #0A0C0F">S Soft</span>
+        <span style="padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: 700; background: #FFF200; color: #0A0C0F">M Medium</span>
+        <span style="padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: 700; background: #F0F0F0; color: #0A0C0F">H Hard</span>
+        <span style="padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: 700; background: #39B54A; color: #0A0C0F">I Intermediate</span>
+        <span style="padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: 700; background: #0085FF; color: #0A0C0F">W Wet</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 12px; background: #111419; border: 1px solid #1C2128; flex-wrap: wrap">
+        <span style="display: flex; gap: 4px; font-family: 'Geist Mono', monospace"><span style="min-width: 36px; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; background: #FFF200; color: #0A0C0F">M 1</span><span style="min-width: 36px; padding: 2px 5px; border-radius: 4px; text-align: center; font-size: 12px; font-weight: 700; background: #39B54A; color: #0A0C0F; opacity: 0.4">I 1</span></span>
+        <span style="flex: 1 1 300px; font-size: 13px; line-height: 1.5; color: #A4AAB4">Up to three sets, newest on the left. The number is laps on that set. Turn on <span style="color: #ECEEF1">Pace view</span> to add each stint's average push-lap time and how much it slows per lap.</span>
+      </div>
+    </section>
+
+    <section id="status" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Track status</h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <span style="height: 34px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-size: 13px; font-weight: 600">Track clear</span>
+        <span style="height: 34px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; background: #FFD60A; color: #0A0C0F; font-size: 13px; font-weight: 600">Yellow flag</span>
+        <span style="height: 34px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; background: #FFB020; color: #0A0C0F; font-size: 13px; font-weight: 600">Virtual safety car</span>
+        <span style="height: 34px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; background: #FFB020; color: #0A0C0F; font-size: 13px; font-weight: 600">Safety car</span>
+        <span style="height: 34px; padding: 0 14px; display: flex; align-items: center; border-radius: 8px; background: #FF3B3B; color: #0A0C0F; font-size: 13px; font-weight: 600">Red flag</span>
+      </div>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #A4AAB4">Anything other than a clear track also shows a full-width banner under the session bar, so you notice it from across the room.</p>
+    </section>
+
+    <section id="sync" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Syncing with your TV</h2>
+      <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+        <li style="display: flex; gap: 14px; padding: 14px 16px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="flex: none; width: 26px; height: 26px; border-radius: 50%; background: #1F242C; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; font-size: 12px">1</span><span style="font-size: 13px; line-height: 1.5; color: #C9CDD3">Open the delay control from the <span style="color: #ECEEF1">Live</span> chip in the top bar.</span></li>
+        <li style="display: flex; gap: 14px; padding: 14px 16px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="flex: none; width: 26px; height: 26px; border-radius: 50%; background: #1F242C; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; font-size: 12px">2</span><span style="font-size: 13px; line-height: 1.5; color: #C9CDD3">Pick a moment you can see on both: the lap counter ticking over, or the session clock in practice and qualifying.</span></li>
+        <li style="display: flex; gap: 14px; padding: 14px 16px; border-radius: 10px; background: #111419; border: 1px solid #1C2128"><span style="flex: none; width: 26px; height: 26px; border-radius: 50%; background: #1F242C; display: flex; align-items: center; justify-content: center; font-family: 'Geist Mono', monospace; font-size: 12px">3</span><span style="font-size: 13px; line-height: 1.5; color: #C9CDD3">Add seconds until Pitwall changes at the same moment as the TV. While the buffer fills you will see <span style="color: #ECEEF1">Syncing</span>.</span></li>
+      </ol>
+    </section>
+
+    <section id="limits" style="display: flex; flex-direction: column; gap: 14px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">What the data can't do</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.55; color: #A4AAB4">
+        <span><span style="color: #ECEEF1">Map positions are estimates.</span> The free feed has no GPS, so cars are placed from about 20 mini-sectors per lap and can jump.</span>
+        <span><span style="color: #ECEEF1">No car telemetry.</span> Speed, throttle and gear need F1 TV.</span>
+        <span><span style="color: #ECEEF1">Transcripts can be wrong.</span> Team radio is transcribed automatically.</span>
+        <span><span style="color: #ECEEF1">Long-run pace ignores fuel.</span> Fuel loads are not published, so compare long runs with care.</span>
+      </div>
+    </section>
+  </main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cols = [
+      ['P', 'Position. In qualifying and practice, ordered by best lap.'],
+      ['DRIVER', 'Three-letter code on the team colour.'],
+      ['+/−', 'Places gained or lost since the start. FL marks the fastest lap.'],
+      ['<1S', 'Fills up as the car closes within one second of the car ahead.'],
+      ['GAP · INT', 'Time behind the leader, and behind the car directly ahead.'],
+      ['LAST · BEST', 'Most recent lap, and the driver’s best lap this session.'],
+      ['S1 · S2 · S3', 'Sector times with the mini-sector bar under each. In qualifying and practice the small grey number is the personal best.'],
+      ['LAPS', 'Practice only: laps completed in the session.'],
+      ['TYRE', 'Current set first, older sets dimmed.'],
+      ['STATUS', 'Qualifying and practice: push lap, long run, out lap, in pit or on track.']
+    ];
+    return { columns: cols.map((c, i) => ({ label: c[0], desc: c[1], bg: i % 2 === 1 ? '#111419' : 'transparent' })) };
+  }
+}
+</script>
+</body>
+</html>

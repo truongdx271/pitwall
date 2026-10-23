@@ -1,0 +1,73 @@
+/*
+ * Pitwall redesign: design tokens.
+ *
+ * Paste the @theme block into dashboard/src/styles/globals.css, next to the existing
+ * `@theme inline` block (which already maps --font-sans / --font-mono to the Geist
+ * variables set in src/app/layout.tsx; keep that as is).
+ *
+ * Tailwind 4 turns every --color-* into utilities: bg-surface-1, text-fg-2,
+ * border-border, text-session-best, bg-tyre-soft, and so on.
+ *
+ * Dark only. There is no light theme and no OLED variant.
+ */
+
+@theme {
+	/* surfaces, darkest to lightest */
+	--color-bg: #0a0c0f; /* page */
+	--color-surface-1: #111419; /* panels, cards */
+	--color-surface-2: #171b21; /* raised: popovers, segmented control track */
+	--color-surface-3: #1f242c; /* selected tab, hover, chip fill */
+	--color-row-alt: #151920; /* zebra rows (desktop) */
+	--color-row-alt-mobile: #13171c; /* zebra rows (mobile) */
+	--color-nav: #0d1014; /* mobile bottom bar */
+
+	/* lines */
+	--color-border: #1c2128; /* panel borders, row dividers */
+	--color-border-subtle: #252a33; /* control outlines (buttons, chips) */
+	--color-border-strong: #323843; /* emphasised outlines */
+
+	/* text */
+	--color-fg-1: #eceef1; /* primary */
+	--color-fg-body: #c9cdd3; /* long-form text (transcripts, help) */
+	--color-fg-2: #a4aab4; /* secondary */
+	--color-fg-3: #7c838f; /* tertiary, headers, units (lowest contrast allowed for text) */
+
+	/* timing semantics: F1 convention */
+	--color-session-best: #b08cff; /* purple: fastest of the session */
+	--color-personal-best: #3ddc97; /* green: driver's best */
+	--color-slower: #f5c451; /* yellow: slower than own best */
+	--color-pit: #4da3ff; /* blue: pit lane mini-sector, pit status */
+	--color-gain: #3ddc97; /* places gained, negative delta */
+	--color-loss: #ff7a6b; /* places lost, knockout zone */
+	--color-fl-row: rgb(176 140 255 / 0.13); /* row of the fastest-lap holder */
+	--color-ko-row: rgb(255 122 107 / 0.07); /* qualifying knockout rows */
+
+	/* track status */
+	--color-flag-clear: #3ddc97;
+	--color-flag-yellow: #ffd60a;
+	--color-flag-sc: #ffb020; /* SC and VSC */
+	--color-flag-red: #ff3b3b;
+
+	/* Pirelli compounds */
+	--color-tyre-soft: #e8002d;
+	--color-tyre-medium: #fff200;
+	--color-tyre-hard: #f0f0f0;
+	--color-tyre-inter: #39b54a;
+	--color-tyre-wet: #0085ff;
+
+	/* shape */
+	--radius-tag: 4px; /* driver tag, tyre block, small badges */
+	--radius-control: 8px; /* buttons, tabs, inputs */
+	--radius-panel: 12px; /* panels and cards */
+
+	/* density */
+	--spacing-row: 30px; /* timing row, desktop */
+	--spacing-row-mobile: 26px; /* timing row, mobile */
+}
+
+/*
+ * Team colours are NOT tokens. They come from the feed (DriverList[n].TeamColour) after
+ * teamColours() in src/lib/color.ts applies the overrides (Cadillac yellow, Audi
+ * burgundy, Alpine pink). Text on a team colour uses textOn(). The hex values in the
+ * mockups are sample data only.
+ */

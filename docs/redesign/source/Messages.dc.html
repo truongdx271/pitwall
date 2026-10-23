@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Messages</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Dashboard" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="Map.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Messages.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #1F242C; color: #ECEEF1; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="Strategy.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="Weather.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"></path></svg>Weather</a>
+    <a href="Standings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8"></path></svg>Standings</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px">
+    <span style="color: #A4AAB4">Canadian GP · Race</span>
+    <span style="font-family: 'Geist Mono', monospace"><span style="color: #7C838F">LAP</span> 3<span style="color: #7C838F">/68</span></span>
+    <span role="status" style="display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-weight: 600">Track clear</span>
+    <button type="button" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 13px; cursor: pointer"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span></button>
+    <a href="Settings.dc.html" aria-label="Settings" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></a>
+  </div>
+</header>
+
+<main style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; align-items: stretch; width: 100%; max-width: 1800px; box-sizing: border-box; margin: 0 auto; flex: 1">
+
+  <section aria-label="Message feed" style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 600">Feed</h2>
+      <div style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #0A0C0F">
+        <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+          <button type="button" onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: 6px; background: {{f.bg}}; color: {{f.fg}}; font-family: Geist, sans-serif; font-size: 12px; font-weight: 500; cursor: pointer">{{f.label}}<span style="font-family: 'Geist Mono', monospace; color: #7C838F">{{f.count}}</span></button>
+        </sc-for>
+      </div>
+      <button type="button" style="display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 10px; border-radius: 8px; border: 1px solid #252A33; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 12px; cursor: pointer">All drivers
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>
+      <label style="margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #A4AAB4; cursor: pointer">
+        <input type="checkbox" checked style="width: 16px; height: 16px; accent-color: #ECEEF1; margin: 0">Chime on new race control message</label>
+    </div>
+
+    <div style="flex: 1; min-height: 0; overflow-y: auto">
+      <sc-for list="{{msgs}}" as="m" hint-placeholder-count="8">
+        <article style="display: grid; grid-template-columns: 72px 36px minmax(0, 1fr); column-gap: 12px; padding: 12px 16px; border-bottom: 1px solid #191D24; background: {{m.bg}}">
+          <span style="padding-top: 9px; font-family: 'Geist Mono', monospace; font-size: 12px; color: #7C838F">{{m.time}}</span>
+          <sc-if value="{{m.isRadio}}" hint-placeholder-val="{{true}}">
+            <button type="button" aria-label="{{m.playLabel}}" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid {{m.btnBorder}}; background: {{m.btnBg}}; color: {{m.btnFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer">
+              <sc-if value="{{m.playing}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h4v16H7zM13 4h4v16h-4z" fill="currentColor"></path></svg></sc-if>
+              <sc-if value="{{m.paused}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z" fill="currentColor"></path></svg></sc-if>
+            </button>
+            <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+              <div style="display: flex; align-items: center; gap: 10px; min-height: 36px; flex-wrap: wrap">
+                <span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: {{m.team}}; color: {{m.ink}}">{{m.tla}}</span>
+                <span style="font-size: 13px; font-weight: 500">Team radio</span>
+                <span style="display: block; width: 200px; max-width: 30%; height: 16px; background: {{m.wave}}"></span>
+                <span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #A4AAB4">{{m.dur}}</span>
+              </div>
+              <sc-if value="{{m.hasText}}" hint-placeholder-val="{{true}}">
+                <p style="margin: 0; max-width: 760px; font-size: 14px; line-height: 1.55; color: #C9CDD3">{{m.text}}</p>
+                <span style="font-size: 11px; color: #7C838F">Auto-transcribed — may contain mistakes</span>
+              </sc-if>
+              <sc-if value="{{m.noText}}" hint-placeholder-val="{{false}}">
+                <button type="button" style="align-self: flex-start; height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #252A33; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 12px; cursor: pointer">Show transcript</button>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{m.isRc}}" hint-placeholder-val="{{false}}">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(245, 196, 81, 0.12); color: #F5C451; display: flex; align-items: center; justify-content: center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V4M5 4h13l-2.5 4.5L18 13H5"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+              <div style="display: flex; align-items: center; gap: 10px; min-height: 36px">
+                <span style="font-size: 13px; font-weight: 500">Race control</span>
+                <span style="font-family: 'Geist Mono', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">L{{m.lap}}</span>
+                <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1F242C; color: #C9CDD3">Incident · noted</span>
+              </div>
+              <p style="margin: 0; max-width: 760px; font-size: 14px; line-height: 1.55; color: #C9CDD3">{{m.text}}</p>
+            </div>
+          </sc-if>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="flex: 1 1 380px; min-width: 0; max-width: 460px; display: flex; flex-direction: column; gap: 12px">
+    <section aria-label="Incidents" style="background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid #1C2128">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Incidents</h2>
+        <span style="font-family: 'Geist Mono', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">2</span>
+        <span style="margin-left: auto; font-size: 12px; color: #7C838F">From race control</span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid #191D24">
+          <span style="display: flex; gap: 4px"><span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #6C98FF; color: #0A0C0F">LAW</span><span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #8A1538; color: #FFFFFF">HUL</span></span>
+          <span style="flex: 1; min-width: 0; font-size: 12px; color: #C9CDD3">Starting procedure — out of position at SC line</span>
+          <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1F242C; color: #A4AAB4">Noted</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 12px">
+          <span style="display: flex; gap: 4px"><span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #E6B800; color: #0A0C0F">BOT</span><span style="display: inline-block; width: 40px; text-align: center; padding: 1px 0; border-radius: 4px; font-size: 11px; font-weight: 700; background: #229971; color: #0A0C0F">STR</span></span>
+          <span style="flex: 1; min-width: 0; font-size: 12px; color: #C9CDD3">Starting procedure — out of position at SC line</span>
+          <span style="font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #1F242C; color: #A4AAB4">Noted</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; padding: 10px 12px; border-top: 1px solid #1C2128; font-size: 11px; color: #7C838F; flex-wrap: wrap">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #7C838F"></span>Noted</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #F5C451"></span>Under investigation</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FF7A6B"></span>Penalty</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3DDC97"></span>No further action</span>
+      </div>
+    </section>
+
+    <section aria-label="Track limits" style="flex: 1; min-height: 0; display: flex; flex-direction: column; background: #111419; border: 1px solid #1C2128; border-radius: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px solid #1C2128">
+        <h2 style="margin: 0; font-size: 14px; font-weight: 600">Track limits</h2>
+        <span style="font-family: 'Geist Mono', monospace; font-size: 11px; padding: 1px 6px; border-radius: 4px; background: #1F242C; color: #A4AAB4">{{tlTotal}}</span>
+        <span style="margin-left: auto; font-size: 12px; color: #7C838F">Deleted laps per driver</span>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 6px">
+        <sc-for list="{{limits}}" as="t" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: 44px minmax(0, 1fr) 120px; column-gap: 12px; align-items: center; height: 44px; padding: 0 6px; border-radius: 6px">
+            <span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: {{t.team}}; color: {{t.ink}}">{{t.tla}}</span>
+            <span style="display: block; height: 10px; background: {{t.pips}}"></span>
+            <span style="text-align: right; font-size: 12px; font-weight: 500; color: {{t.noteColor}}">{{t.note}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin: 0; padding: 10px 12px; border-top: 1px solid #1C2128; font-size: 11px; line-height: 1.5; color: #7C838F">Each block is one deleted lap. Third offence brings the black-and-white flag; the next is reported to the stewards.</p>
+    </section>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'all' };
+  }
+  renderVals() {
+    const C = { t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F', yellow: '#F5C451', loss: '#FF7A6B', empty: '#262B33' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const hash = (s) => { let h = 7; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; };
+    // Waveform as a gradient of bars; played part brighter.
+    const wave = (seed, played) => {
+      const n = 40; const parts = [];
+      for (let k = 0; k < n; k++) {
+        const h = 20 + (hash(seed + k) % 80);
+        const a = (k / n) * 100; const b = a + 100 / n * 0.6;
+        const c = k / n < played ? '#ECEEF1' : '#4A525E';
+        parts.push('linear-gradient(' + c + ', ' + c + ') ' + a.toFixed(2) + '% 50% / ' + (100 / n * 0.6).toFixed(2) + '% ' + h + '% no-repeat');
+      }
+      return parts.join(', ');
+    };
+
+    // Canadian GP replay: real times, durations and the transcripts we have; others collapsed.
+    const all = [
+      { kind: 'rc', time: '20:13:25', lap: 3, text: 'Incident involving cars 30 (LAW) and 27 (HUL) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'rc', time: '20:12:54', lap: 3, text: 'Incident involving cars 77 (BOT) and 18 (STR) noted — starting procedure infringement, out of position at safety car line.' },
+      { kind: 'radio', tla: 'PIA', time: '20:08:48', dur: '0:23', text: "So Oscar, our tyres have dropped quite a lot, everyone must have very cold tyres by this time. — Yeah, but if we fit now we will have warm tyres. So I don't know, I mean it's… These engines are a mistake now.", playing: 0.42 },
+      { kind: 'radio', tla: 'PIA', time: '20:05:14', dur: '0:19', text: "It feels like the rain stopped quite a lot now, what are we all thinking to do? — Oscar, the rain should ease from here, everyone's going to have very cold tyres. — Yeah, but I think now it is time for slicks, if we just box." },
+      { kind: 'radio', tla: 'LIN', time: '20:03:42', dur: '0:05', text: "It's not going again." },
+      { kind: 'radio', tla: 'GAS', time: '20:03:12', dur: '0:05' },
+      { kind: 'radio', tla: 'NOR', time: '20:03:12', dur: '0:05' },
+      { kind: 'radio', tla: 'PIA', time: '19:27:39', dur: '0:14' },
+      { kind: 'radio', tla: 'VER', time: '19:22:05', dur: '0:11' },
+      { kind: 'radio', tla: 'LEC', time: '19:11:53', dur: '0:15' },
+      { kind: 'radio', tla: 'NOR', time: '19:11:23', dur: '0:15' },
+      { kind: 'radio', tla: 'RUS', time: '19:11:23', dur: '0:10' },
+      { kind: 'radio', tla: 'BOR', time: '19:11:23', dur: '0:06' },
+      { kind: 'radio', tla: 'BOR', time: '19:11:23', dur: '0:17' },
+      { kind: 'radio', tla: 'HAD', time: '19:11:23', dur: '0:18' },
+      { kind: 'radio', tla: 'NOR', time: '19:11:21', dur: '0:07' }
+    ];
+    const f = this.state.filter;
+    const msgs = all.filter((m) => f === 'all' || m.kind === f).map((m) => {
+      const t = m.tla ? TEAM[DT[m.tla]] : '#1F242C';
+      const playing = m.playing != null;
+      return Object.assign({}, m, {
+        isRadio: m.kind === 'radio', isRc: m.kind === 'rc',
+        team: t, ink: ink(t), hasText: !!m.text, noText: !m.text,
+        playing: playing, paused: !playing, playLabel: playing ? 'Pause team radio' : 'Play team radio',
+        btnBg: playing ? '#ECEEF1' : '#171B21', btnFg: playing ? '#0A0C0F' : '#ECEEF1', btnBorder: playing ? '#ECEEF1' : '#323843',
+        wave: wave(m.time + (m.tla || ''), playing ? m.playing : 0),
+        bg: playing ? '#151920' : 'transparent'
+      });
+    });
+    const defs = [['all', 'All'], ['radio', 'Radio'], ['rc', 'Race control']];
+    const filters = defs.map((d) => ({
+      label: d[1], count: all.filter((m) => d[0] === 'all' || m.kind === d[0]).length, on: f === d[0],
+      bg: f === d[0] ? '#1F242C' : 'transparent', fg: f === d[0] ? C.t1 : C.t2,
+      pick: () => this.setState({ filter: d[0] })
+    }));
+
+    // SAMPLE track-limit counts (none had been given by lap 3 of the replay).
+    const tl = [['HAM', 3], ['VER', 2], ['NOR', 1], ['PIA', 1]];
+    const limits = tl.map((r) => {
+      const t = TEAM[DT[r[0]]];
+      const cols = [0, 1, 2, 3].map((k) => (k < r[1] ? (r[1] >= 3 ? C.loss : C.yellow) : C.empty));
+      const pips = 'linear-gradient(90deg, ' + cols.map((c, k) => { const a = k * 25; const b = a + 21; return c + ' ' + a + '% ' + b + '%, transparent ' + b + '% ' + (a + 25) + '%'; }).join(', ') + ')';
+      return {
+        tla: r[0], team: t, ink: ink(t), pips: pips,
+        note: r[1] >= 3 ? 'Black & white flag' : r[1] + ' of 3', noteColor: r[1] >= 3 ? C.loss : C.t2
+      };
+    });
+
+    return { msgs: msgs, filters: filters, limits: limits, tlTotal: tl.reduce((a, r) => a + r[1], 0) };
+  }
+}
+</script>
+</body>
+</html>

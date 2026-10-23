@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 1100px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Dashboard" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="Map.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Messages.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="Strategy.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="Weather.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"></path></svg>Weather</a>
+    <a href="Standings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8"></path></svg>Standings</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px">
+    <span style="color: #A4AAB4">Canadian GP · Race</span>
+    <span style="font-family: 'Geist Mono', monospace"><span style="color: #7C838F">LAP</span> 3<span style="color: #7C838F">/68</span></span>
+    <span role="status" style="display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-weight: 600">Track clear</span>
+    <a href="Settings.dc.html" aria-current="page" aria-label="Settings" style="width: 36px; height: 36px; border-radius: 8px; background: #1F242C; color: #ECEEF1; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></a>
+  </div>
+</header>
+
+<main style="width: 100%; max-width: 880px; box-sizing: border-box; margin: 0 auto; padding: 32px 24px 64px; display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.02em">Settings</h1>
+    <span style="font-size: 14px; color: #A4AAB4">Saved in this browser. Changes apply straight away.</span>
+  </div>
+
+  <section aria-labelledby="s-delay" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #111419; border: 1px solid #1C2128">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <h2 id="s-delay" style="margin: 0; font-size: 15px; font-weight: 600">Broadcast delay</h2>
+      <span style="font-size: 13px; color: #A4AAB4">Show data later than live so it matches your TV or stream.</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+      <button type="button" onClick="{{dec}}" aria-label="Decrease delay by 1 second" style="width: 44px; height: 44px; border-radius: 10px; border: 1px solid #323843; background: #171B21; color: #ECEEF1; font-size: 20px; cursor: pointer">−</button>
+      <div style="width: 160px; height: 44px; border-radius: 10px; background: #0A0C0F; border: 1px solid #252A33; display: flex; align-items: center; justify-content: center; gap: 6px"><span style="font-family: 'Geist Mono', monospace; font-size: 22px; font-weight: 600">{{delay}}</span><span style="font-size: 13px; color: #A4AAB4">seconds</span></div>
+      <button type="button" onClick="{{inc}}" aria-label="Increase delay by 1 second" style="width: 44px; height: 44px; border-radius: 10px; border: 1px solid #323843; background: #171B21; color: #ECEEF1; font-size: 20px; cursor: pointer">+</button>
+      <button type="button" onClick="{{reset}}" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #252A33; background: transparent; color: #A4AAB4; font-family: Geist, sans-serif; font-size: 13px; cursor: pointer">Back to live</button>
+      <a href="Help.dc.html#sync" style="font-size: 13px">How to sync</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-display" style="display: flex; flex-direction: column; border-radius: 12px; background: #111419; border: 1px solid #1C2128; overflow: hidden">
+    <h2 id="s-display" style="margin: 0; padding: 18px 20px 6px; font-size: 15px; font-weight: 600">Display</h2>
+    <sc-for list="{{toggles}}" as="t" hint-placeholder-count="6">
+      <div style="display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-top: 1px solid #191D24">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 14px">{{t.label}}</span>
+          <span style="font-size: 12px; color: #7C838F">{{t.hint}}</span>
+        </div>
+        <button type="button" role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" onClick="{{t.flip}}" style="flex: none; width: 44px; height: 26px; padding: 3px; border-radius: 13px; border: 0; background: {{t.track}}; display: flex; justify-content: {{t.align}}; cursor: pointer">
+          <span style="display: block; width: 20px; height: 20px; border-radius: 50%; background: {{t.knob}}"></span>
+        </button>
+      </div>
+    </sc-for>
+  </section>
+
+  <section aria-labelledby="s-rc" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #111419; border: 1px solid #1C2128">
+    <div style="display: flex; align-items: center; gap: 16px">
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+        <h2 id="s-rc" style="margin: 0; font-size: 15px; font-weight: 600">Race control chime</h2>
+        <span style="font-size: 12px; color: #7C838F">Play a sound when race control posts a message.</span>
+      </div>
+      <button type="button" role="switch" aria-checked="{{chime.on}}" aria-label="Race control chime" onClick="{{chime.flip}}" style="flex: none; width: 44px; height: 26px; padding: 3px; border-radius: 13px; border: 0; background: {{chime.track}}; display: flex; justify-content: {{chime.align}}; cursor: pointer"><span style="display: block; width: 20px; height: 20px; border-radius: 50%; background: {{chime.knob}}"></span></button>
+    </div>
+    <sc-if value="{{chime.on}}" hint-placeholder-val="{{true}}">
+      <label style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #A4AAB4">Volume
+        <input type="range" min="0" max="100" value="60" style="flex: 1; max-width: 320px; accent-color: #ECEEF1">
+        <span style="font-family: 'Geist Mono', monospace; color: #ECEEF1">60%</span></label>
+    </sc-if>
+  </section>
+
+  <section aria-labelledby="s-fav" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #111419; border: 1px solid #1C2128">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <h2 id="s-fav" style="margin: 0; font-size: 15px; font-weight: 600">Followed drivers</h2>
+      <span style="font-size: 12px; color: #7C838F">Highlighted in every table and ringed on the map.</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px">
+      <sc-for list="{{drivers}}" as="d" hint-placeholder-count="22">
+        <button type="button" aria-pressed="{{d.on}}" onClick="{{d.flip}}" style="display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 13px; font-weight: 600; cursor: pointer">
+          <span style="width: 4px; height: 18px; border-radius: 2px; background: {{d.team}}"></span>{{d.tla}}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-units" style="display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 12px; background: #111419; border: 1px solid #1C2128; flex-wrap: wrap">
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+      <h2 id="s-units" style="margin: 0; font-size: 15px; font-weight: 600">Speed unit</h2>
+      <span style="font-size: 12px; color: #7C838F">Used for speed traps.</span>
+    </div>
+    <div style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #0A0C0F; border: 1px solid #1C2128">
+      <sc-for list="{{units}}" as="u" hint-placeholder-count="2">
+        <button type="button" aria-pressed="{{u.on}}" onClick="{{u.pick}}" style="height: 34px; padding: 0 14px; border: 0; border-radius: 6px; background: {{u.bg}}; color: {{u.fg}}; font-family: Geist, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer">{{u.label}}</button>
+      </sc-for>
+    </div>
+  </section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      delay: 30, unit: 'kmh', chime: true, fav: { HAM: true },
+      t: { metrics: false, corners: false, headers: true, best: true, mini: true, sc: true }
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    const sw = (on) => ({ on: on, track: on ? '#3DDC97' : '#2A3039', knob: on ? '#0A0C0F' : '#A4AAB4', align: on ? 'flex-end' : 'flex-start' });
+    const defs = [
+      ['metrics', 'Car metrics', 'RPM, gear and speed. Needs an F1 TV feed.'],
+      ['corners', 'Corner numbers on the map', 'Numbered badges at each corner.'],
+      ['headers', 'Table column headers', 'Turn off for a denser timing table.'],
+      ['best', 'Best sectors', 'Personal-best sector next to the current one.'],
+      ['mini', 'Mini-sectors', 'The coloured bar under each sector time.'],
+      ['sc', 'Safety car colours', 'Tint the session bar amber under SC and VSC.']
+    ];
+    const toggles = defs.map((d) => Object.assign(sw(!!s.t[d[0]]), {
+      label: d[1], hint: d[2], flip: () => this.setState({ t: Object.assign({}, s.t, { [d[0]]: !s.t[d[0]] }) })
+    }));
+    const chime = Object.assign(sw(s.chime), { flip: () => this.setState({ chime: !s.chime }) });
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = [['ANT', 'mer'], ['RUS', 'mer'], ['HAM', 'fer'], ['LEC', 'fer'], ['VER', 'rbr'], ['HAD', 'rbr'], ['NOR', 'mcl'], ['PIA', 'mcl'], ['ALO', 'ast'], ['STR', 'ast'], ['GAS', 'alp'], ['COL', 'alp'], ['ALB', 'wil'], ['SAI', 'wil'], ['LAW', 'rb'], ['LIN', 'rb'], ['BEA', 'haa'], ['OCO', 'haa'], ['HUL', 'aud'], ['BOR', 'aud'], ['BOT', 'cad'], ['PER', 'cad']];
+    const drivers = DT.map((d) => {
+      const on = !!s.fav[d[0]];
+      return { tla: d[0], team: TEAM[d[1]], on: on, bg: on ? '#232832' : 'transparent', border: on ? '#ECEEF1' : '#252A33',
+        flip: () => this.setState({ fav: Object.assign({}, s.fav, { [d[0]]: !on }) }) };
+    });
+    const units = [['kmh', 'km/h'], ['mph', 'mph']].map((u) => ({
+      label: u[1], on: s.unit === u[0], bg: s.unit === u[0] ? '#1F242C' : 'transparent', fg: s.unit === u[0] ? '#ECEEF1' : '#A4AAB4', pick: () => this.setState({ unit: u[0] })
+    }));
+    return {
+      toggles: toggles, chime: chime, drivers: drivers, units: units, delay: s.delay,
+      dec: () => this.setState({ delay: Math.max(0, s.delay - 1) }),
+      inc: () => this.setState({ delay: s.delay + 1 }),
+      reset: () => this.setState({ delay: 0 })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pitwall · Standings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0C0F}
+a{color:#A4AAB4}a:hover{color:#ECEEF1}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #0A0C0F; color: #ECEEF1; font-family: Geist, system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; gap: 20px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #1C2128; flex-wrap: wrap">
+  <a href="Home.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #ECEEF1">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="6" fill="#ECEEF1"></rect><path d="M8 8l4 4-4 4M13 16h4" fill="none" stroke="#0A0C0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em">pitwall</span>
+  </a>
+  <nav aria-label="Dashboard" style="display: flex; gap: 2px; flex-wrap: wrap">
+    <a href="Main.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2 2M10 2h4"></path></svg>Live</a>
+    <a href="Map.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"></path><path d="M9 4v14M15 6v14"></path></svg>Map</a>
+    <a href="Messages.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>Messages</a>
+    <a href="Strategy.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5z"></path><path d="m2 13 10 5 10-5"></path></svg>Strategy</a>
+    <a href="Weather.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6 9.5 4.25 4.25 0 0 0 7 18z"></path></svg>Weather</a>
+    <a href="Standings.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #1F242C; color: #ECEEF1; font-size: 13px; font-weight: 500; text-decoration: none; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"></path><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8"></path></svg>Standings</a>
+  </nav>
+  <div style="margin-left: auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 13px">
+    <span style="color: #A4AAB4">Canadian GP · Race</span>
+    <span style="font-family: 'Geist Mono', monospace"><span style="color: #7C838F">LAP</span> 4<span style="color: #7C838F">/68</span></span>
+    <span role="status" style="display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 8px; background: rgba(61, 220, 151, 0.14); color: #3DDC97; font-weight: 600">Track clear</span>
+    <button type="button" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #252A33; background: #111419; color: #ECEEF1; font-family: Geist, sans-serif; font-size: 13px; cursor: pointer"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3DDC97"></span>Live<span style="font-family: 'Geist Mono', monospace; color: #A4AAB4">0s</span></button>
+    <a href="Settings.dc.html" aria-label="Settings" style="width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></a>
+  </div>
+</header>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px 0; flex-wrap: wrap; width: 100%; max-width: 1800px; box-sizing: border-box; margin: 0 auto">
+  <div role="group" aria-label="Standings view" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #111419; border: 1px solid #1C2128">
+    <sc-for list="{{views}}" as="v" hint-placeholder-count="2">
+      <button type="button" onClick="{{v.pick}}" aria-pressed="{{v.on}}" style="height: 32px; padding: 0 12px; border: 0; border-radius: 6px; background: {{v.bg}}; color: {{v.fg}}; font-family: Geist, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer">{{v.label}}</button>
+    </sc-for>
+  </div>
+  <span style="font-size: 12px; color: #A4AAB4">{{caption}}</span>
+</div>
+
+<main style="display: flex; flex-wrap: wrap; gap: 12px; padding: 12px; align-items: flex-start; width: 100%; max-width: 1800px; box-sizing: border-box; margin: 0 auto">
+  <section aria-label="Drivers' championship" style="flex: 1 1 560px; min-width: 0; background: #111419; border: 1px solid #1C2128; border-radius: 12px; padding: 4px 6px 8px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 8px">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 600">Drivers</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: {{dCols}}; column-gap: 10px; height: 24px; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F; border-bottom: 1px solid #1C2128">
+      <span style="text-align: right">P</span><span></span><span>DRIVER</span><span></span><span style="text-align: right">{{midHead}}</span><span style="text-align: right">PTS</span><span style="text-align: right">{{gainHead}}</span>
+    </div>
+    <div style="padding-top: 4px">
+      <sc-for list="{{drivers}}" as="d" hint-placeholder-count="22">
+        <div style="display: grid; grid-template-columns: {{d.cols}}; column-gap: 10px; align-items: center; height: 30px; padding: 0 10px; border-radius: 6px; background: {{d.bg}}">
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 13px; color: #A4AAB4">{{d.pos}}</span>
+          <span style="font-size: 11px; color: {{d.mvColor}}">{{d.mv}}</span>
+          <span style="display: inline-block; width: 44px; text-align: center; padding: 2px 0; border-radius: 4px; font-size: 12px; font-weight: 700; background: {{d.team}}; color: {{d.ink}}">{{d.tla}}</span>
+          <span style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+          <span style="display: block; height: {{d.barH}}; border-radius: 2px; background: {{d.bar}}; text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; line-height: 16px; color: #A4AAB4; white-space: nowrap">{{d.mid}}</span>
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 14px; font-weight: 600">{{d.pts}}</span>
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; color: #3DDC97">{{d.gain}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section aria-label="Constructors' championship" style="flex: 1 1 460px; min-width: 0; background: #111419; border: 1px solid #1C2128; border-radius: 12px; padding: 4px 6px 8px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 8px">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 600">Constructors</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: {{tCols}}; column-gap: 10px; height: 24px; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; color: #7C838F; border-bottom: 1px solid #1C2128">
+      <span style="text-align: right">P</span><span></span><span></span><span>TEAM</span><span style="text-align: right">{{midHead}}</span><span style="text-align: right">PTS</span><span style="text-align: right">{{gainHead}}</span>
+    </div>
+    <div style="padding-top: 4px">
+      <sc-for list="{{teams}}" as="t" hint-placeholder-count="11">
+        <div style="display: grid; grid-template-columns: {{t.cols}}; column-gap: 10px; align-items: center; height: 36px; padding: 0 10px; border-radius: 6px; background: {{t.bg}}">
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 13px; color: #A4AAB4">{{t.pos}}</span>
+          <span style="font-size: 11px; color: {{t.mvColor}}">{{t.mv}}</span>
+          <span style="display: block; width: 10px; height: 20px; border-radius: 3px; background: {{t.color}}"></span>
+          <span style="font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.name}}</span>
+          <span style="display: block; height: {{t.barH}}; border-radius: 2px; background: {{t.bar}}; text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; line-height: 16px; color: #A4AAB4; white-space: nowrap">{{t.mid}}</span>
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 14px; font-weight: 600">{{t.pts}}</span>
+          <span style="text-align: right; font-family: 'Geist Mono', monospace; font-size: 12px; color: #3DDC97">{{t.gain}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'live' };
+  }
+  renderVals() {
+    const C = { t1: '#ECEEF1', t2: '#A4AAB4', t3: '#7C838F', green: '#3DDC97', loss: '#FF7A6B' };
+    const TEAM = { mer: '#27F4D2', fer: '#E8002D', rbr: '#4781D7', mcl: '#FF8000', ast: '#229971', alp: '#E0418F', wil: '#1868DB', rb: '#6C98FF', haa: '#B6BABD', aud: '#8A1538', cad: '#E6B800' };
+    const DT = { ANT: 'mer', RUS: 'mer', HAM: 'fer', LEC: 'fer', VER: 'rbr', HAD: 'rbr', COL: 'alp', GAS: 'alp', LAW: 'rb', LIN: 'rb', BEA: 'haa', OCO: 'haa', ALO: 'ast', STR: 'ast', ALB: 'wil', SAI: 'wil', NOR: 'mcl', PIA: 'mcl', BOT: 'cad', PER: 'cad', HUL: 'aud', BOR: 'aud' };
+    const lum = (hex) => { const n = parseInt(hex.slice(1), 16); const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]; };
+    const ink = (hex) => { const L = lum(hex); return 1.05 / (L + 0.05) >= (L + 0.05) / 0.0537 ? '#FFFFFF' : '#0A0C0F'; };
+    const live = this.state.view === 'live';
+    const mode = 'fill';
+    const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return 'rgba(' + ((n >> 16) & 255) + ', ' + ((n >> 8) & 255) + ', ' + (n & 255) + ', ' + a + ')'; };
+    const colsFor = (isTeam) => '24px 20px ' + (isTeam ? '10px' : '44px') + ' minmax(0, 1fr) ' + (mode === 'bars' ? 'minmax(0, 160px)' : '64px') + ' 44px 44px';
+
+    // Replay (Canadian GP, lap 4): projected totals and gains from the current running order.
+    const D = [
+      ['ANT', 'Antonelli', 131, 25], ['RUS', 'Russell', 106, 18], ['LEC', 'Leclerc', 73, 10], ['HAM', 'Hamilton', 69, 15],
+      ['NOR', 'Norris', 58, 0], ['PIA', 'Piastri', 48, 0], ['VER', 'Verstappen', 40, 12], ['BEA', 'Bearman', 19, 2],
+      ['GAS', 'Gasly', 16, 0], ['LAW', 'Lawson', 14, 4], ['COL', 'Colapinto', 13, 6], ['HAD', 'Hadjar', 12, 8],
+      ['LIN', 'Lindblad', 5, 0], ['SAI', 'Sainz', 4, 0], ['BOR', 'Bortoleto', 2, 0], ['OCO', 'Ocon', 1, 0],
+      ['ALB', 'Albon', 1, 0], ['ALO', 'Alonso', 1, 1], ['HUL', 'Hulkenberg', 0, 0], ['BOT', 'Bottas', 0, 0],
+      ['PER', 'Perez', 0, 0], ['STR', 'Stroll', 0, 0]
+    ];
+    const T = [
+      ['Mercedes', 'mer', 237, 43], ['Ferrari', 'fer', 142, 25], ['McLaren', 'mcl', 106, 0], ['Red Bull Racing', 'rbr', 52, 20],
+      ['Alpine', 'alp', 29, 6], ['Haas F1 Team', 'haa', 20, 2], ['Racing Bulls', 'rb', 19, 4], ['Williams', 'wil', 5, 0],
+      ['Audi', 'aud', 2, 0], ['Aston Martin', 'ast', 1, 1], ['Cadillac', 'cad', 0, 0]
+    ];
+    const rank = (list, ptsOf) => {
+      const sorted = list.map((r, i) => ({ r: r, i: i })).sort((a, b) => ptsOf(b.r) - ptsOf(a.r) || a.i - b.i);
+      const pos = {}; sorted.forEach((o, k) => { pos[o.i] = k + 1; }); return { sorted: sorted, pos: pos };
+    };
+    const build = (list, nameIdx, isTeam) => {
+      const before = rank(list, (r) => r[2] - r[3]);
+      const now = rank(list, (r) => r[2]);
+      const view = live ? now : before;
+      const max = Math.max.apply(null, list.map((r) => (live ? r[2] : r[2] - r[3]))) || 1;
+      return view.sorted.map((o, k) => {
+        const r = o.r;
+        const pts = live ? r[2] : r[2] - r[3];
+        const change = before.pos[o.i] - now.pos[o.i];
+        const color = isTeam ? TEAM[r[1]] : TEAM[DT[r[0]]];
+        const w = Math.round((pts / max) * 100);
+        const baseW = live && r[3] > 0 ? Math.round(((pts - r[3]) / max) * 100) : w;
+        const zebra = k % 2 === 1 ? '#151920' : 'transparent';
+        const leaderPts = live ? view.sorted[0].r[2] : view.sorted[0].r[2] - view.sorted[0].r[3];
+        const fill = 'linear-gradient(90deg, ' + rgba(color, 0.16) + ' 0 ' + baseW + '%, ' + rgba(color, 0.38) + ' ' + baseW + '% ' + w + '%, transparent ' + w + '% 100%)';
+        return {
+          pos: k + 1, name: r[nameIdx], tla: r[0], team: color, color: color, ink: ink(color),
+          pts: pts, gain: live && r[3] > 0 ? '+' + r[3] : '',
+          mv: live && change > 0 ? '▲' : live && change < 0 ? '▼' : '', mvColor: change > 0 ? C.green : C.loss,
+          cols: colsFor(isTeam),
+          mid: mode === 'bars' ? '' : k === 0 ? 'Leader' : '−' + (leaderPts - pts),
+          barH: mode === 'bars' ? '4px' : 'auto',
+          bar: mode === 'bars' ? 'linear-gradient(90deg, ' + (live && r[3] > 0 ? '#4A525E 0 ' + baseW + '%, #3DDC97 ' + baseW + '% ' + w + '%' : '#4A525E 0 ' + w + '%') + ', transparent ' + w + '% 100%)' : 'none',
+          bg: mode === 'fill' ? fill + ', ' + (zebra === 'transparent' ? '#111419' : zebra) : zebra
+        };
+      });
+    };
+
+    const views = [['live', 'Live projection'], ['before', 'Before this race']].map((v) => ({
+      label: v[1], on: this.state.view === v[0], bg: this.state.view === v[0] ? '#1F242C' : 'transparent', fg: this.state.view === v[0] ? C.t1 : C.t2,
+      pick: () => this.setState({ view: v[0] })
+    }));
+
+    return {
+      drivers: build(D, 1, false), teams: build(T, 0, true), views: views,
+      gainHead: live ? '+RACE' : '',
+      dCols: colsFor(false), tCols: colsFor(true), midHead: mode === 'bars' ? '' : 'GAP',
+      caption: (live ? 'If the race finished in the current order.' : 'Official standings going into the Canadian Grand Prix.') + (mode === 'fill' ? ' Row shading = points relative to the leader' + (live ? '; brighter part = points from this race.' : '.') : '')
+    };
+  }
+}
+</script>
+</body>
+</html>

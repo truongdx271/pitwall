@@ -39,18 +39,23 @@ driver; it goes away in the final pass.
 
 ## PR 2 · Tokens and primitives (SPEC §1)
 
-- [ ] Paste `tokens.css` into `src/styles/globals.css`.
-- [ ] Restyle the primitives in `components/ui/` to the tokens: `SegmentedControls`,
+- [x] Paste `tokens.css` into `src/styles/globals.css`.
+- [x] Restyle the primitives in `components/ui/` to the tokens: `SegmentedControls`,
       `Toggle` (switch: green track when on), `Button`, `Modal`, `Select`, `SelectMultiple`,
       `Input`, `Slider`.
-- [ ] Add a `Panel` (surface-1, border, radius-panel, header slot), a `StatusDot`, and a
+- [x] Add a `Panel` (surface-1, border, radius-panel, header slot), a `StatusDot`, and a
       `DriverChip` (restyled `DriverTag`: 48 px, team colour, `textOn`).
-- [ ] Restyle `DriverTireStack` to SPEC §3.2. The logic doesn't change.
-- [ ] Remove the OLED mode: the setting, the toggle, and `OledModeProvider`. The body
+- [x] Restyle `DriverTireStack` to SPEC §3.2. The logic doesn't change.
+- [x] Remove the OLED mode: the setting, the toggle, and `OledModeProvider`. The body
       background becomes `bg-bg`.
 
 **Done when** every existing screen still renders, on the new colours, with no stray `zinc`
 classes in the files you touched.
+
+Notes: `DriverTag` now renders `DriverChip`; the gap is 4 px so the chip fits the old `7ch`
+column until PR 4 rebuilds the grid. The switch's off track is `#2A3039` from
+`Settings.dc.html` (not a token). `.prettierrc.yaml` points the Tailwind plugin at
+`globals.css` so token classes sort like built-in ones.
 
 ## PR 3 · App shell (SPEC §2)
 

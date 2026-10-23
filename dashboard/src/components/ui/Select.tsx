@@ -36,8 +36,8 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 				<ComboboxInput
 					placeholder={placeholder}
 					className={clsx(
-						"w-full rounded-lg border-none bg-zinc-900 py-1.5 pr-8 pl-3 text-sm/6 text-white",
-						"focus:outline-hidden data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-zinc-700",
+						"h-[30px] w-full rounded-control border border-border-subtle bg-bg pr-8 pl-3 text-sm text-fg-1 placeholder:text-fg-3",
+						"focus:border-border-strong focus:outline-none",
 					)}
 					displayValue={(option: Option<T> | null) => option?.label ?? ""}
 					onChange={(event) => setQuery(event.target.value)}
@@ -50,7 +50,7 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 			<ComboboxOptions
 				anchor="bottom"
 				className={clsx(
-					"w-[var(--input-width)] rounded-xl border border-white/5 bg-zinc-900 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+					"w-[var(--input-width)] rounded-control border border-border-subtle bg-surface-2 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
 					"z-50 mt-1 transition duration-100 ease-in data-leave:data-closed:opacity-0",
 				)}
 			>
@@ -58,10 +58,10 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 					<ComboboxOption
 						key={idx}
 						value={option}
-						className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10"
+						className="group flex cursor-pointer items-center gap-2 rounded-md px-3 py-1.5 select-none data-focus:bg-surface-3"
 					>
 						{/* <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" /> */}
-						<div className="text-sm/6 text-white">{option.label}</div>
+						<div className="text-sm text-fg-1">{option.label}</div>
 					</ComboboxOption>
 				))}
 			</ComboboxOptions>

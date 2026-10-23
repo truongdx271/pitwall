@@ -18,8 +18,8 @@ import Footer from "@/components/Footer";
 
 function SectionHeader({ label }: { label: string }) {
 	return (
-		<div className="my-4 border-b border-zinc-800 pb-1">
-			<p className="text-[11px] tracking-widest text-zinc-500 uppercase">{label}</p>
+		<div className="my-4 border-b border-border pb-1">
+			<p className="text-[11px] tracking-widest text-fg-3 uppercase">{label}</p>
 		</div>
 	);
 }
@@ -28,7 +28,7 @@ function SettingRow({ label, children }: { label: string; children: ReactNode })
 	return (
 		<div className="flex items-center gap-[1.5ch] py-1">
 			{children}
-			<p className="text-sm text-zinc-400">{label}</p>
+			<p className="text-sm text-fg-2">{label}</p>
 		</div>
 	);
 }
@@ -38,44 +38,68 @@ export default function SettingsPage() {
 
 	return (
 		<div className="font-mono">
-			<div className="my-4 border-b border-zinc-800 pb-1">
-				<p className="text-[11px] tracking-widest text-zinc-300 uppercase">{">"} settings</p>
+			<div className="my-4 border-b border-border pb-1">
+				<p className="text-[11px] tracking-widest text-fg-1 uppercase">{">"} settings</p>
 			</div>
 
 			<SectionHeader label="visual" />
 
 			<SettingRow label="show car metrics (rpm, gear, speed)">
-				<Toggle enabled={settings.carMetrics} setEnabled={(v) => settings.setCarMetrics(v)} />
+				<Toggle
+					label="show car metrics (rpm, gear, speed)"
+					enabled={settings.carMetrics}
+					setEnabled={(v) => settings.setCarMetrics(v)}
+				/>
 			</SettingRow>
 
 			<SettingRow label="show corner numbers on track map">
-				<Toggle enabled={settings.showCornerNumbers} setEnabled={(v) => settings.setShowCornerNumbers(v)} />
+				<Toggle
+					label="show corner numbers on track map"
+					enabled={settings.showCornerNumbers}
+					setEnabled={(v) => settings.setShowCornerNumbers(v)}
+				/>
 			</SettingRow>
 
 			<SettingRow label="show driver table header">
-				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)} />
+				<Toggle
+					label="show driver table header"
+					enabled={settings.tableHeaders}
+					setEnabled={(v) => settings.setTableHeaders(v)}
+				/>
 			</SettingRow>
 
 			<SettingRow label="show drivers best sectors">
-				<Toggle enabled={settings.showBestSectors} setEnabled={(v) => settings.setShowBestSectors(v)} />
+				<Toggle
+					label="show drivers best sectors"
+					enabled={settings.showBestSectors}
+					setEnabled={(v) => settings.setShowBestSectors(v)}
+				/>
 			</SettingRow>
 
 			<SettingRow label="show drivers mini sectors">
-				<Toggle enabled={settings.showMiniSectors} setEnabled={(v) => settings.setShowMiniSectors(v)} />
-			</SettingRow>
-
-			<SettingRow label="oled mode (pure black background)">
-				<Toggle enabled={settings.oledMode} setEnabled={(v) => settings.setOledMode(v)} />
+				<Toggle
+					label="show drivers mini sectors"
+					enabled={settings.showMiniSectors}
+					setEnabled={(v) => settings.setShowMiniSectors(v)}
+				/>
 			</SettingRow>
 
 			<SettingRow label="use safety car colors">
-				<Toggle enabled={settings.useSafetyCarColors} setEnabled={(v) => settings.setUseSafetyCarColors(v)} />
+				<Toggle
+					label="use safety car colors"
+					enabled={settings.useSafetyCarColors}
+					setEnabled={(v) => settings.setUseSafetyCarColors(v)}
+				/>
 			</SettingRow>
 
 			<SectionHeader label="race control" />
 
 			<SettingRow label="play chime on new race control message">
-				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
+				<Toggle
+					label="play chime on new race control message"
+					enabled={settings.raceControlChime}
+					setEnabled={(v) => settings.setRaceControlChime(v)}
+				/>
 			</SettingRow>
 
 			{settings.raceControlChime && (
@@ -94,19 +118,19 @@ export default function SettingsPage() {
 						value={settings.raceControlChimeVolume}
 						setValue={(v) => settings.setRaceControlChimeVolume(v)}
 					/>
-					<p className="text-sm text-zinc-400">chime volume</p>
+					<p className="text-sm text-fg-2">chime volume</p>
 				</div>
 			)}
 
 			<SectionHeader label="favorite drivers" />
 
-			<p className="mb-4 text-sm text-zinc-400">select your favorite drivers to highlight them on the dashboard.</p>
+			<p className="mb-4 text-sm text-fg-2">select your favorite drivers to highlight them on the dashboard.</p>
 
 			<FavoriteDrivers />
 
 			<SectionHeader label="speed unit" />
 
-			<p className="mb-4 text-sm text-zinc-400">choose the unit for displaying speeds.</p>
+			<p className="mb-4 text-sm text-fg-2">choose the unit for displaying speeds.</p>
 
 			<SegmentedControls
 				id="speed-unit"
@@ -120,7 +144,7 @@ export default function SettingsPage() {
 
 			<SectionHeader label="delay" />
 
-			<p className="mb-4 text-sm text-zinc-400">
+			<p className="mb-4 text-sm text-fg-2">
 				set a delay in seconds — data will be displayed later than the live edge. useful for syncing with a broadcast
 				stream.
 			</p>
@@ -128,13 +152,10 @@ export default function SettingsPage() {
 			<div className="flex items-center gap-[1.5ch]">
 				<DelayTimer />
 				<DelayInput />
-				<p className="text-sm text-zinc-400">delay in seconds</p>
+				<p className="text-sm text-fg-2">delay in seconds</p>
 			</div>
 
-			<Button
-				className="mt-3 border-red-900! text-red-600! hover:border-red-700! hover:text-red-400!"
-				onClick={() => settings.setDelay(0)}
-			>
+			<Button className="mt-3 border-loss/40! text-loss! hover:border-loss!" onClick={() => settings.setDelay(0)}>
 				reset delay
 			</Button>
 

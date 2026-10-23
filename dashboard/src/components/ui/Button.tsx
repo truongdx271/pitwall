@@ -12,8 +12,9 @@ type Props = {
 export default function Button({ children, onClick, className }: Props) {
 	return (
 		<button
+			type="button"
 			className={clsx(
-				"cursor-pointer border border-zinc-700 px-3 py-1.5 font-mono text-[11px] tracking-widest text-zinc-300 uppercase transition-colors hover:border-zinc-500 hover:text-white",
+				"h-[30px] cursor-pointer rounded-md border border-border-subtle px-2.5 text-xs font-medium text-fg-2 transition-colors hover:border-border-strong hover:text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1",
 				className,
 			)}
 			onClick={onClick}

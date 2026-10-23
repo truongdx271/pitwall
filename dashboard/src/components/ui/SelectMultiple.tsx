@@ -28,19 +28,19 @@ export default function SelectMultiple<T>({ placeholder, options, selected, setS
 				<ComboboxInput
 					placeholder={placeholder}
 					className={clsx(
-						"w-full border border-zinc-700 bg-black py-1.5 pr-8 pl-3 font-mono text-sm text-zinc-300 placeholder:text-zinc-600",
-						"focus:border-zinc-500 focus:outline-none",
+						"h-[30px] w-full rounded-control border border-border-subtle bg-bg pr-8 pl-3 text-sm text-fg-1 placeholder:text-fg-3",
+						"focus:border-border-strong focus:outline-none",
 					)}
 					displayValue={(option: Option<T> | null) => option?.label ?? ""}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
-				<ComboboxButton className="absolute inset-y-0 right-0 px-2.5 font-mono text-xs text-zinc-600">▾</ComboboxButton>
+				<ComboboxButton className="absolute inset-y-0 right-0 px-2.5 text-xs text-fg-3">▾</ComboboxButton>
 			</div>
 
 			<ComboboxOptions
 				anchor="bottom"
 				className={clsx(
-					"z-50 mt-1 w-[var(--input-width)] border border-zinc-700 bg-black p-0 [--anchor-gap:var(--spacing-1)] empty:invisible",
+					"z-50 mt-1 w-[var(--input-width)] rounded-control border border-border-subtle bg-surface-2 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
 					"transition duration-100 ease-in data-leave:data-closed:opacity-0",
 				)}
 			>
@@ -48,7 +48,7 @@ export default function SelectMultiple<T>({ placeholder, options, selected, setS
 					<ComboboxOption
 						key={idx}
 						value={option.value}
-						className="cursor-pointer px-3 py-1.5 font-mono text-sm text-zinc-400 select-none data-focus:bg-zinc-900 data-focus:text-zinc-200"
+						className="cursor-pointer rounded-md px-3 py-1.5 text-sm text-fg-2 select-none data-focus:bg-surface-3 data-focus:text-fg-1 data-selected:text-fg-1"
 					>
 						{option.label}
 					</ComboboxOption>

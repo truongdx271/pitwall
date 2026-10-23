@@ -22,11 +22,11 @@ const COMPOUND_LETTER: Record<string, string> = {
 };
 
 const COMPOUND_BG: Record<string, string> = {
-	soft: "bg-red-500 text-black",
-	medium: "bg-yellow-300 text-black",
-	hard: "bg-zinc-100 text-black",
-	intermediate: "bg-green-500 text-black",
-	wet: "bg-blue-500 text-black",
+	soft: "bg-tyre-soft text-bg",
+	medium: "bg-tyre-medium text-bg",
+	hard: "bg-tyre-hard text-bg",
+	intermediate: "bg-tyre-inter text-bg",
+	wet: "bg-tyre-wet text-bg",
 };
 
 const EMPTY_ENTRIES: LapTimeEntry[] = [];
@@ -40,7 +40,7 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 	const offset = Math.max(0, all.length - max);
 	const recent = all.slice(offset);
 
-	if (recent.length === 0) return <span className="text-zinc-800">---</span>;
+	if (recent.length === 0) return <span className="text-fg-3">—</span>;
 
 	// getStintBoundaries skips stints without laps, so map each stint index to its boundary.
 	const boundaries = showPace ? getStintBoundaries(all) : [];
@@ -49,9 +49,7 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 	for (const s of all) boundaryOf.push(s.TotalLaps != null && s.TotalLaps > 0 ? boundaries[b++] : undefined);
 
 	return (
-		<span
-			className={clsx("flex items-baseline whitespace-nowrap tabular-nums", showPace ? "gap-[1.5ch]" : "gap-[0.5ch]")}
-		>
+		<span className={clsx("flex items-center font-mono whitespace-nowrap tabular-nums", showPace ? "gap-3" : "gap-1")}>
 			{recent
 				.map((_, j) => recent.length - 1 - j)
 				.map((i) => {
@@ -62,11 +60,11 @@ export default function DriverTireStack({ stints, racingNumber, showPace = false
 					const boundary = boundaryOf[offset + i];
 
 					return (
-						<span key={i} className="flex items-baseline gap-[0.5ch]">
+						<span key={i} className="flex items-center gap-1.5">
 							<span
 								className={clsx(
-									"inline-block min-w-[4ch] px-[0.3ch] leading-none font-bold",
-									known ? COMPOUND_BG[compound] : "bg-zinc-700 text-black",
+									"inline-block min-w-9 rounded-tag px-[5px] py-0.5 text-center text-xs leading-[14px] font-bold",
+									known ? COMPOUND_BG[compound] : "bg-surface-3 text-fg-2",
 									!current && "opacity-40",
 								)}
 							>
@@ -93,15 +91,13 @@ function StintPace({ entries, boundary, boundaries, current }: StintPaceProps) {
 	const avg = boundary ? stintAvgMs(entries, boundary, boundaries) : null;
 	const deg = boundary ? stintDegradation(entries, boundary, boundaries) : null;
 
-	if (avg == null) return <span className="text-[11px] text-zinc-700">—</span>;
+	if (avg == null) return <span className="text-xs text-fg-3">—</span>;
 
 	return (
-		<span className="flex items-baseline gap-[0.4ch]">
-			<span className={clsx("text-[11px]", current ? "text-zinc-300" : "text-zinc-500")}>{formatMs(avg)}</span>
+		<span className="flex items-baseline gap-1">
+			<span className={clsx("text-xs", current ? "text-fg-1" : "text-fg-2")}>{formatMs(avg)}</span>
 			{deg != null && (
-				<span
-					className={clsx("text-[10px]", deg > 150 ? "text-red-500" : deg < -50 ? "text-emerald-500" : "text-zinc-600")}
-				>
+				<span className={clsx("text-[11px]", deg > 150 ? "text-loss" : "text-fg-3")}>
 					{deg > 0 ? "+" : ""}
 					{(deg / 1000).toFixed(2)}
 				</span>

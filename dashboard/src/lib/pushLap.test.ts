@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatDelta, pushLapDeltas } from "./pushLap";
+import type { TimingStats } from "@/types/state.type";
+import { bestsBeforeLap, formatDelta, previousBestSectors, pushLapDeltas } from "./pushLap";
 
 const s = (Value: string, OverallFastest = false) => ({ Value, OverallFastest });
 
@@ -48,5 +49,32 @@ describe("formatDelta", () => {
 		expect(formatDelta(-103)).toBe("−0.103");
 		expect(formatDelta(52)).toBe("+0.052");
 		expect(formatDelta(0)).toBe("+0.000");
+	});
+});
+
+describe("previousBestSectors / bestsBeforeLap", () => {
+	const stats = (s1: string, s2: string) =>
+		({ Lines: { "16": { BestSectors: [{ Value: s1 }, { Value: s2 }, { Value: "" }] } } }) as unknown as TimingStats;
+
+	it("remembers the best a sector had before it improved", () => {
+		const prev = previousBestSectors(stats("21.138", "23.734"), stats("21.107", "23.734"), {});
+		expect(prev["16"]).toEqual(["21.138"]);
+		// An unchanged update keeps the same object.
+		expect(previousBestSectors(stats("21.107", "23.734"), stats("21.107", "23.734"), prev)).toBe(prev);
+		expect(previousBestSectors(undefined, stats("21.107", "23.734"), prev)).toBe(prev);
+	});
+
+	it("measures the sector that set the new best against the old one", () => {
+		// LEC, Canada Q1: S1 21.107 beat 21.138; S2 23.672 beat 23.734.
+		const sectors = [{ Value: "21.107" }, { Value: "23.672" }, { Value: "" }];
+		const best = ["21.107", "23.672", "29.695"];
+		const own = bestsBeforeLap(sectors, best, ["21.138", "23.734"]);
+		expect(own).toEqual(["21.138", "23.734", "29.695"]);
+		expect(pushLapDeltas(sectors, own, best).ownMs).toBe(-31 - 62);
+	});
+
+	it("falls back to the current best when the old one isn't known", () => {
+		expect(bestsBeforeLap([{ Value: "21.107" }], ["21.107"], undefined)).toEqual(["21.107", undefined, undefined]);
+		expect(bestsBeforeLap([{ Value: "21.300" }], ["21.107"], ["21.138"])).toEqual(["21.107", undefined, undefined]);
 	});
 });

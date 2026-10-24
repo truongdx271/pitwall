@@ -6,7 +6,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import { sortPos } from "@/lib/sorting";
 import { driverStatus } from "@/lib/driverStatus";
 import { knockoutCutoff } from "@/lib/knockout";
-import { formatDelta, pushLapDeltas } from "@/lib/pushLap";
+import { bestsBeforeLap, formatDelta, pushLapDeltas } from "@/lib/pushLap";
 
 import Panel from "@/components/ui/Panel";
 import DriverChip from "@/components/driver/DriverChip";
@@ -19,6 +19,7 @@ export default function PushLapPanel() {
 	const drivers = useDataStore((s) => s.state?.DriverList);
 	const timing = useDataStore((s) => s.state?.TimingData);
 	const stats = useDataStore((s) => s.state?.TimingStats);
+	const previousBests = useDataStore((s) => s.previousBests);
 
 	const lines = timing ? Object.values(timing.Lines).sort(sortPos) : [];
 	const cutoff = knockoutCutoff(timing?.NoEntries, timing?.SessionPart);
@@ -65,7 +66,8 @@ export default function PushLapPanel() {
 				{pushers.map(({ line, position }) => {
 					const driver = drivers?.[line.RacingNumber];
 					if (!driver) return null;
-					const ownBest = (stats?.Lines?.[line.RacingNumber]?.BestSectors ?? []).map((s) => s?.Value);
+					const best = (stats?.Lines?.[line.RacingNumber]?.BestSectors ?? []).map((s) => s?.Value);
+					const ownBest = bestsBeforeLap(line.Sectors, best, previousBests[line.RacingNumber]);
 					const d = pushLapDeltas(line.Sectors, ownBest, refBest);
 					const isRef = refLine?.RacingNumber === line.RacingNumber;
 					const ko = cutoff != null && position > cutoff;
@@ -118,7 +120,6 @@ function DeltaValue({ ms, sessionBest = false }: { ms: number | null; sessionBes
 		<span
 			className={clsx(
 				"text-right font-mono text-[13px] tabular-nums",
-				// A sector that just set the PB is already in BestSectors, so it reads 0: count it as green.
 				sessionBest ? "text-session-best" : ms <= 0 ? "text-personal-best" : "text-slower",
 			)}
 		>

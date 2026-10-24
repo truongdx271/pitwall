@@ -28,7 +28,7 @@ export default function TrackMap() {
 
 	return (
 		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:flex-nowrap">
-			<div className="flex min-w-0 flex-[1_1_320px] flex-col xl:max-w-[320px]">
+			<div className="flex min-w-0 flex-[1_1_320px] flex-col xl:max-w-[360px]">
 				<MapOrderList kind={kind} title={title} />
 			</div>
 

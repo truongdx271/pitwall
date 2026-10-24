@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useState, type ReactNode } from "react";
-import Link from "next/link";
 import clsx from "clsx";
 
 import type { Driver, TimingDataDriver } from "@/types/state.type";
@@ -23,6 +22,7 @@ import DriverTireStack from "@/components/driver/DriverTireStack";
 import DriverDetailModal from "@/components/driver/DriverDetailModal";
 import SegmentedControls from "@/components/ui/SegmentedControls";
 import LongRunsPanel from "@/components/map/LongRunsPanel";
+import TabLink from "@/components/shell/TabLink";
 
 // Mobile tables (SPEC §11): only the columns that fit 390px, 26px rows; tap a row for the
 // full detail (sectors, stints).
@@ -276,7 +276,7 @@ function PushStrip() {
 	const ref = lines[(cutoff ?? 1) - 1];
 
 	return (
-		<Link
+		<TabLink
 			href="/dashboard?tab=map"
 			className="flex min-h-11 items-center gap-2 rounded-control border border-border bg-surface-1 px-3 text-xs text-fg-2"
 		>
@@ -288,7 +288,7 @@ function PushStrip() {
 				</>
 			)}
 			<span className="ml-auto text-fg-3">Map ↗</span>
-		</Link>
+		</TabLink>
 	);
 }
 
@@ -301,7 +301,7 @@ function LatestRaceControl() {
 	if (!latest) return null;
 
 	return (
-		<Link
+		<TabLink
 			href="/dashboard?tab=messages"
 			className="flex min-h-11 items-center gap-3 rounded-control border border-border bg-surface-1 px-3 py-2 text-[13px] text-fg-body"
 		>
@@ -310,6 +310,6 @@ function LatestRaceControl() {
 			</span>
 			<span className="line-clamp-2 flex-1">{latest.Message}</span>
 			{latest.Lap != null && <span className="font-mono text-xs text-fg-3">L{latest.Lap}</span>}
-		</Link>
+		</TabLink>
 	);
 }

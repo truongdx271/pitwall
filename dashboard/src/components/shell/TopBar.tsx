@@ -12,6 +12,7 @@ import HelpModal from "@/components/help/HelpModal";
 import Icon, { LogoMark } from "./icons";
 import LiveChip from "./LiveChip";
 import { TABS, parseTab, tabHref, type TabId } from "./tabs";
+import TabLink from "./TabLink";
 
 type Props = {
 	connected: boolean;
@@ -93,7 +94,7 @@ function TabNav({ active }: { active: TabId | null }) {
 			{TABS.map((tab) => {
 				const selected = tab.id === active;
 				return (
-					<Link
+					<TabLink
 						key={tab.id}
 						href={tabHref(tab.id)}
 						aria-current={selected ? "page" : undefined}
@@ -104,7 +105,7 @@ function TabNav({ active }: { active: TabId | null }) {
 					>
 						<Icon name={tab.icon} />
 						{tab.label}
-					</Link>
+					</TabLink>
 				);
 			})}
 		</nav>

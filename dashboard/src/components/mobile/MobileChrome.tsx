@@ -17,6 +17,7 @@ import { STATUS_PILL } from "@/components/shell/SessionStrip";
 import { parseTab, tabHref, type TabId } from "@/components/shell/tabs";
 import DelayInput from "@/components/DelayInput";
 import DelayTimer from "@/components/DelayTimer";
+import TabLink from "@/components/shell/TabLink";
 
 const useNow = () => {
 	const [now, setNow] = useState(() => Date.now());
@@ -146,7 +147,7 @@ function BottomBar({ active }: { active: TabId | null }) {
 				className="fixed inset-x-0 bottom-0 z-40 grid h-[60px] grid-cols-5 border-t border-border bg-nav pb-[env(safe-area-inset-bottom)]"
 			>
 				{BAR.map((tab) => (
-					<Link
+					<TabLink
 						key={tab.id}
 						href={tabHref(tab.id)}
 						aria-current={tab.id === active ? "page" : undefined}
@@ -157,7 +158,7 @@ function BottomBar({ active }: { active: TabId | null }) {
 					>
 						<Icon name={tab.icon} size={20} />
 						{tab.label}
-					</Link>
+					</TabLink>
 				))}
 				<button
 					ref={moreButton}
@@ -240,14 +241,14 @@ function MoreSheet({ onClose }: { onClose: () => void }) {
 				<ul className="flex flex-col">
 					{items.map((item) => (
 						<li key={item.href}>
-							<Link
+							<TabLink
 								href={item.href}
 								onClick={onClose}
 								className="flex min-h-12 flex-col justify-center rounded-control px-3 py-2 hover:bg-surface-2"
 							>
 								<span className="text-[15px] font-medium">{item.title}</span>
 								<span className="text-xs text-fg-2">{item.hint}</span>
-							</Link>
+							</TabLink>
 						</li>
 					))}
 				</ul>

@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
-
 import Map from "@/components/dashboard/Map";
 import Panel from "@/components/ui/Panel";
 
 import PitLaneFooter from "./PitLaneFooter";
+import TabLink from "@/components/shell/TabLink";
 
 // Track panel shared by the Live tab in every session (SPEC §3.3): compact map, then a
 // footer with the cars in the pit lane and the retired ones.
@@ -17,7 +16,7 @@ export default function TrackPanel({ className }: { className?: string }) {
 			header={
 				<>
 					<span className="text-xs text-fg-3">Positions estimated from mini-sectors</span>
-					<Link
+					<TabLink
 						href="/dashboard?tab=map"
 						className="ml-auto flex h-[30px] items-center gap-1.5 rounded-md px-2 text-xs text-fg-2 transition-colors hover:text-fg-1 focus-visible:outline-2 focus-visible:outline-fg-1"
 					>
@@ -35,7 +34,7 @@ export default function TrackPanel({ className }: { className?: string }) {
 						>
 							<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
 						</svg>
-					</Link>
+					</TabLink>
 				</>
 			}
 		>

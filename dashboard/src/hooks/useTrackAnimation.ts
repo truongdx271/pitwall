@@ -18,6 +18,7 @@ import {
 	segmentState,
 	step,
 	type CarProgress,
+	type PitSide,
 	type Point,
 } from "@/lib/trackProgress";
 
@@ -40,6 +41,7 @@ type Options = {
 	storageKey: string | null;
 	// Lap fraction where the feed reports cars leaving the pits; 0 (the line) if unknown.
 	pitExit: number;
+	pitSide: PitSide | undefined;
 };
 
 const SAVE_INTERVAL_MS = 5_000;
@@ -77,6 +79,7 @@ export function useTrackAnimation({
 	sectorSeconds,
 	storageKey,
 	pitExit,
+	pitSide,
 }: Options) {
 	const track = useMemo(() => (trackPoints && trackPoints.length > 1 ? buildTrack(trackPoints) : null), [trackPoints]);
 
@@ -117,7 +120,7 @@ export function useTrackAnimation({
 
 		// Tucked against the track edge; running cars on the straight may draw over them.
 		// Neighbours overlap by ~40% so the row stays near the pit straight instead of spilling past it.
-		const slots = pitSlots(track, garages.length, carRadius * pitScale * 1.2, carRadius);
+		const slots = pitSlots(track, garages.length, carRadius * pitScale * 1.2, carRadius, pitSide);
 
 		const tick = (t: number) => {
 			const dt = Math.min((t - last) / 1000, 0.25); // background tabs return huge gaps
@@ -198,7 +201,7 @@ export function useTrackAnimation({
 			cancelAnimationFrame(frame);
 			if (learning.version !== savedVersion) saveShares(storageKey, learning);
 		};
-	}, [enabled, track, rotation, centerX, centerY, carRadius, pitScale, garages, storageKey, pitExit]);
+	}, [enabled, track, rotation, centerX, centerY, carRadius, pitScale, garages, storageKey, pitExit, pitSide]);
 
 	// Stable per-driver ref callbacks.
 	const refs = useRef(new Map<string, (node: SVGGElement | null) => void>());

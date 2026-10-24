@@ -190,6 +190,12 @@ describe("pitSlots", () => {
 		expect(pitSlots(tight, 1, 100, 400)[0].y).toBeCloseTo(400);
 	});
 
+	it("uses the side the map gives over the one with more room", () => {
+		// Driving +x: left is +y (towards the return straight), right is -y.
+		expect(pitSlots(loop, 1, 100, 1600, "left")[0].y).toBeCloseTo(1600);
+		expect(pitSlots(loop, 1, 100, 1600, "right")[0].y).toBeCloseTo(-1600);
+	});
+
 	it("keeps every car in one row, entry side first", () => {
 		const slots = pitSlots(loop, 10, 100, 1600);
 		expect(slots.every((p) => Math.abs(p.y + 1600) < 1e-6)).toBe(true);

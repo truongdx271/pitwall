@@ -2,6 +2,8 @@ export type Map = {
 	outlineOnly?: boolean;
 	// Our fallbacks only: lap fraction from the line where the feed reports InPit=false.
 	pitExit?: number;
+	// Our additions only: which side of the driving direction (feed coordinates) the pit lane is on.
+	pitSide?: "left" | "right";
 	corners: Corner[];
 	marshalLights: Corner[];
 	marshalSectors: Corner[];

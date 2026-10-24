@@ -29,10 +29,19 @@ async function loadMap(url: string): Promise<Map | null> {
 // don't carry one). Measured from archive TimingData + Position.z; see public/maps/README.md.
 const PIT_EXITS: Record<string, number> = { "61/2026": 0.052 };
 
+// Pit lane side (of the driving direction, feed coordinates) where the "more room"
+// guess in pitSlots picks the wrong one. Keyed by circuit: pit lanes don't move.
+// Both reported reversed on the live map, 2026-10-24; see public/maps/README.md.
+const PIT_SIDES: Record<number, NonNullable<Map["pitSide"]>> = { 9: "left", 61: "right" };
+
 export const fetchMap = async (circuitKey: number, year = new Date().getFullYear()): Promise<Map | null> => {
-	const map = await loadMap(`https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`);
-	const pitExit = PIT_EXITS[`${circuitKey}/${year}`];
-	if (map) return pitExit !== undefined && map.pitExit === undefined ? { ...map, pitExit } : map;
-	if (OUTLINE_FALLBACKS.has(`${circuitKey}/${year}`)) return loadMap(`/maps/${circuitKey}-${year}.json`);
-	return null;
+	const map =
+		(await loadMap(`https://api.multiviewer.app/api/v1/circuits/${circuitKey}/${year}`)) ??
+		(OUTLINE_FALLBACKS.has(`${circuitKey}/${year}`) ? await loadMap(`/maps/${circuitKey}-${year}.json`) : null);
+	if (!map) return null;
+	return {
+		...map,
+		pitExit: map.pitExit ?? PIT_EXITS[`${circuitKey}/${year}`],
+		pitSide: map.pitSide ?? PIT_SIDES[circuitKey],
+	};
 };

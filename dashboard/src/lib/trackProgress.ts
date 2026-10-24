@@ -381,11 +381,14 @@ function measuredPace(distance: number, seconds: number): number | null {
 	return pace >= 1 / SLOWEST_LAP_SECONDS && pace <= 1 / FASTEST_LAP_SECONDS ? pace : null;
 }
 
+export type PitSide = "left" | "right";
+
 // Without positions we don't know where the pit lane is, and pit cars report
 // lap progress 0, so they would all stack on the finish line. Line them up in a
-// row alongside the track around the finish line instead, on whichever side has
-// more room there.
-export function pitSlots(track: Track, count: number, spacing: number, offset: number): Point[] {
+// row alongside the track around the finish line instead, on `pitSide` (of the
+// driving direction, in feed coordinates) when the map knows it, otherwise on
+// whichever side has more room there.
+export function pitSlots(track: Track, count: number, spacing: number, offset: number, pitSide?: PitSide): Point[] {
 	if (count === 0 || track.length === 0) return [];
 
 	const beside = (fraction: number, side: number, out = offset): Point => {
@@ -400,7 +403,8 @@ export function pitSlots(track: Track, count: number, spacing: number, offset: n
 
 	// Judge the side a few offsets out: right beside the track both sides look equally clear.
 	const probe = offset * 4;
-	const side = distanceToTrack(track, beside(0, 1, probe)) >= distanceToTrack(track, beside(0, -1, probe)) ? 1 : -1;
+	const roomier = distanceToTrack(track, beside(0, 1, probe)) >= distanceToTrack(track, beside(0, -1, probe));
+	const side = (pitSide ? pitSide === "left" : roomier) ? 1 : -1;
 
 	// Slot 0 sits furthest back (pit entry side), the last slot furthest ahead (pit exit side).
 	return Array.from({ length: count }, (_, i) => beside(((i - (count - 1) / 2) * spacing) / track.length, side));

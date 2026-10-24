@@ -6,7 +6,7 @@ import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 import { garageOrder } from "@/lib/garageOrder";
-import { parseLapTime } from "@/lib/trackProgress";
+import { parseLapTime, type PitSide } from "@/lib/trackProgress";
 import { textOn } from "@/lib/color";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -82,6 +82,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 	const [rotation, setRotation] = useState<number>(0);
 	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
 	const [pitExit, setPitExit] = useState(0);
+	const [pitSide, setPitSide] = useState<PitSide>();
 	const [originalTrackPoints, setOriginalTrackPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	useEffect(() => {
@@ -140,6 +141,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 
 			setOutlineOnly(mapJson.outlineOnly ?? false);
 			setPitExit(mapJson.pitExit ?? 0);
+			setPitSide(mapJson.pitSide);
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
@@ -190,6 +192,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 		sectorSeconds,
 		storageKey: `segmentShares:${circuitKey}:${year}`,
 		pitExit,
+		pitSide,
 	});
 
 	if (unavailable || !circuitKey) {

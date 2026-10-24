@@ -48,3 +48,14 @@ The provider layout is used as is; only `pitExit` (0.052) is added in
 each car's Position.z sample at `InPit: false` onto the provider outline, all 75
 pit exits land at 0.050-0.054, ~19 m beside the track. Lap-count ticks land
 within ~3 m of outline point 0, so point 0 is the finish line.
+
+## Pit lane side
+
+Without positions, cars in the pits sit in a row beside the finish line. By
+default the row goes on whichever side of the track has more room there;
+`PIT_SIDES` in `src/lib/fetchMap.ts` overrides that per circuit (all years),
+as left/right of the driving direction in feed coordinates (y up). Austin (9)
+is `left` and Singapore (61) `right`: both were reported on the wrong side on
+2026-10-24. The F1 timing archive answered 401 that day, so these are not
+measured; they could be checked against `Position.z` samples with
+`InPit: true` once the archive is reachable again.

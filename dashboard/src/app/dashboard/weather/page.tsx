@@ -6,7 +6,8 @@ import Panel from "@/components/ui/Panel";
 // Weather tab (SPEC §9): the rain radar with its timeline, and the trackside conditions.
 export default function WeatherPage() {
 	return (
-		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:flex-nowrap">
+		// No table sets the height here, so the row stops at the Live tab's 22-row height (768px).
+		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:max-h-[768px] xl:flex-nowrap">
 			<Panel title="Rain radar" className="min-h-[520px] min-w-0 flex-[999_1_640px]">
 				<div className="relative min-h-0 flex-1 border-t border-border">
 					<WeatherMap />

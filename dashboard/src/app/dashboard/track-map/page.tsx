@@ -27,19 +27,25 @@ export default function TrackMap() {
 				: "Race order";
 
 	return (
-		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:flex-nowrap">
+		// The order list sets the row height (capped at the viewport); the map and the side panel
+		// fill that height, so tall screens don't stretch everything to the bottom.
+		<div className="flex flex-wrap items-stretch gap-3 p-3 xl:max-h-full xl:flex-nowrap">
 			<div className="flex min-w-0 flex-[1_1_320px] flex-col xl:max-w-[360px]">
 				<MapOrderList kind={kind} title={title} />
 			</div>
 
 			{/* On phones the map comes first, the order list under it. */}
-			<div className="flex min-h-[420px] min-w-0 flex-[999_1_520px] flex-col max-md:order-first">
-				<MapPanel name={session?.Meeting.Circuit.ShortName} />
+			<div className="relative flex min-h-[420px] min-w-0 flex-[999_1_520px] flex-col max-md:order-first">
+				<div className="flex flex-1 flex-col xl:absolute xl:inset-0">
+					<MapPanel name={session?.Meeting.Circuit.ShortName} />
+				</div>
 			</div>
 
 			{kind !== "race" && (
-				<div className="flex min-w-0 flex-[1_1_360px] flex-col xl:max-w-[400px]">
-					{kind === "qualifying" ? <PushLapPanel /> : <LongRunsPanel />}
+				<div className="relative flex min-w-0 flex-[1_1_360px] flex-col xl:max-w-[400px]">
+					<div className="flex flex-1 flex-col xl:absolute xl:inset-0">
+						{kind === "qualifying" ? <PushLapPanel /> : <LongRunsPanel />}
+					</div>
 				</div>
 			)}
 		</div>

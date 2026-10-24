@@ -15,7 +15,7 @@ export default function WeatherPage() {
 					Radar © RainViewer · Base map © OpenStreetMap contributors © CARTO
 				</p>
 			</Panel>
-			<div className="min-w-0 flex-[1_1_360px] xl:max-w-[360px]">
+			<div className="min-w-0 flex-[1_1_360px] xl:max-w-[440px]">
 				<WeatherPanel />
 			</div>
 		</div>

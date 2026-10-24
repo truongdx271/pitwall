@@ -52,7 +52,8 @@ function Dashboard() {
 					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 xl:h-full">
 						<div
 							className={clsx(
-								"min-w-0 xl:h-full xl:overflow-y-auto",
+								// The table panel stretches to the column height, like the design's stretched <main>.
+								"min-w-0 xl:h-full xl:overflow-y-auto xl:*:min-h-full",
 								wideTable ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
 							)}
 						>

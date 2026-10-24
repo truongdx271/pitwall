@@ -41,7 +41,7 @@ export default function MessagesTab() {
 			<div className="flex min-h-[480px] min-w-0 flex-[999_1_640px] flex-col">
 				<Feed />
 			</div>
-			<div className="flex min-w-0 flex-[1_1_380px] flex-col gap-3 xl:max-w-[380px]">
+			<div className="flex min-w-0 flex-[1_1_380px] flex-col gap-3 xl:max-w-[460px]">
 				<IncidentsPanel />
 				<TrackLimitsPanel />
 			</div>

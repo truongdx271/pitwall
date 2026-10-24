@@ -59,7 +59,7 @@ export default function StrategyTab() {
 			<div className="flex min-w-0 flex-[999_1_760px] flex-col">
 				<TyreStrategyPanel />
 			</div>
-			<div className="flex min-w-0 flex-[1_1_440px] flex-col gap-3 xl:max-w-[460px]">
+			<div className="flex min-w-0 flex-[1_1_440px] flex-col gap-3 xl:max-w-[560px]">
 				<LapTimesPanel />
 				<SpeedTrapsPanel />
 			</div>
@@ -130,7 +130,8 @@ function TyreStrategyPanel() {
 				<span>NOW · STOPS</span>
 			</div>
 
-			<div className="min-h-0 flex-1 overflow-y-auto px-1.5 pt-1">
+			{/* Rows take their own height, so the lap axis sits right under them (Strategy.png). */}
+			<div className="min-h-0 overflow-y-auto px-1.5 pt-1">
 				{lines.length === 0 && <p className="px-2 py-4 text-[13px] text-fg-2">Waiting for session data…</p>}
 				{lines.map((line, index) => {
 					const driver = drivers?.[line.RacingNumber];

@@ -120,7 +120,10 @@ export default function DashboardLayout({ children }: Props) {
 					<TrackStatusBanner />
 					{reconnecting && <ReconnectingCard lastMessageAt={live.lastMessageAt} retry={live.retry} />}
 					{/* On phones the bottom bar covers the last 60px. */}
-					<div className={clsx("no-scrollbar w-full flex-1 overflow-auto", isMobile && "pb-[60px]")}>{children}</div>
+					<div className={clsx("no-scrollbar w-full flex-1 overflow-auto", isMobile && "pb-[60px]")}>
+						{/* Wide screens: the content stops at 1800px and centres, like the design's <main>. */}
+						<div className="mx-auto h-full w-full max-w-[1800px]">{children}</div>
+					</div>
 					{isMobile && <MobileBottomBar />}
 				</>
 			)}

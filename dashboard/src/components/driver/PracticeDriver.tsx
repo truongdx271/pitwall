@@ -105,7 +105,7 @@ export default function PracticeDriver({ position, driver, timingDriver, timingS
 						<QualiSectorCell
 							key={i}
 							sector={timingDriver.Sectors[i]}
-							best={timingStats?.BestSectors?.[i]?.Value}
+							best={timingStats?.BestSectors?.[i]}
 							hideBest={showPace}
 						/>
 					))}

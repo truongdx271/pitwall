@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-import type { Driver, Sector, TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import type { Driver, PersonalBestLapTime, Sector, TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 import { parseTimeMs } from "@/lib/timeUtils";
@@ -88,7 +88,7 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 
 				<span className="grid min-w-0" style={{ gridTemplateColumns: SECTOR_GRID, columnGap: QUALI_SECTOR_GAP }}>
 					{[0, 1, 2].map((i) => (
-						<QualiSectorCell key={i} sector={timingDriver.Sectors[i]} best={timingStats?.BestSectors?.[i]?.Value} />
+						<QualiSectorCell key={i} sector={timingDriver.Sectors[i]} best={timingStats?.BestSectors?.[i]} />
 					))}
 				</span>
 
@@ -121,15 +121,16 @@ export default function QualiDriver({ position, driver, timingDriver, timingStat
 	);
 }
 
-// Current-lap sector time large on the left, the personal-best sector small on the right,
-// the mini-sector bar underneath (SPEC §4; the old cell had them the other way round).
+// Current-lap sector time large on the left, the personal-best sector small on the right
+// (purple when it is the best of the session), the mini-sector bar underneath (SPEC §4;
+// the old cell had them the other way round).
 export function QualiSectorCell({
 	sector,
 	best,
 	hideBest = false,
 }: {
 	sector: Sector | undefined;
-	best: string | undefined;
+	best: PersonalBestLapTime | undefined;
 	/** Practice pace view: the sector column is too narrow for both times. */
 	hideBest?: boolean;
 }) {
@@ -149,7 +150,11 @@ export function QualiSectorCell({
 				>
 					{sector?.Value || "—"}
 				</span>
-				{showBestSectors && !hideBest && best && <span className="text-[11px] text-fg-3">{best}</span>}
+				{showBestSectors && !hideBest && best?.Value && (
+					<span className={clsx("text-[11px]", best.Position === 1 ? "text-session-best" : "text-fg-3")}>
+						{best.Value}
+					</span>
+				)}
 			</span>
 			{showMiniSectors && (
 				<span className="flex h-[3px] gap-px" aria-hidden>

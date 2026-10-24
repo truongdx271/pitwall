@@ -1,10 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { firstUpcoming, loadSchedule, nextSession } from "@/lib/schedule";
+import { firstUpcoming, loadSchedule, nextSession, roundTitle } from "@/lib/schedule";
 import type { Round } from "@/types/schedule.type";
 
 const round = (name: string, over: boolean): Round =>
-	({ name, countryName: name, countryKey: null, start: "2026-10-04T07:00:00Z", end: "2026-10-04T15:00:00Z", sessions: [], over }) as Round;
+	({
+		name,
+		countryName: name,
+		countryKey: null,
+		start: "2026-10-04T07:00:00Z",
+		end: "2026-10-04T15:00:00Z",
+		sessions: [],
+		over,
+	}) as Round;
 
 describe("firstUpcoming", () => {
 	it("returns the first round that is not over", () => {
@@ -61,5 +69,17 @@ describe("nextSession", () => {
 
 	it("returns null after the last session", () => {
 		expect(nextSession(rounds, Date.parse("2026-07-01T00:00:00Z"))).toBeNull();
+	});
+});
+
+describe("roundTitle", () => {
+	it("names the city where a country has two rounds, the country otherwise", () => {
+		const title = (name: string, countryName: string) => roundTitle({ name, countryName });
+		expect(title("HEINEKEN LAS VEGAS GRAND PRIX 2026", "United States")).toBe("Las Vegas");
+		expect(title("MIAMI GRAND PRIX 2026", "United States")).toBe("Miami");
+		expect(title("MSC CRUISES UNITED STATES GRAND PRIX 2026", "United States")).toBe("United States");
+		expect(title("BARCELONA GRAND PRIX 2026", "Spain")).toBe("Barcelona");
+		expect(title("LENOVO GRAN PREMIO DE ESPAÑA  2027", "Spain")).toBe("Madrid");
+		expect(title("SINGAPORE AIRLINES SINGAPORE GRAND PRIX 2026", "Singapore")).toBe("Singapore");
 	});
 });

@@ -11,6 +11,7 @@ import SegmentedControls from "@/components/ui/SegmentedControls";
 import type { Round as RoundType } from "@/types/schedule.type";
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 import { formatDayRange, formatMonth } from "@/lib/dateFormatter";
+import { roundTitle } from "@/lib/schedule";
 
 // Markup shared by the server-rendered schedule (Docker) and the client-fetched one (static Cloudflare build).
 
@@ -36,7 +37,7 @@ export function NextRoundView({ next }: { next: RoundType | null }) {
 					<span className="rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-xs font-semibold text-fg-2">
 						{countryCode(next.countryName)}
 					</span>
-					<h2 className="text-xl font-semibold">{next.countryName}</h2>
+					<h2 className="text-xl font-semibold">{roundTitle(next)}</h2>
 					<span className="rounded-md bg-personal-best/14 px-1.5 py-0.5 text-xs font-semibold text-personal-best">
 						{thisWeekend ? "This weekend" : "Up next"}
 					</span>

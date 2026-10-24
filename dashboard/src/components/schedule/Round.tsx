@@ -7,6 +7,7 @@ import type { Round as RoundType } from "@/types/schedule.type";
 
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 import { formatDayRange, formatMonth } from "@/lib/dateFormatter";
+import { roundTitle } from "@/lib/schedule";
 
 type Props = {
 	round: RoundType;
@@ -62,7 +63,7 @@ export default function Round({ round, nextName }: Props) {
 				<span className="rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg-2">
 					{countryCode(round.countryName)}
 				</span>
-				<span className="text-[15px] font-semibold">{round.countryName}</span>
+				<span className="text-[15px] font-semibold">{roundTitle(round)}</span>
 				{isNext && (
 					<span className="rounded-md bg-personal-best/14 px-1.5 py-0.5 text-[11px] font-semibold text-personal-best">
 						{thisWeekend ? "This weekend" : "Up next"}

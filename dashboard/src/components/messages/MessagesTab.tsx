@@ -252,20 +252,27 @@ function IncidentsPanel() {
 				{list.map((inc) => (
 					<div
 						key={`${inc.utc}.${inc.cars.join(",")}.${inc.summary}`}
-						className="flex items-center gap-3 border-b border-border px-3 py-2.5"
+						className="flex flex-col gap-1.5 border-b border-border px-3 py-2.5"
 					>
-						<span className="flex shrink-0 flex-wrap gap-1">
-							{inc.cars.map((nr) => {
-								const d = drivers?.[nr];
-								return d ? <DriverChip key={nr} short={d.Tla} teamColor={d.TeamColour} size="sm" /> : null;
-							})}
+						{/* Cars and status on top, the reason on its own line: with several cars side by side
+						    the reason was squeezed to one word per line. */}
+						<span className="flex items-start gap-2">
+							<span className="flex min-w-0 flex-1 flex-wrap gap-1">
+								{inc.cars.map((nr) => {
+									const d = drivers?.[nr];
+									return d ? <DriverChip key={nr} short={d.Tla} teamColor={d.TeamColour} size="sm" /> : null;
+								})}
+							</span>
+							<span
+								className={clsx(
+									"shrink-0 rounded-tag px-1.5 py-px text-[11px] font-semibold",
+									RC_STATUS_TAG[inc.status],
+								)}
+							>
+								{inc.status === "noted" ? "Noted" : RC_STATUS_LABEL[inc.status]}
+							</span>
 						</span>
-						<span className="min-w-0 flex-1 text-xs leading-snug text-fg-body">{inc.summary}</span>
-						<span
-							className={clsx("shrink-0 rounded-tag px-1.5 py-px text-[11px] font-semibold", RC_STATUS_TAG[inc.status])}
-						>
-							{inc.status === "noted" ? "Noted" : RC_STATUS_LABEL[inc.status]}
-						</span>
+						<span className="text-xs leading-snug text-fg-body">{inc.summary}</span>
 					</div>
 				))}
 			</div>

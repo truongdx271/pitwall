@@ -78,7 +78,11 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 					className={clsx("text-right", {
 						"text-session-best": timingDriver.LastLapTime.OverallFastest,
 						"text-personal-best": !timingDriver.LastLapTime.OverallFastest && timingDriver.LastLapTime.PersonalFastest,
-						"text-fg-1": !timingDriver.LastLapTime.OverallFastest && !timingDriver.LastLapTime.PersonalFastest,
+						"text-slower":
+							!timingDriver.LastLapTime.OverallFastest &&
+							!timingDriver.LastLapTime.PersonalFastest &&
+							!!timingDriver.LastLapTime.Value,
+						"text-fg-3": !timingDriver.LastLapTime.Value,
 					})}
 				>
 					{timingDriver.LastLapTime.Value || "—"}

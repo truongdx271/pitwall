@@ -227,7 +227,8 @@ function MobileCells({
 					className={clsx("text-right", {
 						"text-session-best": last?.OverallFastest,
 						"text-personal-best": !last?.OverallFastest && last?.PersonalFastest,
-						"text-fg-1": !last?.OverallFastest && !last?.PersonalFastest,
+						"text-slower": !last?.OverallFastest && !last?.PersonalFastest && !!last?.Value,
+						"text-fg-3": !last?.Value,
 					})}
 				>
 					{last?.Value || "—"}

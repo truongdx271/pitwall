@@ -55,13 +55,17 @@ export default function StrategyTab() {
 	}
 
 	return (
-		<div className="flex h-full flex-wrap items-stretch gap-3 p-3 xl:flex-nowrap">
+		// The tyre table sets the height (capped at the viewport); the right column matches it
+		// and the speed traps scroll inside, as in Strategy.png.
+		<div className="flex flex-wrap items-stretch gap-3 p-3 xl:max-h-full xl:flex-nowrap">
 			<div className="flex min-w-0 flex-[999_1_760px] flex-col">
 				<TyreStrategyPanel />
 			</div>
-			<div className="flex min-w-0 flex-[1_1_440px] flex-col gap-3 xl:max-w-[560px]">
-				<LapTimesPanel />
-				<SpeedTrapsPanel />
+			<div className="relative min-w-0 flex-[1_1_440px] xl:max-w-[560px]">
+				<div className="flex flex-col gap-3 xl:absolute xl:inset-0">
+					<LapTimesPanel />
+					<SpeedTrapsPanel />
+				</div>
 			</div>
 		</div>
 	);
@@ -346,7 +350,7 @@ function SpeedTrapsPanel() {
 	return (
 		<Panel
 			title="Speed traps"
-			className="flex-1"
+			className="min-h-0 flex-1 overflow-y-auto"
 			header={
 				<>
 					<span className="text-xs text-fg-3">Top 5 · {unit === "metric" ? "km/h" : "mph"}</span>

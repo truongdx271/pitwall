@@ -48,25 +48,22 @@ function Dashboard() {
 
 				{activeTab === "live" && !isMobile && (
 					// Table on the left; Track over Messages on the right, Messages filling the rest.
-					// Below 1280px the right column wraps under the table (SPEC §0).
-					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 xl:h-full">
+					// The table sets the row height (capped at the viewport); the right column matches it.
+					// Side by side from 1376px (840 + 500 + gaps); narrower, the right column wraps under the table.
+					<div className="flex w-full flex-wrap items-stretch gap-3 p-3 min-[1376px]:max-h-full">
 						<div
 							className={clsx(
-								// The table panel stretches to the column height, like the design's stretched <main>.
-								"min-w-0 xl:h-full xl:overflow-y-auto xl:*:min-h-full",
+								"min-w-0 min-[1376px]:overflow-y-auto",
 								wideTable ? "flex-[999_1_860px]" : "flex-[999_1_840px]",
 							)}
 						>
 							{isPractice ? <PracticeLeaderBoard /> : isQuali ? <QualiLeaderBoard /> : <LeaderBoard />}
 						</div>
-						<div
-							className={clsx(
-								"flex min-w-0 flex-col gap-3 xl:h-full",
-								wideTable ? "flex-[1_1_480px]" : "flex-[1_1_500px]",
-							)}
-						>
-							<TrackPanel className="shrink-0" />
-							<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 xl:max-h-none" />
+						<div className={clsx("relative min-w-0", wideTable ? "flex-[1_1_480px]" : "flex-[1_1_500px]")}>
+							<div className="flex flex-col gap-3 min-[1376px]:absolute min-[1376px]:inset-0">
+								<TrackPanel className="shrink-0" />
+								<MessagesPanel className="max-h-[480px] min-h-[260px] flex-1 min-[1376px]:max-h-none" />
+							</div>
 						</div>
 					</div>
 				)}

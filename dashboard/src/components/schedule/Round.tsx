@@ -30,6 +30,7 @@ const countryCodeMap: Record<string, string> = {
 	Hungary: "HUN",
 	Italy: "ITA",
 	Japan: "JPN",
+	Malaysia: "MAS",
 	"Saudi Arabia": "KSA",
 	Mexico: "MEX",
 	Monaco: "MON",

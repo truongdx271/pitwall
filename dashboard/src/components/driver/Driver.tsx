@@ -178,7 +178,7 @@ function SectorCells({ sectors = [] }: { sectors: TimingDataDriver["Sectors"] })
 							className={clsx("text-xs leading-[14px]", {
 								"text-session-best": sector?.OverallFastest,
 								"text-personal-best": !sector?.OverallFastest && sector?.PersonalFastest,
-								"text-fg-1": !sector?.OverallFastest && !sector?.PersonalFastest && !!sector?.Value,
+								"text-slower": !sector?.OverallFastest && !sector?.PersonalFastest && !!sector?.Value,
 								"text-fg-3": !sector?.Value,
 							})}
 						>

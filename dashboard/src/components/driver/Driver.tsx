@@ -16,6 +16,7 @@ import { raceGridCols, RACE_GRID_GAP, SECTOR_GRID, SECTOR_GRID_GAP } from "@/com
 import DriverChip from "./DriverChip";
 import DriverTireStack from "./DriverTireStack";
 import DriverCarMetrics from "./DriverCarMetrics";
+import PositionCell from "./PositionCell";
 
 type Props = {
 	position: number;
@@ -60,7 +61,7 @@ export default function Driver({ driver, timingDriver, position, showPace }: Pro
 				className="grid min-w-0 flex-1 items-center px-2.5"
 				style={{ columnGap: RACE_GRID_GAP, gridTemplateColumns: raceGridCols(showPace) }}
 			>
-				<span className={clsx("text-right", danger ? "text-loss" : "text-fg-2")}>{position}</span>
+				<PositionCell position={position} out={out} className={danger ? "text-loss" : "text-fg-2"} />
 
 				<DriverChip short={driver.Tla} teamColor={driver.TeamColour} />
 

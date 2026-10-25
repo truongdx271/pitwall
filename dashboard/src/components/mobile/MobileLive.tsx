@@ -20,6 +20,7 @@ import type { SessionKind } from "@/lib/sessionKind";
 import DriverChip from "@/components/driver/DriverChip";
 import DriverTireStack from "@/components/driver/DriverTireStack";
 import DriverDetailModal from "@/components/driver/DriverDetailModal";
+import PositionCell from "@/components/driver/PositionCell";
 import SegmentedControls from "@/components/ui/SegmentedControls";
 import LongRunsPanel from "@/components/map/LongRunsPanel";
 import TabLink from "@/components/shell/TabLink";
@@ -156,7 +157,11 @@ function MobileTable({ kind, lines, drivers, showInterval, onOpen }: TableProps)
 							)}
 							style={{ gridTemplateColumns: GRID[kind] }}
 						>
-							<span className={clsx("text-right", knockout ? "text-loss" : "text-fg-2")}>{position}</span>
+							{kind === "race" ? (
+								<PositionCell position={position} out={!!(line.Retired || line.Stopped)} className="text-fg-2" />
+							) : (
+								<span className={clsx("text-right", knockout ? "text-loss" : "text-fg-2")}>{position}</span>
+							)}
 							<DriverChip short={driver.Tla} teamColor={driver.TeamColour} size="sm" />
 							<MobileCells kind={kind} line={line} showInterval={showInterval} fastest={fastest} />
 						</button>

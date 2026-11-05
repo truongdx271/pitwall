@@ -10,6 +10,9 @@ type SettingsStore = {
 	speedUnit: SpeedUnit;
 	setSpeedUnit: (speedUnit: SpeedUnit) => void;
 
+	map3d: boolean;
+	setMap3d: (map3d: boolean) => void;
+
 	showCornerNumbers: boolean;
 	setShowCornerNumbers: (showCornerNumbers: boolean) => void;
 
@@ -51,6 +54,9 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				speedUnit: "metric",
 				setSpeedUnit: (speedUnit: SpeedUnit) => set({ speedUnit }),
+
+				map3d: false,
+				setMap3d: (map3d: boolean) => set({ map3d }),
 
 				showCornerNumbers: false,
 				setShowCornerNumbers: (showCornerNumbers: boolean) => set({ showCornerNumbers }),

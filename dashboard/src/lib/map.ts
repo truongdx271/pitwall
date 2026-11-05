@@ -3,6 +3,11 @@ import type { Message } from "@/types/state.type";
 
 import { sortUtc } from "@/lib/sorting";
 
+// Car size in map units (decimetres); the 2D and 3D maps share their pit row.
+export const CAR_RADIUS = 340;
+// Pit cars shrink so they can sit right beside the main straight.
+export const PIT_SCALE = 0.3;
+
 export const rad = (deg: number) => deg * (Math.PI / 180);
 
 export const rotate = (x: number, y: number, a: number, px: number, py: number) => {

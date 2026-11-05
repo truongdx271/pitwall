@@ -1,5 +1,8 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import clsx from "clsx";
+
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { sessionKind } from "@/lib/sessionKind";
@@ -11,6 +14,9 @@ import Panel from "@/components/ui/Panel";
 import MapOrderList from "@/components/map/MapOrderList";
 import PushLapPanel from "@/components/map/PushLapPanel";
 import LongRunsPanel from "@/components/map/LongRunsPanel";
+
+// three.js is large: only fetched once someone opens the 3D view.
+const Map3D = dynamic(() => import("@/components/map3d/Map3D"), { ssr: false });
 
 // Map tab (SPEC §6): order list, the full map, and a session-specific side panel
 // (none in the race).
@@ -55,6 +61,8 @@ export default function TrackMap() {
 function MapPanel({ name }: { name: string | undefined }) {
 	const showCornerNumbers = useSettingsStore((s) => s.showCornerNumbers);
 	const setShowCornerNumbers = useSettingsStore((s) => s.setShowCornerNumbers);
+	const map3d = useSettingsStore((s) => s.map3d);
+	const setMap3d = useSettingsStore((s) => s.setMap3d);
 
 	return (
 		<Panel
@@ -62,8 +70,27 @@ function MapPanel({ name }: { name: string | undefined }) {
 			className="h-full"
 			header={
 				<>
-					<span className="text-xs text-fg-3">Estimated from mini-sectors</span>
-					<label className="ml-auto flex cursor-pointer items-center gap-2 text-xs text-fg-2">
+					<span className="text-xs text-fg-3 max-md:hidden">Estimated from mini-sectors</span>
+					<div role="group" aria-label="Map style" className="ml-auto flex gap-0.5 rounded-control bg-bg p-0.5">
+						{[
+							{ label: "2D", on: !map3d, value: false },
+							{ label: "3D", on: map3d, value: true },
+						].map(({ label, on, value }) => (
+							<button
+								key={label}
+								type="button"
+								aria-pressed={on}
+								onClick={() => setMap3d(value)}
+								className={clsx(
+									"h-[26px] cursor-pointer rounded-md px-2.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-fg-1",
+									on ? "bg-surface-3 text-fg-1" : "text-fg-2 hover:text-fg-1",
+								)}
+							>
+								{label}
+							</button>
+						))}
+					</div>
+					<label className="flex cursor-pointer items-center gap-2 text-xs text-fg-2">
 						<input
 							type="checkbox"
 							checked={showCornerNumbers}
@@ -75,9 +102,7 @@ function MapPanel({ name }: { name: string | undefined }) {
 				</>
 			}
 		>
-			<div className="min-h-0 flex-1 border-t border-border p-3">
-				<Map />
-			</div>
+			<div className="min-h-0 flex-1 border-t border-border p-3">{map3d ? <Map3D /> : <Map />}</div>
 			<PitLaneFooter />
 		</Panel>
 	);

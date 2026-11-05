@@ -14,10 +14,12 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useTrackAnimation } from "@/hooks/useTrackAnimation";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
+	CAR_RADIUS,
 	createSectors,
 	findYellowSectors,
 	getSectorColor,
 	type MapSector,
+	PIT_SCALE,
 	prioritizeColoredSectors,
 	rad,
 	rotate,
@@ -34,9 +36,6 @@ const ROTATION_FIX = 90;
 const FINISH_LINE_WIDTH = 300;
 const CORNER_LABEL_OFFSET = 480;
 const CORNER_RADIUS = 210;
-const CAR_RADIUS = 340;
-// Pit cars shrink so they can sit right beside the main straight.
-const PIT_SCALE = 0.3;
 
 type Corner = {
 	number: number;

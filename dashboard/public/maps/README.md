@@ -61,3 +61,19 @@ clockwise, so right is the infield where the pits are; at the line both sides
 are equally clear and the guess fell to the outside. The F1 timing archive answered 401 that day, so these are not
 measured; they could be checked against `Position.z` samples with
 `InPit: true` once the archive is reachable again.
+
+## 3D map data (`3d/<circuitKey>.json`)
+
+`z` holds the track height in metres, one value per point of the circuit's
+outline, and `pit` the pit lane as `[x, y, z]`. `scripts/bake-map3d.mjs` builds
+them from OpenF1's historical car locations: heights from the 5 fastest
+qualifying laps, the pit lane from the median of up to 5 race stops. Files are
+checked in because OpenF1's free tier is rate limited and answers 401 during
+live sessions. The map falls back to a flat track with no pit lane when a file
+is missing or its `z` length differs from the outline, so rebake when the
+provider changes a layout: `node scripts/bake-map3d.mjs <circuitKey>`.
+
+The feed holds `z` constant in the pit lane (776.6 m at Interlagos, where the
+track drops to 757 m at pit exit), so pit heights come from the nearest track
+point. Sepang's outline is not in feed coordinates, so it can't be baked until
+it is replaced with a measured lap.

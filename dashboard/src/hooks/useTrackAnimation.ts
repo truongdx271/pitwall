@@ -22,13 +22,10 @@ import {
 	type Point,
 } from "@/lib/trackProgress";
 
-type Options = {
+type Shared = {
 	enabled: boolean;
 	trackPoints: Point[] | null;
 	timingLines: Record<string, TimingDataDriver> | undefined;
-	rotation: number;
-	centerX: number | null;
-	centerY: number | null;
 	carRadius: number;
 	// Pit cars are drawn at this fraction of a running car's size.
 	pitScale: number;
@@ -42,6 +39,15 @@ type Options = {
 	// Lap fraction where the feed reports cars leaving the pits; 0 (the line) if unknown.
 	pitExit: number;
 	pitSide: PitSide | undefined;
+};
+
+// Where a car goes this frame, in feed coordinates. `fraction` is its lap position, null in its pit slot.
+export type CarPlacement = { point: Point; fraction: number | null };
+
+// What the animation draws on: the 2D map's SVG or the 3D scene.
+export type CarSink = {
+	cars: () => string[];
+	place: (racingNumber: string, placement: CarPlacement | null) => void;
 };
 
 const SAVE_INTERVAL_MS = 5_000;
@@ -64,26 +70,26 @@ function saveShares(key: string | null, shares: SegmentShares) {
 	}
 }
 
-// Drives estimated car dots along the track outline with requestAnimationFrame,
-// writing transforms straight to the DOM so React doesn't re-render every frame.
-export function useTrackAnimation({
-	enabled,
-	trackPoints,
-	timingLines,
-	rotation,
-	centerX,
-	centerY,
-	carRadius,
-	pitScale,
-	garages,
-	sectorSeconds,
-	storageKey,
-	pitExit,
-	pitSide,
-}: Options) {
+// Moves estimated cars along the track outline with requestAnimationFrame and hands each
+// frame's positions to `sink`, so React doesn't re-render every frame.
+export function useCarAnimation(
+	{
+		enabled,
+		trackPoints,
+		timingLines,
+		carRadius,
+		pitScale,
+		garages,
+		sectorSeconds,
+		storageKey,
+		pitExit,
+		pitSide,
+	}: Shared,
+	sink: CarSink,
+) {
 	const track = useMemo(() => (trackPoints && trackPoints.length > 1 ? buildTrack(trackPoints) : null), [trackPoints]);
 
-	const nodes = useRef(new Map<string, SVGGElement>());
+	const sinkRef = useRef(sink);
 	const progress = useRef(new Map<string, CarProgress>());
 	const shares = useRef(new SegmentShares());
 	// Each car keeps one set of segment boundaries per lap so learning never shifts it mid-lap.
@@ -102,6 +108,10 @@ export function useTrackAnimation({
 	}, [sectorSeconds]);
 
 	useEffect(() => {
+		sinkRef.current = sink;
+	}, [sink]);
+
+	useEffect(() => {
 		progress.current.clear();
 		pitStale.current.clear();
 		shares.current = loadShares(storageKey);
@@ -109,7 +119,7 @@ export function useTrackAnimation({
 	}, [track, storageKey]);
 
 	useEffect(() => {
-		if (!enabled || !track || centerX === null || centerY === null) return;
+		if (!enabled || !track) return;
 
 		let frame = 0;
 		let last = performance.now();
@@ -128,7 +138,8 @@ export function useTrackAnimation({
 			const now = Date.now();
 			const lines = timingRef.current;
 
-			nodes.current.forEach((node, nr) => {
+			for (const nr of sinkRef.current.cars()) {
+				const place = (placement: CarPlacement | null) => sinkRef.current.place(nr, placement);
 				const timing = lines?.[nr];
 
 				const slot = garages.indexOf(nr);
@@ -138,16 +149,14 @@ export function useTrackAnimation({
 					shares.current.reset(nr);
 					lapBoundaries.current.delete(nr);
 					pitStale.current.set(nr, PIT);
-					const r = rotate(slots[slot].x, slots[slot].y, rotation, centerX, centerY);
-					node.style.transform = `translateX(${r.x}px) translateY(${r.y}px) scale(${pitScale})`;
-					node.style.visibility = "visible";
-					return;
+					place({ point: slots[slot], fraction: null });
+					continue;
 				}
 
 				const state = timing ? segmentState(timing) : null;
 				if (!timing || !state) {
-					node.style.visibility = "hidden";
-					return;
+					place(null);
+					continue;
 				}
 
 				shares.current.observe(nr, state.completed, state.count, now, parseLapTime(timing.BestLapTime?.Value), {
@@ -173,19 +182,16 @@ export function useTrackAnimation({
 					? { fraction: pitExit, segmentSize: pitExit > 0 ? 0 : boundaries[1] - boundaries[0] }
 					: segmentProgress(timing, boundaries);
 				if (!seg) {
-					node.style.visibility = "hidden";
-					return;
+					place(null);
+					continue;
 				}
 
 				const moving = !timing.InPit && !timing.Stopped && !timing.Retired;
 				const next = step(progress.current.get(nr), seg.fraction, seg.segmentSize, lapSeconds(timing), now, dt, moving);
 				progress.current.set(nr, next);
 
-				const p = pointAt(track, next.shown);
-				const r = rotate(p.x, p.y, rotation, centerX, centerY);
-				node.style.transform = `translateX(${r.x}px) translateY(${r.y}px)`;
-				node.style.visibility = "visible";
-			});
+				place({ point: pointAt(track, next.shown), fraction: next.shown % 1 });
+			}
 
 			if (learning.version !== savedVersion && now - savedAt > SAVE_INTERVAL_MS) {
 				saveShares(storageKey, learning);
@@ -201,7 +207,39 @@ export function useTrackAnimation({
 			cancelAnimationFrame(frame);
 			if (learning.version !== savedVersion) saveShares(storageKey, learning);
 		};
-	}, [enabled, track, rotation, centerX, centerY, carRadius, pitScale, garages, storageKey, pitExit, pitSide]);
+	}, [enabled, track, carRadius, pitScale, garages, storageKey, pitExit, pitSide]);
+}
+
+type Options = Shared & {
+	rotation: number;
+	centerX: number | null;
+	centerY: number | null;
+};
+
+// The 2D map: writes each car's transform straight to its SVG group.
+export function useTrackAnimation({ rotation, centerX, centerY, ...shared }: Options) {
+	const nodes = useRef(new Map<string, SVGGElement>());
+
+	const sink = useMemo<CarSink>(
+		() => ({
+			cars: () => Array.from(nodes.current.keys()),
+			place: (nr, placement) => {
+				const node = nodes.current.get(nr);
+				if (!node || centerX === null || centerY === null) return;
+				if (!placement) {
+					node.style.visibility = "hidden";
+					return;
+				}
+				const r = rotate(placement.point.x, placement.point.y, rotation, centerX, centerY);
+				const scale = placement.fraction === null ? ` scale(${shared.pitScale})` : "";
+				node.style.transform = `translateX(${r.x}px) translateY(${r.y}px)${scale}`;
+				node.style.visibility = "visible";
+			},
+		}),
+		[rotation, centerX, centerY, shared.pitScale],
+	);
+
+	useCarAnimation(shared, sink);
 
 	// Stable per-driver ref callbacks.
 	const refs = useRef(new Map<string, (node: SVGGElement | null) => void>());

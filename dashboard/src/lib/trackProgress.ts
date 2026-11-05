@@ -4,7 +4,8 @@ import type { TimingDataDriver } from "@/types/state.type";
 // These helpers turn that into a fraction of the lap and move a displayed
 // fraction smoothly along the track outline between segment updates.
 
-export type Point = { x: number; y: number };
+// `z` (metres) is only set on the 3D map's tracks; distances stay two-dimensional.
+export type Point = { x: number; y: number; z?: number };
 
 export type Track = {
 	points: Point[];
@@ -398,7 +399,7 @@ export function pitSlots(track: Track, count: number, spacing: number, offset: n
 		const b = pointAt(track, fraction + delta);
 		const len = dist(a, b) || 1;
 		// Left normal of the driving direction, scaled to `offset`.
-		return { x: p.x - ((b.y - a.y) / len) * out * side, y: p.y + ((b.x - a.x) / len) * out * side };
+		return { ...p, x: p.x - ((b.y - a.y) / len) * out * side, y: p.y + ((b.x - a.x) / len) * out * side };
 	};
 
 	// Judge the side a few offsets out: right beside the track both sides look equally clear.
@@ -440,7 +441,9 @@ function dist(a: Point, b: Point): number {
 }
 
 function lerp(a: Point, b: Point, t: number): Point {
-	return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+	const point: Point = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+	if (a.z !== undefined && b.z !== undefined) point.z = a.z + (b.z - a.z) * t;
+	return point;
 }
 
 // The live feed sometimes delivers arrays as {"0": …, "1": …} objects.

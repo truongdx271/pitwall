@@ -10,7 +10,14 @@ import { fetchMap } from "@/lib/fetchMap";
 import { garageOrder } from "@/lib/garageOrder";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import { CAR_RADIUS, findYellowSectors, PIT_SCALE } from "@/lib/map";
-import { defaultExaggeration, fetchMap3d, MAX_EXAGGERATION, sectorStarts, type Map3dData } from "@/lib/map3d";
+import {
+	defaultExaggeration,
+	fetchMap3d,
+	MAX_EXAGGERATION,
+	pitLanePoints,
+	sectorStarts,
+	type Map3dData,
+} from "@/lib/map3d";
 import { buildTrack, parseLapTime, pointAt, type Point } from "@/lib/trackProgress";
 
 import { useCarAnimation, type CarSink } from "@/hooks/useTrackAnimation";
@@ -114,6 +121,7 @@ function Scene({ loaded, storageKey }: { loaded: Loaded; storageKey: string }) {
 
 	const starts = useMemo(() => sectorStarts(map), [map]);
 	const track = useMemo(() => buildTrack(points), [points]);
+	const pitLane = useMemo(() => pitLanePoints(data), [data]);
 	const corners = useMemo(
 		() =>
 			map.corners.map((corner) => {
@@ -249,6 +257,7 @@ function Scene({ loaded, storageKey }: { loaded: Loaded; storageKey: string }) {
 			storageKey,
 			pitExit: map.pitExit ?? 0,
 			pitSide: map.pitSide,
+			pitLane,
 		},
 		sink,
 	);

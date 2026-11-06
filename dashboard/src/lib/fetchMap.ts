@@ -30,7 +30,7 @@ async function loadMap(url: string): Promise<Map | null> {
 const PIT_EXITS: Record<string, number> = { "61/2026": 0.052 };
 
 // Pit lane side (of the driving direction, feed coordinates) where the "more room"
-// guess in pitSlots picks the wrong one. Keyed by circuit: pit lanes don't move.
+// guess in pitSlots picks the wrong one. Only used when a circuit has no baked pit lane. Keyed by circuit: pit lanes don't move.
 // Reported reversed on the live map: Austin and Singapore 2026-10-24, Mexico City 2026-10-31;
 // see public/maps/README.md.
 const PIT_SIDES: Record<number, NonNullable<Map["pitSide"]>> = { 9: "left", 61: "right", 65: "right" };

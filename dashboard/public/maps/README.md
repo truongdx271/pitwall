@@ -77,3 +77,10 @@ The feed holds `z` constant in the pit lane (776.6 m at Interlagos, where the
 track drops to 757 m at pit exit), so pit heights come from the nearest track
 point. Sepang's outline is not in feed coordinates, so it can't be baked until
 it is replaced with a measured lap.
+
+## Pit row
+
+Pit cars park along the baked pit lane in `3d/<circuitKey>.json` (`pitLaneSlots`), on both
+the 2D and 3D maps, centred where the lane passes the finish line. Without a baked lane
+(Monaco, Hungaroring, Shanghai, Sepang) the row falls back to beside the track (`pitSlots`,
+`PIT_SIDES`).

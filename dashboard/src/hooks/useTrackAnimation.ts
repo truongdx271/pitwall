@@ -11,6 +11,7 @@ import {
 	parseLapTime,
 	PIT,
 	pitExitHold,
+	pitLaneSlots,
 	pitSlots,
 	pointAt,
 	SegmentShares,
@@ -39,6 +40,8 @@ type Shared = {
 	// Lap fraction where the feed reports cars leaving the pits; 0 (the line) if unknown.
 	pitExit: number;
 	pitSide: PitSide | undefined;
+	// The circuit's measured pit lane, entry to exit; without one the row is placed beside the track.
+	pitLane?: Point[];
 };
 
 // Where a car goes this frame, in feed coordinates. `fraction` is its lap position, null in its pit slot.
@@ -84,6 +87,7 @@ export function useCarAnimation(
 		storageKey,
 		pitExit,
 		pitSide,
+		pitLane,
 	}: Shared,
 	sink: CarSink,
 ) {
@@ -130,7 +134,11 @@ export function useCarAnimation(
 
 		// Tucked against the track edge; running cars on the straight may draw over them.
 		// Neighbours overlap by ~40% so the row stays near the pit straight instead of spilling past it.
-		const slots = pitSlots(track, garages.length, carRadius * pitScale * 1.2, carRadius, pitSide);
+		const spacing = carRadius * pitScale * 1.2;
+		const slots =
+			pitLane && pitLane.length >= 2
+				? pitLaneSlots(track, pitLane, garages.length, spacing)
+				: pitSlots(track, garages.length, spacing, carRadius, pitSide);
 
 		const tick = (t: number) => {
 			const dt = Math.min((t - last) / 1000, 0.25); // background tabs return huge gaps
@@ -207,7 +215,7 @@ export function useCarAnimation(
 			cancelAnimationFrame(frame);
 			if (learning.version !== savedVersion) saveShares(storageKey, learning);
 		};
-	}, [enabled, track, carRadius, pitScale, garages, storageKey, pitExit, pitSide]);
+	}, [enabled, track, carRadius, pitScale, garages, storageKey, pitExit, pitSide, pitLane]);
 }
 
 type Options = Shared & {

@@ -416,7 +416,8 @@ export class TrackScene {
 		car.pit = pit;
 		car.visible = true;
 		car.mesh.visible = true;
-		car.label.hidden = false;
+		// Pit cars sit close together; their chips would cover the pit straight.
+		car.label.hidden = pit;
 	}
 
 	private tick = (now: number) => {
@@ -462,9 +463,7 @@ export class TrackScene {
 			...this.order.filter((nr) => this.cars.has(nr)),
 			...Array.from(this.cars.keys()).filter((nr) => !this.order.includes(nr)),
 		];
-		// Pit cars go last: running cars keep the clear spots.
-		const queue = ordered.map((nr) => this.cars.get(nr) as Car).filter((car) => car.visible);
-		queue.sort((a, b) => Number(a.pit) - Number(b.pit));
+		const queue = ordered.map((nr) => this.cars.get(nr) as Car).filter((car) => car.visible && !car.pit);
 		for (const car of queue) {
 			v.copy(car.mesh.position).project(this.camera);
 			shown.push({ car, x: (v.x + 1) * w, y: (1 - v.y) * h });
@@ -472,7 +471,6 @@ export class TrackScene {
 		const boxes = stackLabels(shown.map((s) => ({ x: s.x, y: s.y - CHIP_LIFT })));
 		shown.forEach(({ car, x, y }, i) => {
 			const box = boxes[i];
-			car.label.style.opacity = car.pit ? "0.55" : "1";
 			car.label.style.transform = `translate(${(x - 17).toFixed(1)}px, ${box.y.toFixed(1)}px)`;
 			car.stem.style.height = `${Math.max(0, y - box.y - 21).toFixed(1)}px`;
 		});

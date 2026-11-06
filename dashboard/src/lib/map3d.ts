@@ -25,6 +25,11 @@ export async function fetchMap3d(circuitKey: number, outlinePoints: number): Pro
 	}
 }
 
+// Feed-coordinate points of the baked pit lane; undefined for circuits without one.
+export function pitLanePoints(data: Map3dData | null): { x: number; y: number; z: number }[] | undefined {
+	return data?.pit?.map(([x, y, z]) => ({ x, y, z }));
+}
+
 const MIN_EXAGGERATION = 1;
 export const MAX_EXAGGERATION = 6;
 // Starting height: a tenth of the track's span, so Monza is readable and Spa isn't a cliff.

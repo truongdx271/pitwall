@@ -411,6 +411,49 @@ export function pitSlots(track: Track, count: number, spacing: number, offset: n
 	return Array.from({ length: count }, (_, i) => beside(((i - (count - 1) / 2) * spacing) / track.length, side));
 }
 
+// Parking slots along the real pit lane, from pit entry towards pit exit. The row is centred where
+// the lane passes the finish line, and closes up if the lane is too short to hold it.
+export function pitLaneSlots(track: Track, lane: Point[], count: number, spacing: number): Point[] {
+	if (count === 0 || track.points.length === 0 || lane.length < 2) return [];
+
+	const line = track.points[0];
+	const lengths = [0];
+	let centre = 0;
+	let nearest = Infinity;
+	for (let i = 0; i < lane.length - 1; i++) {
+		const a = lane[i];
+		const b = lane[i + 1];
+		const length = dist(a, b);
+		const t = length === 0 ? 0 : clamp01(((line.x - a.x) * (b.x - a.x) + (line.y - a.y) * (b.y - a.y)) / length ** 2);
+		const gap = dist(line, { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+		if (gap < nearest) {
+			nearest = gap;
+			centre = lengths[i] + t * length;
+		}
+		lengths.push(lengths[i] + length);
+	}
+
+	const total = lengths[lengths.length - 1];
+	const gaps = Math.max(count - 1, 1);
+	const step = Math.min(spacing, total / gaps);
+	const row = step * (count - 1);
+	const start = Math.min(total - row, Math.max(0, centre - row / 2));
+
+	let segment = 0;
+	return Array.from({ length: count }, (_, i) => {
+		const at = start + i * step;
+		while (segment < lane.length - 2 && lengths[segment + 1] < at) segment++;
+		const a = lane[segment];
+		const b = lane[segment + 1];
+		const t = clamp01((at - lengths[segment]) / (lengths[segment + 1] - lengths[segment] || 1));
+		const point: Point = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+		if (a.z !== undefined && b.z !== undefined) point.z = a.z + (b.z - a.z) * t;
+		return point;
+	});
+}
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
 function distanceToTrack(track: Track, p: Point): number {
 	const { points } = track;
 	let min = Infinity;

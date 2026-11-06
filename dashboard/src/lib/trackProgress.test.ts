@@ -4,6 +4,7 @@ import {
 	buildTrack,
 	lapSeconds,
 	parseLapTime,
+	pitLaneSlots,
 	pitSlots,
 	pointAt,
 	PIT,
@@ -152,6 +153,53 @@ describe("wrapDelta", () => {
 		expect(wrapDelta(0.02 - 0.98)).toBeCloseTo(0.04);
 		expect(wrapDelta(0.4)).toBeCloseTo(0.4);
 		expect(wrapDelta(-0.1)).toBeCloseTo(-0.1);
+	});
+});
+
+describe("pitLaneSlots", () => {
+	// Finish line at (0,0); the lane runs beside it from x = -500 to x = 500 at y = 200.
+	const track = buildTrack([
+		{ x: 0, y: 0 },
+		{ x: 1000, y: 0 },
+		{ x: 1000, y: 3000 },
+		{ x: -1000, y: 3000 },
+		{ x: -1000, y: 0 },
+	]);
+	const lane = [
+		{ x: -500, y: 200, z: 10 },
+		{ x: 0, y: 200, z: 20 },
+		{ x: 500, y: 200, z: 30 },
+	];
+
+	it("returns nothing without cars or a lane", () => {
+		expect(pitLaneSlots(track, lane, 0, 100)).toEqual([]);
+		expect(pitLaneSlots(track, lane.slice(0, 1), 3, 100)).toEqual([]);
+	});
+
+	it("centres the row on the lane where it passes the line, entry first", () => {
+		const slots = pitLaneSlots(track, lane, 3, 100);
+		expect(slots.map((s) => s.x)).toEqual([-100, 0, 100]);
+		expect(slots.every((s) => s.y === 200)).toBe(true);
+	});
+
+	it("takes the height from the lane", () => {
+		expect(pitLaneSlots(track, lane, 1, 100)[0].z).toBeCloseTo(20);
+		expect(pitLaneSlots(track, lane, 3, 100)[0].z).toBeCloseTo(18);
+	});
+
+	it("stays on the lane when the line is near one end", () => {
+		const late = [
+			{ x: 0, y: 200 },
+			{ x: 1000, y: 200 },
+		];
+		expect(pitLaneSlots(track, late, 3, 100).map((s) => s.x)).toEqual([0, 100, 200]);
+	});
+
+	it("closes the row up when the lane is too short", () => {
+		const xs = pitLaneSlots(track, lane, 11, 500).map((s) => s.x);
+		expect(xs[0]).toBe(-500);
+		expect(xs[10]).toBe(500);
+		expect(xs[1]).toBeCloseTo(-400);
 	});
 });
 

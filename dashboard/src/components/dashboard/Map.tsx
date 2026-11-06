@@ -6,7 +6,8 @@ import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 import { garageOrder } from "@/lib/garageOrder";
-import { parseLapTime, type PitSide } from "@/lib/trackProgress";
+import { fetchMap3d, pitLanePoints } from "@/lib/map3d";
+import { parseLapTime, type PitSide, type Point } from "@/lib/trackProgress";
 import { textOn } from "@/lib/color";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -82,6 +83,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
 	const [pitExit, setPitExit] = useState(0);
 	const [pitSide, setPitSide] = useState<PitSide>();
+	const [pitLane, setPitLane] = useState<Point[]>();
 	const [originalTrackPoints, setOriginalTrackPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	useEffect(() => {
@@ -89,6 +91,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 		(async () => {
 			if (!circuitKey) return;
 			const mapJson = await fetchMap(circuitKey, year);
+			const map3d = mapJson ? await fetchMap3d(circuitKey, mapJson.x.length) : null;
 			if (cancelled) return;
 			if (!mapJson) {
 				setUnavailable(true);
@@ -141,6 +144,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 			setOutlineOnly(mapJson.outlineOnly ?? false);
 			setPitExit(mapJson.pitExit ?? 0);
 			setPitSide(mapJson.pitSide);
+			setPitLane(pitLanePoints(map3d));
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
@@ -192,6 +196,7 @@ function CircuitMap({ filter, compact, circuitKey, year }: Props & { circuitKey?
 		storageKey: `segmentShares:${circuitKey}:${year}`,
 		pitExit,
 		pitSide,
+		pitLane,
 	});
 
 	if (unavailable || !circuitKey) {
